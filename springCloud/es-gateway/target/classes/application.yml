@@ -1,0 +1,177 @@
+server:
+  port: 9998
+
+spring:
+  application:
+    name: gateway-service
+  redis:
+    host: localhost
+    port: 6379
+    password: 123456
+  config:
+    import: nacos:gateway-service-dev.yml
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+      config:
+        server-addr: localhost:8848
+        file-extension: yml
+    gateway:
+      discovery:
+        locator:
+          enabled: true #开启注册中心路由功能
+      default-filters:
+        - AddRequestHeader=origin,gateway # 添加名为origin的请求头，值为gateway
+      globalcors:
+        cors-configurations:
+          '[/**]': # 匹配所有请求
+            allowedOrigins: "*" #跨域处理 允许所有的域
+            allowedMethods: # 支持的方法
+              - GET
+              - POST
+              - PUT
+              - DELETE
+      routes: # 路由
+        - id: es-user #路由ID，没有固定要求，但是要保证唯一，建议配合服务名
+          uri: lb://es-user # 匹配提供服务的路由地址
+          predicates: # 断言
+            - Path=/user/** # 断言，路径相匹配进行路由
+        - id: es-user #路由ID，没有固定要求，但是要保证唯一，建议配合服务名
+          uri: lb://es-user # 匹配提供服务的路由地址
+          predicates: # 断言
+            - Path=/md/** # 断言，路径相匹配进行路由
+        - id: es-mail #路由ID，没有固定要求，但是要保证唯一，建议配合服务名
+          uri: lb://es-mail # 匹配提供服务的路由地址
+          predicates: # 断言
+            - Path=/email/** # 断言，路径相匹配进行路由
+        - id: es-info #路由ID，没有固定要求，但是要保证唯一，建议配合服务名
+          uri: lb://es-info # 匹配提供服务的路由地址
+          predicates: # 断言
+            - Path=/info/** # 断言，路径相匹配进行路由
+        - id: es-files #路由ID，没有固定要求，但是要保证唯一，建议配合服务名
+          uri: lb://es-files # 匹配提供服务的路由地址
+          predicates: # 断言
+            - Path=/files/** # 断言，路径相匹配进行路由
+        - id: es-exam #路由ID，没有固定要求，但是要保证唯一，建议配合服务名
+          uri: lb://es-exam # 匹配提供服务的路由地址
+          predicates: # 断言
+            - Path=/exam/** # 断言，路径相匹配进行路由
+        - id: es-statistic #路由ID，没有固定要求，但是要保证唯一，建议配合服务名
+          uri: lb://es-statistic # 匹配提供服务的路由地址
+          predicates: # 断言
+            - Path=/statistic/** # 断言，路径相匹配进行路由
+        - id: es-trustSeal #路由ID，没有固定要求，但是要保证唯一，建议配合服务名
+          uri: lb://es-trustSeal # 匹配提供服务的路由地址
+          predicates: # 断言
+            - Path=/trustSeal/** # 断言，路径相匹配进行路由
+        - id: es-websocket #路由ID，没有固定要求，但是要保证唯一，建议配合服务名
+          uri: lb://es-websocket # 匹配提供服务的路由地址
+          predicates: # 断言
+            - Path=/websocket/** # 断言，路径相匹配进行路由
+
+
+knife4j:
+
+  # 聚合swagger文档
+  gateway:
+    enabled: true
+    # 排序规则(tag/operation排序自4.2.0版本新增)
+    # 取值：alpha-默认排序规则，官方swagger-ui默认实现,order-Knife4j提供的增强排序规则，开发者可扩展x-order，根据数值来自定义排序
+    tags-sorter: order
+    operations-sorter: order
+    #开启Swagger的Basic认证功能,默认是false
+    basic:
+      enable: true
+      # Basic认证用户名
+      username: 123456
+      # Basic认证密码
+      password: 123456
+    # 指定手动配置的模式(默认为该模式)
+    strategy: manual
+    routes:
+      - name: 用户管理
+        # 真实子服务访问url地址-提供OpenAPI的文档
+        url: /es-user/v3/api-docs
+        service-name: es-user
+        # 路由前缀
+        # 兼容OpenAPI3规范在聚合时丢失contextPath属性的异常情况，由开发者自己配置contextPath,Knife4j的前端Ui做兼容处理,与url属性独立不冲突，仅OpenAPI3规范聚合需要，OpenAPI2规范不需要设置此属性,默认为(apiPathPrefix)
+        context-path: /
+        order: 1
+      - name: 考试管理服务
+        # 真实子服务访问url地址-提供OpenAPI的文档
+        url: /es-exam/v3/api-docs
+        service-name: es-exam
+        # 路由前缀
+        # 兼容OpenAPI3规范在聚合时丢失contextPath属性的异常情况，由开发者自己配置contextPath,Knife4j的前端Ui做兼容处理,与url属性独立不冲突，仅OpenAPI3规范聚合需要，OpenAPI2规范不需要设置此属性,默认为(apiPathPrefix)
+        context-path: /
+        order: 2
+      - name: 邮箱验证服务
+        # 真实子服务访问url地址-提供OpenAPI的文档
+        url: /es-mail/v3/api-docs
+        service-name: es-mail
+        # 路由前缀
+        # 兼容OpenAPI3规范在聚合时丢失contextPath属性的异常情况，由开发者自己配置contextPath,Knife4j的前端Ui做兼容处理,与url属性独立不冲突，仅OpenAPI3规范聚合需要，OpenAPI2规范不需要设置此属性,默认为(apiPathPrefix)
+        context-path: /
+        order: 3
+      - name: 系统信息服务
+        # 真实子服务访问url地址-提供OpenAPI的文档
+        url: /es-info/v3/api-docs
+        service-name: es-info
+        # 路由前缀
+        # 兼容OpenAPI3规范在聚合时丢失contextPath属性的异常情况，由开发者自己配置contextPath,Knife4j的前端Ui做兼容处理,与url属性独立不冲突，仅OpenAPI3规范聚合需要，OpenAPI2规范不需要设置此属性,默认为(apiPathPrefix)
+        context-path: /
+        order: 4
+      - name: 文件服务
+        # 真实子服务访问url地址-提供OpenAPI的文档
+        url: /es-files/v3/api-docs
+        service-name: es-files
+        # 路由前缀
+        # 兼容OpenAPI3规范在聚合时丢失contextPath属性的异常情况，由开发者自己配置contextPath,Knife4j的前端Ui做兼容处理,与url属性独立不冲突，仅OpenAPI3规范聚合需要，OpenAPI2规范不需要设置此属性,默认为(apiPathPrefix)
+        context-path: /
+        order: 5
+      - name: 统计服务
+        # 真实子服务访问url地址-提供OpenAPI的文档
+        url: /es-statistic/v3/api-docs
+        service-name: es-statistic
+        # 路由前缀
+        # 兼容OpenAPI3规范在聚合时丢失contextPath属性的异常情况，由开发者自己配置contextPath,Knife4j的前端Ui做兼容处理,与url属性独立不冲突，仅OpenAPI3规范聚合需要，OpenAPI2规范不需要设置此属性,默认为(apiPathPrefix)
+        context-path: /
+        order: 6
+      - name: 认证服务
+        # 真实子服务访问url地址-提供OpenAPI的文档
+        url: /es-trustSeal/v3/api-docs
+        service-name: es-trustSeal
+        # 路由前缀
+        # 兼容OpenAPI3规范在聚合时丢失contextPath属性的异常情况，由开发者自己配置contextPath,Knife4j的前端Ui做兼容处理,与url属性独立不冲突，仅OpenAPI3规范聚合需要，OpenAPI2规范不需要设置此属性,默认为(apiPathPrefix)
+        context-path: /
+        order: 7
+      - name: ws双工通信服务
+        # 真实子服务访问url地址-提供OpenAPI的文档
+        url: /es-websocket/v3/api-docs
+        service-name: es-websocket
+        # 路由前缀
+        # 兼容OpenAPI3规范在聚合时丢失contextPath属性的异常情况，由开发者自己配置contextPath,Knife4j的前端Ui做兼容处理,与url属性独立不冲突，仅OpenAPI3规范聚合需要，OpenAPI2规范不需要设置此属性,默认为(apiPathPrefix)
+        context-path: /
+        order: 8
+    discover:
+      enabled: true
+  # 配置Knife4j的展示细节和功能开关
+  setting:
+    # 设置界面语言
+    language: zh-CN
+    # 是否显示页脚
+    enable-footer: true
+    # 启用自定义页脚内容
+    enable-footer-custom: true
+    # 设置自定义页脚的内容
+    footer-custom-content: Apache License 2.0 | Copyright 2019-[浙江八一菜刀股份有限公司](https://gitee.com/xiaoym/knife4j)
+
+  # 是否启用CORS跨域支持
+  cors: true
+
+config:
+  redisTimeout: 60
+
+
+

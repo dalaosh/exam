@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mc.estrustSeal.mapper.StudentFaceMapper">
+    <resultMap id="StudentFace" type="com.mc.escommon.entity.statistic.StudentFace">
+        <!-- 映射 StudentFace 实体类自身的属性 -->
+        <result property="id" column="sf_id"/>
+        <result property="studentId" column="sf_student_id"/>
+        <result property="faceId" column="sf_face_id"/>
+        <result property="faceFeature" column="sf_face_feature"/>
+        <result property="facePath" column="sf_face_path"/>
+        <result property="idPath" column="sf_IdPath"/>
+        <result property="provinceId" column="sf_provinceId"/>
+        <result property="cityId" column="sf_cityId"/>
+        <result property="areaId" column="sf_areaId"/>
+        <result property="universityId" column="sf_universityId"/>
+        <result property="collegesId" column="sf_collegesId"/>
+        <result property="majorId" column="sf_majorId"/>
+        <result property="isSubmit" column="sf_is_submit"/>
+
+        <!-- 关联映射 Student 对象的属性 -->
+        <association property="student" javaType="com.mc.escommon.entity.user.Student">
+            <id property="id" column="s_id"/>
+            <result property="role" column="s_role"/>
+            <result property="photo" column="s_photo"/>
+            <result property="account" column="s_account"/>
+            <result property="password" column="s_password"/>
+            <result property="keySm3" column="s_key_sm3"/>
+            <result property="email" column="s_email"/>
+            <result property="name" column="s_name"/>
+            <result property="sex" column="s_sex"/>
+            <result property="phone" column="s_phone"/>
+            <result property="publicKey" column="s_public_key"/>
+        </association>
+
+        <!-- 关联映射 AddressProvinces 对象的属性 -->
+        <association property="addressProvinces" javaType="com.mc.escommon.entity.statistic.AddressProvinces">
+            <result property="id" column="ap_id"/>
+            <result property="provinceId" column="ap_province_id"/>
+            <result property="province" column="ap_province"/>
+            <result property="provinceEasy" column="ap_province_easy"/>
+        </association>
+
+        <!-- 关联映射 AddressCities 对象的属性 -->
+        <association property="addressCities" javaType="com.mc.escommon.entity.statistic.AddressCities">
+            <result property="id" column="ac_id"/>
+            <result property="cityId" column="ac_city_id"/>
+            <result property="city" column="ac_city"/>
+            <result property="provinceId" column="ac_province_id"/>
+        </association>
+
+        <!-- 关联映射 AddressAreas 对象的属性 -->
+        <association property="addressAreas" javaType="com.mc.escommon.entity.statistic.AddressAreas">
+            <result property="id" column="aa_id"/>
+            <result property="areaId" column="aa_area_id"/>
+            <result property="area" column="aa_area"/>
+            <result property="cityId" column="aa_city_id"/>
+        </association>
+
+        <!-- 关联映射 SchoolsUniversity 对象的属性 -->
+        <association property="schoolsUniversity" javaType="com.mc.escommon.entity.statistic.SchoolsUniversity">
+            <result property="id" column="su_id"/>
+            <result property="universityName" column="su_university_name"/>
+            <result property="provinceId" column="su_province_id"/>
+            <result property="cityId" column="su_city_id"/>
+            <result property="areaId" column="su_area_id"/>
+            <result property="address" column="su_address"/>
+        </association>
+
+        <!-- 关联映射 SchoolsColleges 对象的属性 -->
+        <association property="schoolsColleges" javaType="com.mc.escommon.entity.statistic.SchoolsColleges">
+            <result property="id" column="sc_id"/>
+            <result property="collegesName" column="sc_colleges_name"/>
+            <result property="universityId" column="sc_university_id"/>
+        </association>
+
+        <!-- 关联映射 SchoolsMajor 对象的属性 -->
+        <association property="schoolsMajor" javaType="com.mc.escommon.entity.statistic.SchoolsMajor">
+            <result property="id" column="sm_id"/>
+            <result property="majorName" column="sm_major_name"/>
+            <result property="collegesId" column="sm_colleges_id"/>
+        </association>
+    </resultMap>
+
+    <sql id="selectVo">
+        SELECT
+            sf.id AS sf_id,
+            sf.student_id AS sf_student_id,
+            sf.face_id AS sf_face_id,
+            sf.face_feature AS sf_face_feature,
+            sf.face_path AS sf_face_path,
+            sf.id_path AS sf_IdPath,
+            sf.province_id AS sf_provinceId,
+            sf.city_id AS sf_cityId,
+            sf.area_id AS sf_areaId,
+            sf.university_id AS sf_universityId,
+            sf.colleges_id AS sf_collegesId,
+            sf.major_id AS sf_majorId,
+            sf.is_submit AS sf_is_submit,
+            s.id AS s_id,
+            s.role AS s_role,
+            s.photo AS s_photo,
+            s.account AS s_account,
+            s.password AS s_password,
+            s.key_sm3 AS s_key_sm3,
+            s.email AS s_email,
+            s.name AS s_name,
+            s.sex AS s_sex,
+            s.phone AS s_phone,
+            s.public_key AS s_public_key,
+            ap.id AS ap_id,
+            ap.province_id AS ap_province_id,
+            ap.province AS ap_province,
+            ap.province_easy AS ap_province_easy,
+            ac.id AS ac_id,
+            ac.city_id AS ac_city_id,
+            ac.city AS ac_city,
+            ac.province_id AS ac_province_id,
+            aa.id AS aa_id,
+            aa.area_id AS aa_area_id,
+            aa.area AS aa_area,
+            aa.city_id AS aa_city_id,
+            su.id AS su_id,
+            su.university_name AS su_university_name,
+            su.province_id AS su_province_id,
+            su.city_id AS su_city_id,
+            su.area_id AS su_area_id,
+            su.address AS su_address,
+            sc.id AS sc_id,
+            sc.colleges_name AS sc_colleges_name,
+            sc.university_id AS sc_university_id,
+            sm.id AS sm_id,
+            sm.major_name AS sm_major_name,
+            sm.colleges_id AS sm_colleges_id
+        FROM
+            student_face sf
+                LEFT JOIN
+            student s ON sf.student_id = s.id
+                LEFT JOIN
+            address_provinces ap ON sf.province_id = ap.id
+                LEFT JOIN
+            address_cities ac ON sf.city_id = ac.id
+                LEFT JOIN
+            address_areas aa ON sf.area_id = aa.id
+                LEFT JOIN
+            schools_university su ON sf.university_id = su.id
+                LEFT JOIN
+            schools_colleges sc ON sf.colleges_id = sc.id
+                LEFT JOIN
+            schools_major sm ON sf.major_id = sm.id
+    </sql>
+
+    <insert id="insert" parameterType="com.mc.escommon.entity.statistic.StudentFace" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO student_face
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="studentId != null">student_id,</if>
+            <if test="faceId != null">face_id,</if>
+            <if test="faceFeature != null">face_feature,</if>
+            <if test="facePath != null">face_path,</if>
+            <if test="idPath != null">id_path,</if>
+            <if test="provinceId != null">province_id,</if>
+            <if test="cityId != null">city_id,</if>
+            <if test="areaId != null">area_id,</if>
+            <if test="universityId != null">university_id,</if>
+            <if test="collegesId != null">colleges_id,</if>
+            <if test="majorId != null">major_id,</if>
+            <if test="isSubmit != null and isSubmit != ''">is_submit</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="studentId != null">#{studentId},</if>
+            <if test="faceId != null">#{faceId},</if>
+            <if test="faceFeature != null">#{faceFeature},</if>
+            <if test="facePath != null">#{facePath},</if>
+            <if test="idPath != null">#{idPath},</if>
+            <if test="provinceId != null">#{provinceId},</if>
+            <if test="cityId != null">#{cityId},</if>
+            <if test="areaId != null">#{areaId},</if>
+            <if test="universityId != null">#{universityId},</if>
+            <if test="collegesId != null">#{collegesId},</if>
+            <if test="majorId != null">#{majorId},</if>
+            <if test="isSubmit != null and isSubmit != ''">#{isSubmit}</if>
+        </trim>
+    </insert>
+
+    <!-- 单个删除 -->
+    <delete id="deleteById" parameterType="int">
+        DELETE FROM student_face WHERE id = #{id}
+    </delete>
+
+    <!-- 批量删除 -->
+    <delete id="deleteByIds" parameterType="int[]">
+        DELETE FROM student_face WHERE id IN
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectAll" parameterType="com.mc.escommon.entity.statistic.StudentFace" resultMap="StudentFace">
+        <!-- 引入之前定义的 SQL 片段 -->
+        <include refid="selectVo"/>
+        <!-- 使用 where 标签来动态生成 WHERE 子句 -->
+        <where>
+            <!-- 判断 id 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="id != null">
+                AND sf.id = #{id} <!-- 使用表别名 sf 引用 id 列 -->
+            </if>
+            <!-- 判断 studentId 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="studentId != null">
+                AND sf.student_id = #{studentId} <!--使用表别名 sf 引用 student_id 列 -->
+            </if>
+            <!-- 判断 faceId 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="faceId != null">
+                AND sf.face_id = #{faceId} <!--使用表别名 sf 引用 face_id 列 -->
+            </if>
+            <!-- 判断 faceFeature 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="faceFeature != null">
+                AND sf.face_feature = #{faceFeature} <!--使用表别名 sf 引用 face_feature 列 -->
+            </if>
+            <!-- 判断 facePath 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="facePath != null">
+                AND sf.face_path = #{facePath} <!--使用表别名 sf 引用 face_path 列 -->
+            </if>
+            <!-- 判断 idPath 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="idPath != null">
+                AND sf.IdPath = #{idPath} <!--使用表别名 sf 引用 IdPath 列 -->
+            </if>
+            <!-- 判断 provinceId 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="provinceId != null">
+                AND sf.provinceId = #{provinceId} <!--使用表别名 sf 引用 provinceId 列 -->
+            </if>
+            <!-- 判断 cityId 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="cityId != null">
+                AND sf.cityId = #{cityId} <!--使用表别名 sf 引用 cityId 列 -->
+            </if>
+            <!-- 判断 areaId 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="areaId != null">
+                AND sf.areaId = #{areaId} <!--使用表别名 sf 引用 areaId 列 -->
+            </if>
+            <!-- 判断 universityId 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="universityId != null">
+                AND sf.universityId = #{universityId} <!--使用表别名 sf 引用 universityId 列 -->
+            </if>
+            <!-- 判断 collegesId 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="collegesId != null">
+                AND sf.collegesId = #{collegesId} <!--使用表别名 sf 引用 collegesId 列 -->
+            </if>
+            <!-- 判断 majorId 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="majorId != null">
+                AND sf.majorId = #{majorId} <!--使用表别名 sf 引用 majorId 列 -->
+            </if>
+            <!-- 判断 isSubmit 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="isSubmit != null and isSubmit != ''">
+                AND sf.is_submit = #{isSubmit} <!--使用表别名 sf 引用 is_submit 列 -->
+            </if>
+            <if test="account != null and account != ''">
+                AND s.account = #{account}
+            </if>
+            <if test="name != null and name != ''">
+                AND s.name = #{name}
+            </if>
+            <if test="sex != null and sex != ''">
+                AND s.sex = #{sex}
+            </if>
+            <if test="phone != null and phone != ''">
+                AND s.phone = #{phone}
+            </if>
+            <if test="email != null and email != ''">
+                AND s.email = #{email}
+            </if>
+        </where>
+        ORDER BY sf.id DESC
+    </select>
+
+    <select id="selectById" parameterType="int" resultMap="StudentFace">
+        <!-- 引入之前定义的查询课程学生相关信息的 SQL 片段 -->
+        <include refid="selectVo"/>
+        <!-- 根据课程学生关联的唯一标识 id 进行筛选 -->
+        WHERE sf.id = #{id}
+        ORDER BY sf.id DESC
+    </select>
+    <select id="selectByUserId" parameterType="int" resultMap="StudentFace">
+        <!-- 引入之前定义的查询课程学生相关信息的 SQL 片段 -->
+        <include refid="selectVo"/>
+        <!-- 根据课程学生关联的唯一标识 id 进行筛选 -->
+        WHERE sf.student_id = #{userId}
+        ORDER BY sf.id DESC
+    </select>
+    <select id="selectByFaceId" parameterType="String" resultMap="StudentFace">
+        <!-- 引入之前定义的查询课程学生相关信息的 SQL 片段 -->
+        <include refid="selectVo"/>
+        <!-- 根据课程学生关联的唯一标识 id 进行筛选 -->
+        WHERE sf.face_id = #{faceId}
+        ORDER BY sf.id DESC
+    </select>
+
+    <update id="updateById" parameterType="com.mc.escommon.entity.statistic.StudentFace">
+        <!-- 指定要更新的表为 student_face -->
+        UPDATE student_face
+        <!--使用 set 标签动态生成要更新的字段 -->
+        <set>
+            <!-- 如果 studentId 不为空，则更新该字段 -->
+            <if test="studentId != null">
+                student_id = #{studentId},
+            </if>
+            <!-- 如果 faceId 不为空，则更新该字段 -->
+            <if test="faceId != null">
+                face_id = #{faceId},
+            </if>
+            <!-- 如果 faceFeature 不为空，则更新该字段 -->
+            <if test="faceFeature != null">
+                face_feature = #{faceFeature},
+            </if>
+            <!-- 如果 facePath 不为空，则更新该字段 -->
+            <if test="facePath != null">
+                face_path = #{facePath},
+            </if>
+            <!-- 如果 idPath 不为空，则更新该字段 -->
+            <if test="idPath != null">
+                id_path = #{idPath},
+            </if>
+            <!-- 如果 provinceId 不为空，则更新该字段 -->
+            <if test="provinceId != null">
+                province_id = #{provinceId},
+            </if>
+            <!-- 如果 cityId 不为空，则更新该字段 -->
+            <if test="cityId != null">
+                city_id = #{cityId},
+            </if>
+            <!-- 如果 areaId 不为空，则更新该字段 -->
+            <if test="areaId != null">
+                area_id = #{areaId},
+            </if>
+            <!-- 如果 universityId 不为空，则更新该字段 -->
+            <if test="universityId != null">
+                university_id = #{universityId},
+            </if>
+            <!-- 如果 collegesId 不为空，则更新该字段 -->
+            <if test="collegesId != null">
+                colleges_id = #{collegesId},
+            </if>
+            <!-- 如果 majorId 不为空，则更新该字段 -->
+            <if test="majorId != null">
+                major_id = #{majorId},
+            </if>
+            <!-- 如果 isSubmit 不为空，则更新该字段 -->
+            <if test="isSubmit != null and isSubmit != ''">
+                is_submit = #{isSubmit},
+            </if>
+        </set>
+        <!-- 根据课程学生关联的唯一标识 id 来确定要更新的记录 -->
+        WHERE id = #{id}
+    </update>
+</mapper>

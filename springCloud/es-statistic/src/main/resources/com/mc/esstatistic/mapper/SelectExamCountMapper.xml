@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mc.esstatistic.mapper.SelectExamCountMapper">
+
+    <select id="selectExamAnswerAll" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM exam_answer
+        WHERE exam_id=#{examId};
+    </select>
+
+    <select id="selectExamAnswerIsMarkAll" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM exam_answer
+        WHERE mark_exams IS NOT NULL
+          AND mark_exams!=''
+          AND exam_id=#{examId};
+    </select>
+
+    <select id="selectExamAnswerNoMarkAll" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM exam_answer
+        WHERE (mark_exams IS NULL OR mark_exams='')
+          AND exam_id=#{examId};
+    </select>
+
+    <select id="selectExamAnswerIsRightSignAll" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM exam_answer
+        WHERE right_sign = '验签成功'
+          AND exam_id=#{examId};
+    </select>
+
+    <select id="selectExamAnswerNoRightSignAll" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM exam_answer
+        WHERE (right_sign != '验签成功' OR right_sign IS NULL)
+          AND exam_id=#{examId};
+    </select>
+
+    <select id="selectExamAnswerIsMarkQuestion" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM exam_answer ea
+                 INNER JOIN exam_paper ep ON ea.paper_id = ep.id
+        WHERE ep.question_type = #{questionType}
+          AND ea.exam_id = #{examId}
+          AND ea.mark_exams IS NOT NULL AND ea.mark_exams!='';
+    </select>
+
+    <select id="selectExamAnswerNoMarkQuestion" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM exam_answer ea
+                 INNER JOIN exam_paper ep ON ea.paper_id = ep.id
+        WHERE ep.question_type = #{questionType}
+          AND ea.exam_id = #{examId}
+          AND (ea.mark_exams IS NULL OR ea.mark_exams='');
+    </select>
+
+    <select id="selectExamAnswerIsRightSignQuestion" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM exam_answer ea
+                 INNER JOIN exam_paper ep ON ea.paper_id = ep.id
+        WHERE ep.question_type = #{questionType}
+          AND ea.exam_id = #{examId}
+          AND ea.right_sign = '验签成功';
+    </select>
+
+    <select id="selectExamAnswerNoRightSignQuestion" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM exam_answer ea
+                 INNER JOIN exam_paper ep ON ea.paper_id = ep.id
+        WHERE ep.question_type = #{questionType}
+          AND ea.exam_id = #{examId}
+          AND (ea.right_sign != '验签成功' OR ea.right_sign IS NULL);
+    </select>
+    <select id="selectExamAnswerIsAnswer" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM exam_answer
+        WHERE exam_id=#{examId}
+          AND student_id=#{studentId};
+    </select>
+    <select id="selectExamAnswerIsAnswerQuestion" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM exam_answer ea
+                 INNER JOIN exam_paper ep ON ea.paper_id = ep.id
+        WHERE ep.question_type = #{questionType}
+        AND ea.exam_id = #{examId}
+          AND student_id=#{studentId};
+    </select>
+    <select id="selectExamPaperAll" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM exam_paper
+        WHERE exam_id=#{examId};
+    </select>
+    <select id="selectExamPaperQuestion" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM exam_paper
+        WHERE exam_id=#{examId}
+        AND question_type=#{questionType};
+    </select>
+    <select id="selectExamCourseNum" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM course_student
+        WHERE course_id=#{courseId}
+        AND is_add=#{isAdd};
+    </select>
+    <select id="selectExamPaperNum" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM exam_paper
+        WHERE exam_id=#{examId};
+    </select>
+    <select id="selectExamAnswerNum" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM exam_answer
+        WHERE exam_id=#{examId};
+    </select>
+
+</mapper>

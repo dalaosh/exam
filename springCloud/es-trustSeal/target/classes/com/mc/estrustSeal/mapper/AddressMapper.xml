@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mc.estrustSeal.mapper.AddressMapper">
+    <resultMap id="ProvincesResult" type="com.mc.escommon.entity.statistic.AddressProvinces">
+        <result property="id" column="id"/>
+        <result property="provinceId" column="province_id"/>
+        <result property="province" column="province"/>
+        <result property="provinceEasy" column="province_easy"/>
+    </resultMap>
+    <resultMap id="CitiesResult" type="com.mc.escommon.entity.statistic.AddressCities">
+        <result property="id" column="id"/>
+        <result property="cityId" column="city_id"/>
+        <result property="city" column="city"/>
+        <result property="provinceId" column="province_id"/>
+    </resultMap>
+    <resultMap id="AreasResult" type="com.mc.escommon.entity.statistic.AddressAreas">
+        <result property="id" column="id"/>
+        <result property="areaId" column="area_id"/>
+        <result property="area" column="area"/>
+        <result property="cityId" column="city_id"/>
+    </resultMap>
+
+    <sql id="selectProvincesVo">
+        select id, province_id, province, province_easy
+        from examsystem.address_provinces
+    </sql>
+    <sql id="selectCitiesVo">
+        select id, city_id, city, province_id
+        from examsystem.address_cities
+    </sql>
+    <sql id="selectAreasVo">
+        select id, area_id, area, city_id
+        from examsystem.address_areas
+    </sql>
+
+    <select id="selectProvinces" parameterType="com.mc.escommon.entity.statistic.AddressProvinces" resultMap="ProvincesResult">
+        <include refid="selectProvincesVo"/>
+    </select>
+    <select id="selectCities" parameterType="com.mc.escommon.entity.statistic.AddressCities" resultMap="CitiesResult">
+        <include refid="selectCitiesVo"/>
+        where province_id=#{provinceId}
+    </select>
+    <select id="selectAreas" parameterType="com.mc.escommon.entity.statistic.AddressAreas" resultMap="AreasResult">
+        <include refid="selectAreasVo"/>
+        where city_id=#{cityId}
+    </select>
+</mapper>

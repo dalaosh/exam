@@ -1,0 +1,631 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mc.esexam.mapper.ExamAnswerMapper">
+    <resultMap id="ExamAnswer" type="com.mc.escommon.entity.exam.ExamAnswer">
+        <!-- 映射 ExamAnswer 实体类自身的属性 -->
+        <result property="id" column="id"/>
+        <result property="examId" column="exam_id"/>
+        <result property="paperId" column="paper_id"/>
+        <result property="studentId" column="student_id"/>
+        <result property="answer" column="answer"/>
+        <result property="markExams" column="mark_exams"/>
+        <result property="ringSign" column="ring_sign"/>
+        <result property="time" column="time"/>
+        <result property="isMarked" column="is_marked"/>
+        <result property="rightSign" column="right_sign"/>
+
+        <!-- 关联映射 ExamManage 对象的属性 -->
+        <association property="examManage" javaType="com.mc.escommon.entity.exam.ExamManage">
+            <!-- 映射 ExamManage 实体类自身的属性 -->
+            <result property="id" column="exam_manage_id"/>
+            <result property="description" column="description"/>
+            <result property="courseId" column="course_id"/>
+            <result property="examDate" column="exam_date"/>
+            <result property="totalTime" column="total_time"/>
+            <result property="totalScore" column="total_score"/>
+            <result property="type" column="type"/>
+            <result property="tips" column="tips"/>
+            <result property="publicKeys" column="public_keys"/>
+            <result property="beginTime" column="em_begin_time"/>
+            <result property="endTime" column="em_end_time"/>
+            <result property="isMarked" column="em_is_marked"/>
+        </association>
+
+        <!-- 关联映射 Course 对象的属性 -->
+        <association property="course" javaType="com.mc.escommon.entity.exam.Course">
+            <!-- 映射 Course 实体类自身的属性 -->
+            <result property="id" column="course_id"/>
+            <result property="teacherId" column="teacher_id"/>
+            <result property="name" column="course_name"/>
+            <result property="beginTime" column="begin_time"/>
+            <result property="endTime" column="end_time"/>
+            <result property="photo" column="course_photo"/>
+            <result property="number" column="number"/>
+            <result property="message" column="message"/>
+        </association>
+
+        <!-- 关联映射 Teacher 对象的属性 -->
+        <association property="teacher" javaType="com.mc.escommon.entity.user.Teacher">
+            <result property="id" column="teacher_id"/>
+            <result property="role" column="role"/>
+            <result property="photo" column="teacher_photo"/>
+            <result property="account" column="account"/>
+            <result property="password" column="password"/>
+            <result property="keySm3" column="key_sm3"/>
+            <result property="email" column="email"/>
+            <result property="name" column="teacher_name"/>
+            <result property="sex" column="sex"/>
+            <result property="phone" column="phone"/>
+            <result property="publicKey" column="public_key"/>
+        </association>
+
+        <!-- 关联映射 Student 对象的属性 -->
+        <association property="student" javaType="com.mc.escommon.entity.user.Student">
+            <id property="id" column="s_id"/>
+            <result property="role" column="s_role"/>
+            <result property="photo" column="s_photo"/>
+            <result property="account" column="s_account"/>
+            <result property="password" column="s_password"/>
+            <result property="keySm3" column="s_key_sm3"/>
+            <result property="email" column="s_email"/>
+            <result property="name" column="s_name"/>
+            <result property="sex" column="s_sex"/>
+            <result property="phone" column="s_phone"/>
+            <result property="publicKey" column="s_public_key"/>
+        </association>
+
+        <!-- 关联映射 ExamPaper 对象的属性 -->
+        <association property="examPaper" javaType="com.mc.escommon.entity.exam.ExamPaper">
+            <result property="id" column="paper_id"/>
+            <result property="examId" column="examId"/>
+            <result property="questionType" column="question_type"/>
+            <result property="questionId" column="question_id"/>
+        </association>
+
+        <!-- 关联映射 QuestionCode 对象的属性 -->
+        <association property="questionCode" javaType="com.mc.escommon.entity.exam.QuestionCode">
+            <!-- 映射 QuestionCode 实体类自身的属性 -->
+            <id property="id" column="qc_id"/>
+            <result property="courseId" column="qc_course_id"/>
+            <result property="question" column="qc_question"/>
+            <result property="answer" column="qc_answer"/>
+            <result property="analysis" column="qc_analysis"/>
+            <result property="score" column="qc_score"/>
+            <result property="level" column="qc_level"/>
+            <result property="section" column="qc_section"/>
+        </association>
+
+        <!-- 关联映射 QuestionFill 对象的属性 -->
+        <association property="questionFill" javaType="com.mc.escommon.entity.exam.QuestionFill">
+            <id property="id" column="qf_id"/>
+            <result property="courseId" column="qf_course_id"/>
+            <result property="question" column="qf_question"/>
+            <result property="answer" column="qf_answer"/>
+            <result property="analysis" column="qf_analysis"/>
+            <result property="score" column="qf_score"/>
+            <result property="level" column="qf_level"/>
+            <result property="section" column="qf_section"/>
+        </association>
+
+        <!-- 关联映射 questionJudge 对象的属性 -->
+        <association property="questionJudge" javaType="com.mc.escommon.entity.exam.QuestionJudge">
+            <id property="id" column="qj_id"/>
+            <result property="courseId" column="qj_course_id"/>
+            <result property="question" column="qj_question"/>
+            <result property="answer" column="qj_answer"/>
+            <result property="analysis" column="qj_analysis"/>
+            <result property="score" column="qj_score"/>
+            <result property="level" column="qj_level"/>
+            <result property="section" column="qj_section"/>
+        </association>
+
+        <!-- 关联映射 QuestionMulti 对象的属性 -->
+        <association property="questionMulti" javaType="com.mc.escommon.entity.exam.QuestionMulti">
+            <id property="id" column="qm_id"/>
+            <result property="courseId" column="qm_course_id"/>
+            <result property="questionType" column="qm_question_type"/>
+            <result property="question" column="qm_question"/>
+            <result property="answerA" column="qm_answerA"/>
+            <result property="answerB" column="qm_answerB"/>
+            <result property="answerC" column="qm_answerC"/>
+            <result property="answerD" column="qm_answerD"/>
+            <result property="rightAnswer" column="qm_rightAnswer"/>
+            <result property="analysis" column="qm_analysis"/>
+            <result property="score" column="qm_score"/>
+            <result property="level" column="qm_level"/>
+            <result property="section" column="qm_section"/>
+        </association>
+
+        <!-- 关联映射 QuestionShortAns 对象的属性 -->
+        <association property="questionShortAns" javaType="com.mc.escommon.entity.exam.QuestionShortAns">
+            <id property="id" column="qs_id"/>
+            <result property="courseId" column="qs_course_id"/>
+            <result property="question" column="qs_question"/>
+            <result property="answer" column="qs_answer"/>
+            <result property="analysis" column="qs_analysis"/>
+            <result property="score" column="qs_score"/>
+            <result property="level" column="qs_level"/>
+            <result property="section" column="qs_section"/>
+        </association>
+    </resultMap>
+
+    <sql id="selectVo">
+        SELECT
+            ea.id,
+            ea.exam_id,
+            ea.paper_id,
+            ea.student_id,
+            ea.answer,
+            ea.mark_exams,
+            ea.ring_sign,
+            ea.time,
+            ea.is_marked,
+            ea.right_sign,
+            em.id AS exam_manage_id,
+            em.description,
+            em.course_id,
+            em.exam_date,
+            em.total_time,
+            em.total_score,
+            em.type,
+            em.tips,
+            em.public_keys,
+            em.is_marked AS em_is_marked,
+            em.begin_time AS em_begin_time,
+            em.end_time AS em_end_time,
+            c.id AS course_id,
+            c.teacher_id,
+            c.name AS course_name,
+            c.begin_time,
+            c.end_time,
+            c.photo AS course_photo,
+            c.number,
+            c.message,
+            t.id AS teacher_id,
+            t.role,
+            t.photo AS teacher_photo,
+            t.account,
+            t.password,
+            t.key_sm3,
+            t.email,
+            t.name AS teacher_name,
+            t.sex,
+            t.phone,
+            t.public_key,
+            s.id AS s_id,
+            s.role AS s_role,
+            s.photo AS s_photo,
+            s.account AS s_account,
+            s.password AS s_password,
+            s.key_sm3 AS s_key_sm3,
+            s.email AS s_email,
+            s.name AS s_name,
+            s.sex AS s_sex,
+            s.phone AS s_phone,
+            s.public_key AS s_public_key,
+            ep.id AS paper_id,
+            ep.exam_id AS examId,
+            ep.question_type,
+            ep.question_id,
+            qc.id AS qc_id,
+            qc.course_id AS qc_course_id,
+            qc.question AS qc_question,
+            qc.answer AS qc_answer,
+            qc.analysis AS qc_analysis,
+            qc.score AS qc_score,
+            qc.level AS qc_level,
+            qc.section AS qc_section,
+            qf.id AS qf_id,
+            qf.course_id AS qf_course_id,
+            qf.question AS qf_question,
+            qf.answer AS qf_answer,
+            qf.analysis AS qf_analysis,
+            qf.score AS qf_score,
+            qf.level AS qf_level,
+            qf.section AS qf_section,
+            qj.id AS qj_id,
+            qj.course_id AS qj_course_id,
+            qj.question AS qj_question,
+            qj.answer AS qj_answer,
+            qj.analysis AS qj_analysis,
+            qj.score AS qj_score,
+            qj.level AS qj_level,
+            qj.section AS qj_section,
+            qm.id AS qm_id,
+            qm.course_id AS qm_course_id,
+            qm.question_type AS qm_question_type,
+            qm.question AS qm_question,
+            qm.answerA AS qm_answerA,
+            qm.answerB AS qm_answerB,
+            qm.answerC AS qm_answerC,
+            qm.answerD AS qm_answerD,
+            qm.rightAnswer AS qm_rightAnswer,
+            qm.analysis AS qm_analysis,
+            qm.score AS qm_score,
+            qm.level AS qm_level,
+            qm.section AS qm_section,
+            qs.id AS qs_id,
+            qs.course_id AS qs_course_id,
+            qs.question AS qs_question,
+            qs.answer AS qs_answer,
+            qs.analysis AS qs_analysis,
+            qs.score AS qs_score,
+            qs.level AS qs_level,
+            qs.section AS qs_section
+        FROM
+            exam_answer ea
+                LEFT JOIN
+            exam_manage em ON ea.exam_id = em.id
+                LEFT JOIN
+            course c ON em.course_id = c.id
+                LEFT JOIN
+            teacher t ON c.teacher_id = t.id
+                LEFT JOIN
+            student s ON ea.student_id = s.id
+                LEFT JOIN
+            exam_paper ep ON ea.paper_id = ep.id
+                LEFT JOIN
+            question_code qc ON ep.question_id = qc.id AND ep.question_type = 'code'
+                LEFT JOIN
+            question_fill qf ON ep.question_id = qf.id AND ep.question_type = 'fill'
+                LEFT JOIN
+            question_judge qj ON ep.question_id = qj.id AND ep.question_type = 'judge'
+                LEFT JOIN
+            question_multi qm ON ep.question_id = qm.id AND ep.question_type = 'multi'
+                LEFT JOIN
+            question_shortAns qs ON ep.question_id = qs.id AND ep.question_type = 'shortAns'
+    </sql>
+
+    <insert id="insert" parameterType="com.mc.escommon.entity.exam.ExamAnswer" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO exam_answer
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="examId != null">exam_id,</if>
+            <if test="paperId != null">paper_id,</if>
+            <if test="studentId != null">student_id,</if>
+            <if test="answer != null and answer != ''">answer,</if>
+            <if test="markExams != null">mark_exams,</if>
+            <if test="ringSign != null and ringSign != ''">ring_sign,</if>
+            <if test="time != null">time,</if>
+            <if test="isMarked != null and isMarked != ''">is_marked,</if>
+            <if test="rightSign != null and rightSign != ''">right_sign,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="examId != null">#{examId},</if>
+            <if test="paperId != null">#{paperId},</if>
+            <if test="studentId != null">#{studentId},</if>
+            <if test="answer != null and answer != ''">#{answer},</if>
+            <if test="markExams != null">#{markExams},</if>
+            <if test="ringSign != null and ringSign != ''">#{ringSign},</if>
+            <if test="time != null">#{time},</if>
+            <if test="isMarked != null and isMarked != ''">#{isMarked},</if>
+            <if test="rightSign != null and rightSign != ''">#{rightSign},</if>
+        </trim>
+    </insert>
+
+    <!-- 单个删除 -->
+    <delete id="deleteById" parameterType="int">
+        DELETE FROM exam_answer WHERE id = #{id}
+    </delete>
+
+    <!-- 批量删除 -->
+    <delete id="deleteByIds" parameterType="int[]">
+        DELETE FROM exam_answer WHERE id IN
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectAll" parameterType="com.mc.escommon.entity.exam.ExamAnswer" resultMap="ExamAnswer">
+        <!-- 引入之前定义的 SQL 片段 -->
+        <include refid="selectVo"/>
+        <!-- 使用 where 标签来动态生成 WHERE 子句 -->
+        <where>
+            <!-- 判断 id 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="id != null">
+                AND ea.id = #{id} <!-- 使用表别名 ea 引用 id 列 -->
+            </if>
+            <!-- 判断 questionType 是否不为空且不为空字符串，如果满足条件则添加对应的查询条件 -->
+            <if test="questionType != null and questionType != ''">
+                AND ep.question_type = #{questionType} <!-- 使用表别名 ep 引用 question_type 列 -->
+            </if>
+            <!-- 判断 examId 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="examId != null">
+                AND ea.exam_id = #{examId} <!-- 使用表别名 ea 引用 exam_id 列 -->
+            </if>
+            <!-- 判断 paperId 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="paperId != null">
+                AND ea.paper_id = #{paperId} <!-- 使用表别名 ea 引用 paper_id 列 -->
+            </if>
+            <!-- 判断 studentId 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="studentId != null">
+                AND ea.student_id = #{studentId} <!-- 使用表别名 ea 引用 student_id 列 -->
+            </if>
+            <!-- 判断 answer 是否不为空且不为空字符串，如果满足条件则添加对应的查询条件 -->
+            <if test="answer != null and answer != ''">
+                AND ea.answer = #{answer} <!-- 使用表别名 ea 引用 answer 列 -->
+            </if>
+            <!-- 判断 markExams 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="markExams != null">
+                AND ea.mark_exams = #{markExams} <!-- 使用表别名 ea 引用 mark_exams 列 -->
+            </if>
+            <!-- 判断 ringSign 是否不为空且不为空字符串，如果满足条件则添加对应的查询条件 -->
+            <if test="ringSign != null and ringSign != ''">
+                AND ea.ring_sign = #{ringSign} <!-- 使用表别名 ea 引用 ring_sign 列 -->
+            </if>
+            <!-- 判断 time 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="time != null">
+                AND ea.time = #{time} <!-- 使用表别名 ea 引用 time 列 -->
+            </if>
+            <if test="isMarked != null and isMarked != ''">
+                AND ea.is_marked = #{isMarked} <!-- 使用表别名 ea 引用 ring_sign 列 -->
+            </if>
+            <if test="rightSign != null and rightSign != ''">
+                AND ea.right_sign = #{rightSign} <!-- 使用表别名 ea 引用 ring_sign 列 -->
+            </if>
+        </where>
+        ORDER BY ea.id ASC
+    </select>
+
+    <select id="selectById" parameterType="int" resultMap="ExamAnswer">
+        <!-- 引入之前定义的查询考试答案相关信息的 SQL 片段 -->
+        <include refid="selectVo"/>
+        <!-- 根据考试答案的唯一标识 id 进行筛选 -->
+        WHERE ea.id = #{id}
+        ORDER BY ea.id ASC
+    </select>
+    <select id="selectTeacherById" resultType="com.mc.escommon.entity.user.Teacher">
+        select id, role, photo, account, password, key_sm3, email, name, sex, phone, public_key AS publicKey
+        from teacher
+        where id=#{id}
+    </select>
+    <select id="selectNoMark" resultMap="ExamAnswer">
+        <!-- 引入之前定义的 SQL 片段 -->
+        <include refid="selectVo"/>
+        <!-- 使用 where 标签来动态生成 WHERE 子句 -->
+        <where>
+            <!-- 判断 id 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="id != null">
+                AND ea.id = #{id} <!-- 使用表别名 ea 引用 id 列 -->
+            </if>
+            <!-- 判断 questionType 是否不为空且不为空字符串，如果满足条件则添加对应的查询条件 -->
+            <if test="questionType != null and questionType != ''">
+                AND ep.question_type = #{questionType} <!-- 使用表别名 ep 引用 question_type 列 -->
+            </if>
+            <!-- 判断 examId 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="examId != null">
+                AND ea.exam_id = #{examId} <!-- 使用表别名 ea 引用 exam_id 列 -->
+            </if>
+            <!-- 判断 paperId 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="paperId != null">
+                AND ea.paper_id = #{paperId} <!-- 使用表别名 ea 引用 paper_id 列 -->
+            </if>
+            <!-- 判断 studentId 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="studentId != null">
+                AND ea.student_id = #{studentId} <!-- 使用表别名 ea 引用 student_id 列 -->
+            </if>
+            <!-- 判断 answer 是否不为空且不为空字符串，如果满足条件则添加对应的查询条件 -->
+            <if test="answer != null and answer != ''">
+                AND ea.answer = #{answer} <!-- 使用表别名 ea 引用 answer 列 -->
+            </if>
+            <!-- 判断 markExams 是否不为空，如果不为空则添加对应的查询条件 -->
+<!--            <if test="markExams != null">-->
+<!--                AND ea.mark_exams = #{markExams} &lt;!&ndash; 使用表别名 ea 引用 mark_exams 列 &ndash;&gt;-->
+
+<!--            </if>-->
+            <!-- 判断 ringSign 是否不为空且不为空字符串，如果满足条件则添加对应的查询条件 -->
+            <if test="ringSign != null and ringSign != ''">
+                AND ea.ring_sign = #{ringSign} <!-- 使用表别名 ea 引用 ring_sign 列 -->
+            </if>
+            <!-- 判断 time 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="time != null">
+                AND ea.time = #{time} <!-- 使用表别名 ea 引用 time 列 -->
+            </if>
+            <if test="isMarked != null and isMarked != ''">
+                AND ea.is_marked = #{isMarked} <!-- 使用表别名 ea 引用 ring_sign 列 -->
+            </if>
+            <if test="rightSign != null and rightSign != ''">
+                AND ea.right_sign = #{rightSign} <!-- 使用表别名 ea 引用 ring_sign 列 -->
+            </if>
+            AND (ea.mark_exams IS NULL OR ea.mark_exams='')
+        </where>
+        ORDER BY ea.id ASC
+    </select>
+    <select id="selectIsMark" resultMap="ExamAnswer">
+        <!-- 引入之前定义的 SQL 片段 -->
+        <include refid="selectVo"/>
+        <!-- 使用 where 标签来动态生成 WHERE 子句 -->
+        <where>
+            <!-- 判断 id 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="id != null">
+                AND ea.id = #{id} <!-- 使用表别名 ea 引用 id 列 -->
+            </if>
+            <!-- 判断 questionType 是否不为空且不为空字符串，如果满足条件则添加对应的查询条件 -->
+            <if test="questionType != null and questionType != ''">
+                AND ep.question_type = #{questionType} <!-- 使用表别名 ep 引用 question_type 列 -->
+            </if>
+            <!-- 判断 examId 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="examId != null">
+                AND ea.exam_id = #{examId} <!-- 使用表别名 ea 引用 exam_id 列 -->
+            </if>
+            <!-- 判断 paperId 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="paperId != null">
+                AND ea.paper_id = #{paperId} <!-- 使用表别名 ea 引用 paper_id 列 -->
+            </if>
+            <!-- 判断 studentId 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="studentId != null">
+                AND ea.student_id = #{studentId} <!-- 使用表别名 ea 引用 student_id 列 -->
+            </if>
+            <!-- 判断 answer 是否不为空且不为空字符串，如果满足条件则添加对应的查询条件 -->
+            <if test="answer != null and answer != ''">
+                AND ea.answer = #{answer} <!-- 使用表别名 ea 引用 answer 列 -->
+            </if>
+            <!-- 判断 markExams 是否不为空，如果不为空则添加对应的查询条件 -->
+<!--            <if test="markExams != null">-->
+<!--                AND ea.mark_exams = #{markExams} &lt;!&ndash; 使用表别名 ea 引用 mark_exams 列 &ndash;&gt;-->
+<!--            </if>-->
+            <!-- 判断 ringSign 是否不为空且不为空字符串，如果满足条件则添加对应的查询条件 -->
+            <if test="ringSign != null and ringSign != ''">
+                AND ea.ring_sign = #{ringSign} <!-- 使用表别名 ea 引用 ring_sign 列 -->
+            </if>
+            <!-- 判断 time 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="time != null">
+                AND ea.time = #{time} <!-- 使用表别名 ea 引用 time 列 -->
+            </if>
+            <if test="isMarked != null and isMarked != ''">
+                AND ea.is_marked = #{isMarked} <!-- 使用表别名 ea 引用 ring_sign 列 -->
+            </if>
+            <if test="rightSign != null and rightSign != ''">
+                AND ea.right_sign = #{rightSign} <!-- 使用表别名 ea 引用 ring_sign 列 -->
+            </if>
+            AND ea.mark_exams IS NOT NULL
+        </where>
+        ORDER BY ea.id ASC
+    </select>
+    <select id="selectNoRightSign" resultMap="ExamAnswer">
+        <!-- 引入之前定义的 SQL 片段 -->
+        <include refid="selectVo"/>
+        <!-- 使用 where 标签来动态生成 WHERE 子句 -->
+        <where>
+            <!-- 判断 id 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="id != null">
+                AND ea.id = #{id} <!-- 使用表别名 ea 引用 id 列 -->
+            </if>
+            <!-- 判断 questionType 是否不为空且不为空字符串，如果满足条件则添加对应的查询条件 -->
+            <if test="questionType != null and questionType != ''">
+                AND ep.question_type = #{questionType} <!-- 使用表别名 ep 引用 question_type 列 -->
+            </if>
+            <!-- 判断 examId 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="examId != null">
+                AND ea.exam_id = #{examId} <!-- 使用表别名 ea 引用 exam_id 列 -->
+            </if>
+            <!-- 判断 paperId 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="paperId != null">
+                AND ea.paper_id = #{paperId} <!-- 使用表别名 ea 引用 paper_id 列 -->
+            </if>
+            <!-- 判断 studentId 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="studentId != null">
+                AND ea.student_id = #{studentId} <!-- 使用表别名 ea 引用 student_id 列 -->
+            </if>
+            <!-- 判断 answer 是否不为空且不为空字符串，如果满足条件则添加对应的查询条件 -->
+            <if test="answer != null and answer != ''">
+                AND ea.answer = #{answer} <!-- 使用表别名 ea 引用 answer 列 -->
+            </if>
+            <!-- 判断 markExams 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="markExams != null">
+                AND ea.mark_exams = #{markExams} <!-- 使用表别名 ea 引用 mark_exams 列 -->
+            </if>
+            <!-- 判断 ringSign 是否不为空且不为空字符串，如果满足条件则添加对应的查询条件 -->
+            <if test="ringSign != null and ringSign != ''">
+                AND ea.ring_sign = #{ringSign} <!-- 使用表别名 ea 引用 ring_sign 列 -->
+            </if>
+            <!-- 判断 time 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="time != null">
+                AND ea.time = #{time} <!-- 使用表别名 ea 引用 time 列 -->
+            </if>
+            <if test="isMarked != null and isMarked != ''">
+                AND ea.is_marked = #{isMarked} <!-- 使用表别名 ea 引用 ring_sign 列 -->
+            </if>
+<!--            <if test="rightSign != null and rightSign != ''">-->
+<!--                AND ea.right_sign = #{rightSign} &lt;!&ndash; 使用表别名 ea 引用 ring_sign 列 &ndash;&gt;-->
+<!--            </if>-->
+            AND (ea.right_sign != '验签成功' OR ea.right_sign IS NULL)
+        </where>
+        ORDER BY ea.id ASC
+    </select>
+    <select id="selectIsRightSign" resultMap="ExamAnswer">
+        <!-- 引入之前定义的 SQL 片段 -->
+        <include refid="selectVo"/>
+        <!-- 使用 where 标签来动态生成 WHERE 子句 -->
+        <where>
+            <!-- 判断 id 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="id != null">
+                AND ea.id = #{id} <!-- 使用表别名 ea 引用 id 列 -->
+            </if>
+            <!-- 判断 questionType 是否不为空且不为空字符串，如果满足条件则添加对应的查询条件 -->
+            <if test="questionType != null and questionType != ''">
+                AND ep.question_type = #{questionType} <!-- 使用表别名 ep 引用 question_type 列 -->
+            </if>
+            <!-- 判断 examId 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="examId != null">
+                AND ea.exam_id = #{examId} <!-- 使用表别名 ea 引用 exam_id 列 -->
+            </if>
+            <!-- 判断 paperId 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="paperId != null">
+                AND ea.paper_id = #{paperId} <!-- 使用表别名 ea 引用 paper_id 列 -->
+            </if>
+            <!-- 判断 studentId 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="studentId != null">
+                AND ea.student_id = #{studentId} <!-- 使用表别名 ea 引用 student_id 列 -->
+            </if>
+            <!-- 判断 answer 是否不为空且不为空字符串，如果满足条件则添加对应的查询条件 -->
+            <if test="answer != null and answer != ''">
+                AND ea.answer = #{answer} <!-- 使用表别名 ea 引用 answer 列 -->
+            </if>
+            <!-- 判断 markExams 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="markExams != null">
+                AND ea.mark_exams = #{markExams} <!-- 使用表别名 ea 引用 mark_exams 列 -->
+            </if>
+            <!-- 判断 ringSign 是否不为空且不为空字符串，如果满足条件则添加对应的查询条件 -->
+            <if test="ringSign != null and ringSign != ''">
+                AND ea.ring_sign = #{ringSign} <!-- 使用表别名 ea 引用 ring_sign 列 -->
+            </if>
+            <!-- 判断 time 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="time != null">
+                AND ea.time = #{time} <!-- 使用表别名 ea 引用 time 列 -->
+            </if>
+            <if test="isMarked != null and isMarked != ''">
+                AND ea.is_marked = #{isMarked} <!-- 使用表别名 ea 引用 ring_sign 列 -->
+            </if>
+<!--            <if test="rightSign != null and rightSign != ''">-->
+<!--                AND ea.right_sign = #{rightSign} &lt;!&ndash; 使用表别名 ea 引用 ring_sign 列 &ndash;&gt;-->
+<!--            </if>-->
+            AND ea.right_sign = '验签成功'
+        </where>
+        ORDER BY ea.id ASC
+    </select>
+
+    <update id="updateById" parameterType="com.mc.escommon.entity.exam.ExamAnswer">
+        <!-- 指定要更新的表为 exam_answer -->
+        UPDATE exam_answer
+        <!-- 使用 set 标签动态生成要更新的字段 -->
+        <set>
+            <!-- 如果 examId 不为空，则更新该字段 -->
+            <if test="examId != null">
+                exam_id = #{examId},
+            </if>
+            <!-- 如果 paperId 不为空，则更新该字段 -->
+            <if test="paperId != null">
+                paper_id = #{paperId},
+            </if>
+            <!-- 如果 studentId 不为空，则更新该字段 -->
+            <if test="studentId != null">
+                student_id = #{studentId},
+            </if>
+            <!-- 如果 answer 不为空且不为空字符串，则更新该字段 -->
+            <if test="answer != null and answer != ''">
+                answer = #{answer},
+            </if>
+            <!-- 如果 markExams 不为空，则更新该字段 -->
+            <if test="markExams != null">
+                mark_exams = #{markExams},
+            </if>
+            <!-- 如果 ringSign 不为空且不为空字符串，则更新该字段 -->
+            <if test="ringSign != null and ringSign != ''">
+                ring_sign = #{ringSign},
+            </if>
+            <!-- 如果 ringSign 不为空且不为空字符串，则更新该字段 -->
+            <if test="isMarked != null and isMarked != ''">
+                is_marked = #{isMarked},
+            </if>
+            <!-- 如果 time 不为空，则更新该字段 -->
+            <if test="time != null and time != ''">
+                time = #{time},
+            </if>
+            <if test="rightSign != null and rightSign != ''">
+                right_sign = #{rightSign},
+            </if>
+        </set>
+        <!-- 根据考试答案的唯一标识 id 来确定要更新的记录 -->
+        WHERE id = #{id}
+    </update>
+</mapper>

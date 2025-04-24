@@ -1,0 +1,63 @@
+spring:
+  application:
+    name: es-mail
+  config:
+    import: nacos:es-mail-dev.yml
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+      config:
+        server-addr: localhost:8848
+        file-extension: yml
+  # 邮箱配置
+  mail:
+    # POP3服务器地址为“pop.qq.com”，SMTP服务器地址为“smtp.qq.com”
+    # 注：
+    # 1、SMTP服务器需要身份验证。
+    # 2、如果是设置POP3和SMTP的SSL加密方式，则端口如下：
+    #    1）POP3服务器（端口995）；
+    #    2）SMTP服务器（端口465或587）。
+    host: smtp.qq.com
+    # qq邮箱账号
+    username: 2563622159@qq.com
+    # 授权密码
+    password: nydwuihfmkktecff
+    # 端口号
+    port: 465
+    default-encoding: utf-8
+    properties:
+      mail:
+        smtp:
+          ssl:
+            enable: true #一定要开启ssl,不然会503 验证失败的
+
+
+springdoc:
+  api-docs:
+    enabled: true # 开启OpenApi接口
+    path: v3/api-docs  # 自定义路径，默认为 "/v3/api-docs"
+  swagger-ui:
+    enabled: true # 开启swagger界面，依赖OpenApi，需要OpenApi同时开启
+    path: /es-mail/swagger-ui/index.html # 自定义路径，默认为"/swagger-ui/index.html"
+    configUrl: es-mail/v3/api-docs/swagger-config
+    urls:
+      - name: es-mail
+        url: v3/api-docs
+
+knife4j:
+  gateway:
+    enabled: true
+    # 指定服务发现的模式聚合微服务文档，并且是默认`default`分组
+    strategy: discover
+    discover:
+      enabled: true
+      # 指定版本号(Swagger2|OpenAPI3)
+      version : openapi3
+      # 需要排除的微服务(eg:网关服务)
+      excluded-services:
+        - gateway-service
+  # 是否启用CORS跨域支持
+  cors: true
+server:
+  port: 9081

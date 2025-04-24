@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mc.esinfo.mapper.NewsMapper">
+    <!-- 定义结果映射，将数据库查询结果映射到 Java 对象 com.mc.escommon.entity.info.News 上 -->
+    <resultMap type="com.mc.escommon.entity.info.News" id="NewsResult">
+        <!-- 主键映射 -->
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="name" column="name"/>
+        <result property="content" column="content"/>
+        <result property="time" column="time"/>
+        <!-- 关联映射，将新闻关联的管理员信息映射到 News 对象的 admin 属性上 -->
+        <association property="admin" javaType="com.mc.escommon.entity.user.Admin">
+            <id property="id" column="admin_id"/>
+            <result property="role" column="admin_role"/>
+            <result property="photo" column="photo"/>
+            <result property="account" column="account"/>
+            <result property="password" column="password"/>
+            <result property="keySm3" column="key_sm3"/>
+            <result property="email" column="email"/>
+            <result property="name" column="admin_name"/>
+            <result property="sex" column="sex"/>
+            <result property="phone" column="phone"/>
+        </association>
+    </resultMap>
+
+    <!-- 定义可复用的 SQL 片段，用于查询新闻的基本信息 -->
+    <sql id="selectNewsVo">
+        SELECT
+            n.id,
+            n.user_id,
+            n.name,
+            n.content,
+            n.time,
+            a.id AS admin_id,
+            a.role AS admin_role,
+            a.photo,
+            a.account,
+            a.password,
+            a.key_sm3,
+            a.email,
+            a.name AS admin_name,
+            a.sex,
+            a.phone
+        FROM
+            system_news n
+                LEFT JOIN
+            admin a ON n.user_id = a.id
+    </sql>
+
+    <!-- 增加新闻记录 -->
+    <insert id="insert" parameterType="com.mc.escommon.entity.info.News" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO system_news
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="content != null and content != ''">content,</if>
+            <if test="time != null">time</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="content != null and content != ''">#{content},</if>
+            <if test="time != null">#{time}</if>
+        </trim>
+    </insert>
+
+    <!-- 单个删除新闻记录 -->
+    <delete id="deleteById" parameterType="int">
+        DELETE FROM system_news WHERE id = #{id}
+    </delete>
+
+    <!-- 批量删除新闻记录 -->
+    <delete id="deleteByIds" parameterType="java.util.List">
+        DELETE FROM system_news WHERE id IN
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 根据条件查找新闻记录 -->
+    <select id="selectAll" parameterType="com.mc.escommon.entity.info.News" resultMap="NewsResult">
+        <include refid="selectNewsVo"/>
+        <where>
+            <if test="id != null">
+                AND n.id = #{id}
+            </if>
+            <if test="userId != null">
+                AND n.user_id = #{userId}
+            </if>
+            <if test="name != null and name != ''">
+                AND n.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="content != null and content != ''">
+                AND n.content LIKE CONCAT('%', #{content}, '%')
+            </if>
+            <if test="time != null">
+                AND n.time = #{time}
+            </if>
+        </where>
+        <!-- 添加按时间降序排序的逻辑 -->
+        ORDER BY n.time DESC
+    </select>
+
+    <!-- 根据 id 查询新闻记录 -->
+    <select id="selectById" parameterType="int" resultMap="NewsResult">
+        <include refid="selectNewsVo"/>
+        WHERE n.id = #{id}
+    </select>
+
+    <!-- 修改新闻记录 -->
+    <update id="updateById" parameterType="com.mc.escommon.entity.info.News">
+        UPDATE system_news
+        <set>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="content != null and content != ''">content = #{content},</if>
+            <if test="time != null">time = #{time},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+</mapper>

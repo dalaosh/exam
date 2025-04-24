@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mc.esexam.mapper.CourseStudentMapper">
+    <resultMap id="CourseStudent" type="com.mc.escommon.entity.exam.CourseStudent">
+        <!-- 映射 CourseStudent 实体类自身的属性 -->
+        <id property="id" column="cs_id"/>
+        <result property="courseId" column="cs_course_id"/>
+        <result property="studentId" column="cs_student_id"/>
+        <result property="isAdd" column="cs_is_add"/>
+
+        <!-- 关联映射 Course 对象的属性 -->
+        <association property="course" javaType="com.mc.escommon.entity.exam.Course">
+            <id property="id" column="c_id"/>
+            <result property="teacherId" column="c_teacher_id"/>
+            <result property="name" column="c_name"/>
+            <result property="beginTime" column="c_begin_time"/>
+            <result property="endTime" column="c_end_time"/>
+            <result property="photo" column="c_photo"/>
+            <result property="number" column="c_number"/>
+            <result property="message" column="c_message"/>
+        </association>
+
+        <!-- 关联映射 Student 对象的属性 -->
+        <association property="student" javaType="com.mc.escommon.entity.user.Student">
+            <id property="id" column="s_id"/>
+            <result property="role" column="s_role"/>
+            <result property="photo" column="s_photo"/>
+            <result property="account" column="s_account"/>
+            <result property="password" column="s_password"/>
+            <result property="keySm3" column="s_key_sm3"/>
+            <result property="email" column="s_email"/>
+            <result property="name" column="s_name"/>
+            <result property="sex" column="s_sex"/>
+            <result property="phone" column="s_phone"/>
+            <result property="publicKey" column="s_public_key"/>
+        </association>
+
+        <!-- 关联映射 Teacher 对象的属性 -->
+        <association property="teacher" javaType="com.mc.escommon.entity.user.Teacher">
+            <id property="id" column="t_id"/>
+            <result property="role" column="t_role"/>
+            <result property="photo" column="t_photo"/>
+            <result property="account" column="t_account"/>
+            <result property="password" column="t_password"/>
+            <result property="keySm3" column="t_key_sm3"/>
+            <result property="email" column="t_email"/>
+            <result property="name" column="t_name"/>
+            <result property="sex" column="t_sex"/>
+            <result property="phone" column="t_phone"/>
+            <result property="publicKey" column="t_public_key"/>
+        </association>
+    </resultMap>
+
+    <sql id="selectVo">
+        SELECT
+            cs.id AS cs_id,
+            cs.course_id AS cs_course_id,
+            cs.student_id AS cs_student_id,
+            cs.is_add AS cs_is_add,
+            c.id AS c_id,
+            c.teacher_id AS c_teacher_id,
+            c.name AS c_name,
+            c.begin_time AS c_begin_time,
+            c.end_time AS c_end_time,
+            c.photo AS c_photo,
+            c.number AS c_number,
+            c.message AS c_message,
+            s.id AS s_id,
+            s.role AS s_role,
+            s.photo AS s_photo,
+            s.account AS s_account,
+            s.password AS s_password,
+            s.key_sm3 AS s_key_sm3,
+            s.email AS s_email,
+            s.name AS s_name,
+            s.sex AS s_sex,
+            s.phone AS s_phone,
+            s.public_key AS s_public_key,
+            t.id AS t_id,
+            t.role AS t_role,
+            t.photo AS t_photo,
+            t.account AS t_account,
+            t.password AS t_password,
+            t.key_sm3 AS t_key_sm3,
+            t.email AS t_email,
+            t.name AS t_name,
+            t.sex AS t_sex,
+            t.phone AS t_phone,
+            t.public_key AS t_public_key
+        FROM
+            course_student cs
+                LEFT JOIN
+            course c ON cs.course_id = c.id
+                LEFT JOIN
+            student s ON cs.student_id = s.id
+                LEFT JOIN
+            teacher t ON c.teacher_id = t.id
+    </sql>
+
+    <insert id="insert" parameterType="com.mc.escommon.entity.exam.CourseStudent" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO course_student
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="courseId != null">course_id,</if>
+            <if test="studentId != null">student_id,</if>
+            <if test="isAdd != null">is_add</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="courseId != null">#{courseId},</if>
+            <if test="studentId != null">#{studentId},</if>
+            <if test="isAdd != null and isAdd != ''">#{isAdd}</if>
+        </trim>
+    </insert>
+
+    <!-- 单个删除 -->
+    <delete id="deleteById" parameterType="int">
+        DELETE FROM course_student WHERE id = #{id}
+    </delete>
+
+    <!-- 批量删除 -->
+    <delete id="deleteByIds" parameterType="int[]">
+        DELETE FROM course_student WHERE id IN
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectAll" parameterType="com.mc.escommon.entity.exam.CourseStudent" resultMap="CourseStudent">
+        <!-- 引入之前定义的 SQL 片段 -->
+        <include refid="selectVo"/>
+        <!-- 使用 where 标签来动态生成 WHERE 子句 -->
+        <where>
+            <!-- 判断 id 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="id != null">
+                AND cs.id = #{id} <!-- 使用表别名 cs 引用 id 列 -->
+            </if>
+            <!-- 判断 courseId 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="courseId != null">
+                AND cs.course_id = #{courseId} <!-- 使用表别名 cs 引用 course_id 列 -->
+            </if>
+            <!-- 判断 studentId 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="studentId != null">
+                AND cs.student_id = #{studentId} <!-- 使用表别名 cs 引用 student_id 列 -->
+            </if>
+            <!-- 判断 isAdd 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="isAdd != null and isAdd != ''">
+                AND cs.is_add = #{isAdd} <!-- 使用表别名 cs 引用 is_add 列 -->
+            </if>
+        </where>
+        ORDER BY cs.id DESC
+    </select>
+
+    <select id="selectById" parameterType="int" resultMap="CourseStudent">
+        <!-- 引入之前定义的查询课程学生相关信息的 SQL 片段 -->
+        <include refid="selectVo"/>
+        <!-- 根据课程学生关联的唯一标识 id 进行筛选 -->
+        WHERE cs.id = #{id}
+        ORDER BY cs.id DESC
+    </select>
+
+    <update id="updateById" parameterType="com.mc.escommon.entity.exam.CourseStudent">
+        <!-- 指定要更新的表为 course_student -->
+        UPDATE course_student
+        <!-- 使用 set 标签动态生成要更新的字段 -->
+        <set>
+            <!-- 如果 courseId 不为空，则更新该字段 -->
+            <if test="courseId != null">
+                course_id = #{courseId},
+            </if>
+            <!-- 如果 studentId 不为空，则更新该字段 -->
+            <if test="studentId != null">
+                student_id = #{studentId},
+            </if>
+            <!-- 如果 isAdd 不为空，则更新该字段 -->
+            <if test="isAdd != null and isAdd != ''">
+                is_add = #{isAdd},
+            </if>
+        </set>
+        <!-- 根据课程学生关联的唯一标识 id 来确定要更新的记录 -->
+        WHERE id = #{id}
+    </update>
+</mapper>

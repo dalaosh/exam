@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mc.estrustSeal.mapper.UniversityCollegeMajorMapper">
+
+    <!-- 实体类映射 - 学校（仅修改column别名） -->
+    <resultMap id="SchoolsUniversity" type="com.mc.escommon.entity.statistic.SchoolsUniversity">
+        <result property="id" column="su_id"/>
+        <result property="universityName" column="su_university_name"/>
+        <result property="provinceId" column="su_province_id"/>
+        <result property="cityId" column="su_city_id"/>
+        <result property="areaId" column="su_area_id"/>
+        <result property="address" column="su_address"/>
+        <association property="addressProvinces" javaType="com.mc.escommon.entity.statistic.AddressProvinces">
+            <result property="id" column="ap_id"/>
+            <result property="provinceId" column="ap_province_id"/>
+            <result property="province" column="ap_province"/>
+            <result property="provinceEasy" column="ap_province_easy"/>
+        </association>
+        <association property="addressCities" javaType="com.mc.escommon.entity.statistic.AddressCities">
+            <result property="id" column="ac_id"/>
+            <result property="cityId" column="ac_city_id"/>
+            <result property="city" column="ac_city"/>
+            <result property="provinceId" column="ac_province_id"/>
+        </association>
+        <association property="addressAreas" javaType="com.mc.escommon.entity.statistic.AddressAreas">
+            <result property="id" column="aa_id"/>
+            <result property="areaId" column="aa_area_id"/>
+            <result property="area" column="aa_area"/>
+            <result property="cityId" column="aa_city_id"/>
+        </association>
+    </resultMap>
+
+    <!-- 实体类映射 - 学院（仅修改column别名） -->
+    <resultMap id="schoolsColleges" type="com.mc.escommon.entity.statistic.SchoolsColleges">
+        <result property="id" column="sc_id"/>
+        <result property="collegesName" column="sc_colleges_name"/>
+        <result property="universityId" column="sc_university_id"/>
+        <association property="schoolsUniversity" javaType="com.mc.escommon.entity.statistic.SchoolsUniversity">
+            <result property="id" column="su_id"/>
+            <result property="universityName" column="su_university_name"/>
+            <result property="provinceId" column="su_province_id"/>
+            <result property="cityId" column="su_city_id"/>
+            <result property="areaId" column="su_area_id"/>
+            <result property="address" column="su_address"/>
+        </association>
+        <association property="addressProvinces" javaType="com.mc.escommon.entity.statistic.AddressProvinces">
+            <result property="id" column="ap_id"/>
+            <result property="provinceId" column="ap_province_id"/>
+            <result property="province" column="ap_province"/>
+            <result property="provinceEasy" column="ap_province_easy"/>
+        </association>
+        <association property="addressCities" javaType="com.mc.escommon.entity.statistic.AddressCities">
+            <result property="id" column="ac_id"/>
+            <result property="cityId" column="ac_city_id"/>
+            <result property="city" column="ac_city"/>
+            <result property="provinceId" column="ac_province_id"/>
+        </association>
+        <association property="addressAreas" javaType="com.mc.escommon.entity.statistic.AddressAreas">
+            <result property="id" column="aa_id"/>
+            <result property="areaId" column="aa_area_id"/>
+            <result property="area" column="aa_area"/>
+            <result property="cityId" column="aa_city_id"/>
+        </association>
+    </resultMap>
+
+    <!-- 实体类映射 - 专业（仅修改column别名） -->
+    <resultMap id="SchoolsMajor" type="com.mc.escommon.entity.statistic.SchoolsMajor">
+        <result property="id" column="sm_class_id"/>
+        <result property="majorName" column="sm_major_name"/>
+        <result property="collegesId" column="sm_colleges_id"/>
+        <association property="schoolsColleges" javaType="com.mc.escommon.entity.statistic.SchoolsColleges">
+            <result property="id" column="sc_id"/>
+            <result property="collegesName" column="sc_colleges_name"/>
+            <result property="universityId" column="sc_university_id"/>
+        </association>
+        <association property="schoolsUniversity" javaType="com.mc.escommon.entity.statistic.SchoolsUniversity">
+            <result property="id" column="su_id"/>
+            <result property="universityName" column="su_university_name"/>
+            <result property="provinceId" column="su_province_id"/>
+            <result property="cityId" column="su_city_id"/>
+            <result property="areaId" column="su_area_id"/>
+            <result property="address" column="su_address"/>
+        </association>
+        <association property="addressProvinces" javaType="com.mc.escommon.entity.statistic.AddressProvinces">
+            <result property="id" column="ap_id"/>
+            <result property="provinceId" column="ap_province_id"/>
+            <result property="province" column="ap_province"/>
+            <result property="provinceEasy" column="ap_province_easy"/>
+        </association>
+        <association property="addressCities" javaType="com.mc.escommon.entity.statistic.AddressCities">
+            <result property="id" column="ac_id"/>
+            <result property="cityId" column="ac_city_id"/>
+            <result property="city" column="ac_city"/>
+            <result property="provinceId" column="ac_province_id"/>
+        </association>
+        <association property="addressAreas" javaType="com.mc.escommon.entity.statistic.AddressAreas">
+            <result property="id" column="aa_id"/>
+            <result property="areaId" column="aa_area_id"/>
+            <result property="area" column="aa_area"/>
+            <result property="cityId" column="aa_city_id"/>
+        </association>
+    </resultMap>
+
+    <!-- SQL片段（仅添加别名） -->
+    <sql id="universitySelect">
+        SELECT
+            su.id AS su_id,
+            su.university_name AS su_university_name,
+            su.province_id AS su_province_id,
+            su.city_id AS su_city_id,
+            su.area_id AS su_area_id,
+            su.address AS su_address,
+            ap.id AS ap_id,
+            ap.province_id AS ap_province_id,
+            ap.province AS ap_province,
+            ap.province_easy AS ap_province_easy,
+            ac.id AS ac_id,
+            ac.city_id AS ac_city_id,
+            ac.city AS ac_city,
+            ac.province_id AS ac_province_id,
+            aa.id AS aa_id,
+            aa.area_id AS aa_area_id,
+            aa.area AS aa_area,
+            aa.city_id AS aa_city_id
+        FROM schools_university su
+                 LEFT JOIN address_provinces ap ON su.province_id = ap.id
+                 LEFT JOIN address_cities ac ON su.city_id = ac.id
+                 LEFT JOIN address_areas aa ON su.area_id = aa.id
+    </sql>
+
+    <sql id="collegeSelect">
+        SELECT
+            sc.id AS sc_id,
+            sc.colleges_name AS sc_colleges_name,
+            sc.university_id AS sc_university_id,
+            su.id AS su_id,
+            su.university_name AS su_university_name,
+            su.province_id AS su_province_id,
+            su.city_id AS su_city_id,
+            su.area_id AS su_area_id,
+            su.address AS su_address,
+            ap.id AS ap_id,
+            ap.province_id AS ap_province_id,
+            ap.province AS ap_province,
+            ap.province_easy AS ap_province_easy,
+            ac.id AS ac_id,
+            ac.city_id AS ac_city_id,
+            ac.city AS ac_city,
+            ac.province_id AS ac_province_id,
+            aa.id AS aa_id,
+            aa.area_id AS aa_area_id,
+            aa.area AS aa_area,
+            aa.city_id AS aa_city_id
+        FROM schools_colleges sc
+                 LEFT JOIN schools_university su ON sc.university_id = su.id
+                 LEFT JOIN address_provinces ap ON su.province_id = ap.id
+                 LEFT JOIN address_cities ac ON su.city_id = ac.id
+                 LEFT JOIN address_areas aa ON su.area_id = aa.id
+    </sql>
+
+    <sql id="majorSelect">
+        SELECT
+            sm.id AS sm_class_id,
+            sm.major_name AS sm_major_name,
+            sm.colleges_id AS sm_colleges_id,
+            sc.id AS sc_id,
+            sc.colleges_name AS sc_colleges_name,
+            sc.university_id AS sc_university_id,
+            su.id AS su_id,
+            su.university_name AS su_university_name,
+            su.province_id AS su_province_id,
+            su.city_id AS su_city_id,
+            su.area_id AS su_area_id,
+            su.address AS su_address,
+            ap.id AS ap_id,
+            ap.province_id AS ap_province_id,
+            ap.province AS ap_province,
+            ap.province_easy AS ap_province_easy,
+            ac.id AS ac_id,
+            ac.city_id AS ac_city_id,
+            ac.city AS ac_city,
+            ac.province_id AS ac_province_id,
+            aa.id AS aa_id,
+            aa.area_id AS aa_area_id,
+            aa.area AS aa_area,
+            aa.city_id AS aa_city_id
+        FROM schools_major sm
+                 LEFT JOIN schools_colleges sc ON sm.colleges_id = sc.id
+                 LEFT JOIN schools_university su ON sc.university_id = su.id
+                 LEFT JOIN address_provinces ap ON su.province_id = ap.id
+                 LEFT JOIN address_cities ac ON su.city_id = ac.id
+                 LEFT JOIN address_areas aa ON su.area_id = aa.id
+    </sql>
+
+    <!-- 以下所有操作保持原样 -->
+    <insert id="insertUniversity" parameterType="com.mc.escommon.entity.statistic.SchoolsUniversity" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO schools_university
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="universityName != null and universityName != ''">university_name,</if>
+            <if test="provinceId != null">province_id,</if>
+            <if test="cityId != null">city_id,</if>
+            <if test="areaId != null">area_id,</if>
+            <if test="address != null and address != ''">address</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="universityName != null and universityName != ''">#{universityName},</if>
+            <if test="provinceId != null">#{provinceId},</if>
+            <if test="cityId != null">#{cityId},</if>
+            <if test="areaId != null">#{areaId},</if>
+            <if test="address != null and address != ''">#{address}</if>
+        </trim>
+    </insert>
+
+    <update id="updateUniversityById" parameterType="com.mc.escommon.entity.statistic.SchoolsUniversity">
+        UPDATE schools_university
+        <set>
+            <if test="universityName != null and universityName != ''">university_name = #{universityName},</if>
+            <if test="provinceId != null">province_id = #{provinceId},</if>
+            <if test="cityId != null">city_id = #{cityId},</if>
+            <if test="areaId != null">area_id = #{areaId},</if>
+            <if test="address != null and address != ''">address = #{address},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteUniversityById" parameterType="int">
+        DELETE FROM schools_university WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteUniversityByIds" parameterType="int[]">
+        DELETE FROM schools_university WHERE id IN
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectUniversityById" resultMap="SchoolsUniversity">
+        <include refid="universitySelect"/>
+        WHERE su.id = #{id}
+    </select>
+
+    <select id="selectUniversity" resultMap="SchoolsUniversity" parameterType="com.mc.escommon.entity.statistic.SchoolsUniversity">
+        <include refid="universitySelect"/>
+        <where>
+            <if test="universityName != null and universityName != ''">
+                AND su.university_name LIKE CONCAT('%', #{universityName}, '%')
+            </if>
+            <if test="provinceId != null">
+                AND su.province_id = #{provinceId}
+            </if>
+            <if test="cityId != null">
+                AND su.city_id = #{cityId}
+            </if>
+            <if test="areaId != null and areaId != ''">
+                AND su.area_id = #{areaId}
+            </if>
+        </where>
+        ORDER BY su.id ASC
+    </select>
+
+    <!-- 学院操作保持原样 -->
+    <insert id="insertCollege" parameterType="com.mc.escommon.entity.statistic.SchoolsColleges" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO schools_colleges
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="collegesName != null">colleges_name,</if>
+            <if test="universityId != null">university_id,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="collegesName != null">#{collegesName},</if>
+            <if test="universityId != null">#{universityId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateCollegeById" parameterType="com.mc.escommon.entity.statistic.SchoolsColleges">
+        UPDATE schools_colleges
+        <set>
+            <if test="collegesName != null">
+                colleges_name = #{collegesName},
+            </if>
+            <if test="universityId != null">
+                university_id = #{universityId},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteCollegeById" parameterType="int">
+        DELETE FROM schools_colleges WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteCollegesByIds" parameterType="int[]">
+        DELETE FROM schools_colleges WHERE id IN
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectCollegeById" resultMap="schoolsColleges">
+        <include refid="collegeSelect"/>
+        WHERE sc.id = #{id}
+    </select>
+
+    <select id="selectColleges" resultMap="schoolsColleges" parameterType="com.mc.escommon.entity.statistic.SchoolsColleges">
+        <include refid="collegeSelect"/>
+        <where>
+            <if test="collegesName != null and collegesName != ''">
+                AND sc.colleges_name LIKE CONCAT('%', #{collegesName}, '%')
+            </if>
+            <if test="universityId != null">
+                AND sc.university_id = #{universityId}
+            </if>
+            <if test="provinceId != null">
+                AND su.province_id = #{provinceId}
+            </if>
+            <if test="cityId != null">
+                AND su.city_id = #{cityId}
+            </if>
+            <if test="areaId != null and areaId != ''">
+                AND su.area_id = #{areaId}
+            </if>
+        </where>
+        ORDER BY sc.id ASC
+    </select>
+
+    <!-- 专业操作保持原样 -->
+    <insert id="insertMajor" parameterType="com.mc.escommon.entity.statistic.SchoolsMajor" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO schools_major
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="majorName != null">major_name,</if>
+            <if test="collegesId != null">colleges_id,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="majorName != null">#{majorName},</if>
+            <if test="collegesId != null">#{collegesId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateMajorById" parameterType="com.mc.escommon.entity.statistic.SchoolsMajor">
+        UPDATE schools_major
+        <set>
+            <if test="majorName != null">
+                major_name = #{majorName},
+            </if>
+            <if test="collegesId != null">
+                colleges_id = #{collegesId},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteMajorById" parameterType="int">
+        DELETE FROM schools_major WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteMajorByIds" parameterType="int[]">
+        DELETE FROM schools_major WHERE id IN
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectMajorById" resultMap="SchoolsMajor">
+        <include refid="majorSelect"/>
+        WHERE sm.sm_class_id = #{id}
+    </select>
+
+    <select id="selectMajor" resultMap="SchoolsMajor" parameterType="com.mc.escommon.entity.statistic.SchoolsMajor">
+        <include refid="majorSelect"/>
+        <where>
+            <if test="majorName != null and majorName != ''">
+                AND sm.major_name LIKE CONCAT('%', #{majorName}, '%')
+            </if>
+            <if test="collegesId != null">
+                AND sm.colleges_id = #{collegesId}
+            </if>
+            <if test="universityId != null">
+                AND sc.university_id = #{universityId}
+            </if>
+            <if test="provinceId != null">
+                AND su.province_id = #{provinceId}
+            </if>
+            <if test="cityId != null">
+                AND su.city_id = #{cityId}
+            </if>
+            <if test="areaId != null and areaId != ''">
+                AND su.area_id = #{areaId}
+            </if>
+        </where>
+        ORDER BY sm.id ASC
+    </select>
+
+</mapper>

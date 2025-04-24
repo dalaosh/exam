@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mc.esexam.mapper.QuestionJudgeMapper">
+    <!-- 定义结果映射，将数据库查询结果映射到 QuestionJudge 实体类 -->
+    <resultMap id="QuestionJudge" type="com.mc.escommon.entity.exam.QuestionJudge">
+        <!-- 映射 QuestionJudge 实体类自身的属性 -->
+        <!-- 主键映射，将数据库中的 qj_id 列映射到实体类的 id 属性 -->
+        <id property="id" column="qj_id"/>
+        <!-- 将数据库中的 qj_course_id 列映射到实体类的 courseId 属性 -->
+        <result property="courseId" column="qj_course_id"/>
+        <!-- 将数据库中的 qj_question 列映射到实体类的 question 属性 -->
+        <result property="question" column="qj_question"/>
+        <!-- 将数据库中的 qj_answer 列映射到实体类的 answer 属性 -->
+        <result property="answer" column="qj_answer"/>
+        <!-- 将数据库中的 qj_analysis 列映射到实体类的 analysis 属性 -->
+        <result property="analysis" column="qj_analysis"/>
+        <!-- 将数据库中的 qj_score 列映射到实体类的 score 属性 -->
+        <result property="score" column="qj_score"/>
+        <!-- 将数据库中的 qj_level 列映射到实体类的 level 属性 -->
+        <result property="level" column="qj_level"/>
+        <!-- 将数据库中的 qj_section 列映射到实体类的 section 属性 -->
+        <result property="section" column="qj_section"/>
+
+        <!-- 关联映射 Course 对象的属性 -->
+        <!-- 使用 association 标签关联 Course 对象 -->
+        <association property="course" javaType="com.mc.escommon.entity.exam.Course">
+            <!-- 主键映射，将数据库中的 c_id 列映射到 Course 实体类的 id 属性 -->
+            <id property="id" column="c_id"/>
+            <!-- 将数据库中的 c_teacher_id 列映射到 Course 实体类的 teacherId 属性 -->
+            <result property="teacherId" column="c_teacher_id"/>
+            <!-- 将数据库中的 c_name 列映射到 Course 实体类的 name 属性 -->
+            <result property="name" column="c_name"/>
+            <!-- 将数据库中的 c_begin_time 列映射到 Course 实体类的 beginTime 属性 -->
+            <result property="beginTime" column="c_begin_time"/>
+            <!-- 将数据库中的 c_end_time 列映射到 Course 实体类的 endTime 属性 -->
+            <result property="endTime" column="c_end_time"/>
+            <!-- 将数据库中的 c_photo 列映射到 Course 实体类的 photo 属性 -->
+            <result property="photo" column="c_photo"/>
+            <!-- 将数据库中的 c_number 列映射到 Course 实体类的 number 属性 -->
+            <result property="number" column="c_number"/>
+            <!-- 将数据库中的 c_message 列映射到 Course 实体类的 message 属性 -->
+            <result property="message" column="c_message"/>
+        </association>
+
+        <!-- 关联映射 Teacher 对象的属性 -->
+        <!-- 使用 association 标签关联 Teacher 对象 -->
+        <association property="teacher" javaType="com.mc.escommon.entity.user.Teacher">
+            <!-- 主键映射，将数据库中的 t_id 列映射到 Teacher 实体类的 id 属性 -->
+            <id property="id" column="t_id"/>
+            <!-- 将数据库中的 t_role 列映射到 Teacher 实体类的 role 属性 -->
+            <result property="role" column="t_role"/>
+            <!-- 将数据库中的 t_photo 列映射到 Teacher 实体类的 photo 属性 -->
+            <result property="photo" column="t_photo"/>
+            <!-- 将数据库中的 t_account 列映射到 Teacher 实体类的 account 属性 -->
+            <result property="account" column="t_account"/>
+            <!-- 将数据库中的 t_password 列映射到 Teacher 实体类的 password 属性 -->
+            <result property="password" column="t_password"/>
+            <!-- 将数据库中的 t_key_sm3 列映射到 Teacher 实体类的 keySm3 属性 -->
+            <result property="keySm3" column="t_key_sm3"/>
+            <!-- 将数据库中的 t_email 列映射到 Teacher 实体类的 email 属性 -->
+            <result property="email" column="t_email"/>
+            <!-- 将数据库中的 t_name 列映射到 Teacher 实体类的 name 属性 -->
+            <result property="name" column="t_name"/>
+            <!-- 将数据库中的 t_sex 列映射到 Teacher 实体类的 sex 属性 -->
+            <result property="sex" column="t_sex"/>
+            <!-- 将数据库中的 t_phone 列映射到 Teacher 实体类的 phone 属性 -->
+            <result property="phone" column="t_phone"/>
+            <!-- 将数据库中的 t_public_key 列映射到 Teacher 实体类的 publicKey 属性 -->
+            <result property="publicKey" column="t_public_key"/>
+        </association>
+    </resultMap>
+
+    <!-- 定义 SQL 片段，用于复用查询语句 -->
+    <sql id="selectVo">
+        SELECT
+            qj.id AS qj_id,
+            qj.course_id AS qj_course_id,
+            qj.question AS qj_question,
+            qj.answer AS qj_answer,
+            qj.analysis AS qj_analysis,
+            qj.score AS qj_score,
+            qj.level AS qj_level,
+            qj.section AS qj_section,
+            c.id AS c_id,
+            c.teacher_id AS c_teacher_id,
+            c.name AS c_name,
+            c.begin_time AS c_begin_time,
+            c.end_time AS c_end_time,
+            c.photo AS c_photo,
+            c.number AS c_number,
+            c.message AS c_message,
+            t.id AS t_id,
+            t.role AS t_role,
+            t.photo AS t_photo,
+            t.account AS t_account,
+            t.password AS t_password,
+            t.key_sm3 AS t_key_sm3,
+            t.email AS t_email,
+            t.name AS t_name,
+            t.sex AS t_sex,
+            t.phone AS t_phone,
+            t.public_key AS t_public_key
+        FROM
+            question_judge qj
+                LEFT JOIN
+            course c ON qj.course_id = c.id
+                LEFT JOIN
+            teacher t ON c.teacher_id = t.id
+    </sql>
+
+    <!-- 插入操作，将 QuestionJudge 实体类插入到 question_judge 表中 -->
+    <insert id="insert" parameterType="com.mc.escommon.entity.exam.QuestionJudge" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO question_judge
+        <!-- 使用 trim 标签动态生成插入语句的列名部分 -->
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <!-- 如果 courseId 不为空，则插入该字段 -->
+            <if test="courseId != null">course_id,</if>
+            <!-- 如果 question 不为空且不为空字符串，则插入该字段 -->
+            <if test="question != null and question != ''">question,</if>
+            <!-- 如果 answer 不为空且不为空字符串，则插入该字段 -->
+            <if test="answer != null and answer != ''">answer,</if>
+            <!-- 如果 analysis 不为空且不为空字符串，则插入该字段 -->
+            <if test="analysis != null and analysis != ''">analysis,</if>
+            <!-- 如果 score 不为空，则插入该字段 -->
+            <if test="score != null">score,</if>
+            <!-- 如果 level 不为空且不为空字符串，则插入该字段 -->
+            <if test="level != null and level != ''">level,</if>
+            <!-- 如果 section 不为空且不为空字符串，则插入该字段 -->
+            <if test="section != null and section != ''">section</if>
+        </trim>
+        <!-- 使用 trim 标签动态生成插入语句的值部分 -->
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <!-- 如果 courseId 不为空，则插入该字段的值 -->
+            <if test="courseId != null">#{courseId},</if>
+            <!-- 如果 question 不为空且不为空字符串，则插入该字段的值 -->
+            <if test="question != null and question != ''">#{question},</if>
+            <!-- 如果 answer 不为空且不为空字符串，则插入该字段的值 -->
+            <if test="answer != null and answer != ''">#{answer},</if>
+            <!-- 如果 analysis 不为空且不为空字符串，则插入该字段的值 -->
+            <if test="analysis != null and analysis != ''">#{analysis},</if>
+            <!-- 如果 score 不为空，则插入该字段的值 -->
+            <if test="score != null">#{score},</if>
+            <!-- 如果 level 不为空且不为空字符串，则插入该字段的值 -->
+            <if test="level != null and level != ''">#{level},</if>
+            <!-- 如果 section 不为空且不为空字符串，则插入该字段的值 -->
+            <if test="section != null and section != ''">#{section}</if>
+        </trim>
+    </insert>
+
+    <!-- 单个删除操作，根据 id 删除 question_judge 表中的记录 -->
+    <delete id="deleteById" parameterType="int">
+        DELETE FROM question_judge WHERE id = #{id}
+    </delete>
+
+    <!-- 批量删除操作，根据多个 id 删除 question_judge 表中的记录 -->
+    <delete id="deleteByIds" parameterType="int[]">
+        DELETE FROM question_judge WHERE id IN
+        <!-- 使用 foreach 标签遍历 id 数组 -->
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 查询所有符合条件的 QuestionJudge 记录 -->
+    <select id="selectAll" parameterType="com.mc.escommon.entity.exam.QuestionJudge" resultMap="QuestionJudge">
+        <!-- 引入之前定义的 SQL 片段 -->
+        <include refid="selectVo"/>
+        <!-- 使用 where 标签动态生成 WHERE 子句 -->
+        <where>
+            <!-- 如果 id 不为空，则添加 id 的查询条件 -->
+            <if test="id != null">
+                AND qj.id = #{id} <!-- 使用表别名 qj 引用 id 列 -->
+            </if>
+            <!-- 如果 courseId 不为空，则添加 courseId 的查询条件 -->
+            <if test="courseId != null">
+                AND qj.course_id = #{courseId} <!-- 使用表别名 qj 引用 course_id 列 -->
+            </if>
+            <!-- 如果 question 不为空且不为空字符串，则添加 question 的查询条件 -->
+            <if test="question != null and question != ''">
+                AND qj.question = #{question} <!-- 使用表别名 qj 引用 question 列 -->
+            </if>
+            <!-- 如果 answer 不为空且不为空字符串，则添加 answer 的查询条件 -->
+            <if test="answer != null and answer != ''">
+                AND qj.answer = #{answer} <!-- 使用表别名 qj 引用 answer 列 -->
+            </if>
+            <!-- 如果 analysis 不为空且不为空字符串，则添加 analysis 的查询条件 -->
+            <if test="analysis != null and analysis != ''">
+                AND qj.analysis = #{analysis} <!-- 使用表别名 qj 引用 analysis 列 -->
+            </if>
+            <!-- 如果 score 不为空，则添加 score 的查询条件 -->
+            <if test="score != null">
+                AND qj.score = #{score} <!-- 使用表别名 qj 引用 score 列 -->
+            </if>
+            <!-- 如果 level 不为空且不为空字符串，则添加 level 的查询条件 -->
+            <if test="level != null and level != ''">
+                AND qj.level = #{level} <!-- 使用表别名 qj 引用 level 列 -->
+            </if>
+            <!-- 如果 section 不为空且不为空字符串，则添加 section 的查询条件 -->
+            <if test="section != null and section != ''">
+                AND qj.section = #{section} <!-- 使用表别名 qj 引用 section 列 -->
+            </if>
+            <!-- 新增：如果教师id不为空，则添加教师id的查询条件 -->
+            <if test="course != null and course.teacherId != null">
+                AND t.id = #{course.teacherId} <!-- 使用表别名 t 引用教师表的id列 -->
+            </if>
+        </where>
+        <!-- 按 id 降序排序 -->
+        ORDER BY qj.id DESC
+    </select>
+
+    <!-- 根据 id 查询单个 QuestionJudge 记录 -->
+    <select id="selectById" parameterType="int" resultMap="QuestionJudge">
+        <!-- 引入之前定义的 SQL 片段 -->
+        <include refid="selectVo"/>
+        <!-- 根据 id 筛选记录 -->
+        WHERE qj.id = #{id}
+        <!-- 按 id 降序排序 -->
+        ORDER BY qj.id DESC
+    </select>
+
+    <!-- 根据 id 更新 QuestionJudge 记录 -->
+    <update id="updateById" parameterType="com.mc.escommon.entity.exam.QuestionJudge">
+        <!-- 指定要更新的表 -->
+        UPDATE question_judge
+        <!-- 使用 set 标签动态生成要更新的字段 -->
+        <set>
+            <!-- 如果 courseId 不为空，则更新该字段 -->
+            <if test="courseId != null">
+                course_id = #{courseId},
+            </if>
+            <!-- 如果 question 不为空且不为空字符串，则更新该字段 -->
+            <if test="question != null and question != ''">
+                question = #{question},
+            </if>
+            <!-- 如果 answer 不为空且不为空字符串，则更新该字段 -->
+            <if test="answer != null and answer != ''">
+                answer = #{answer},
+            </if>
+            <!-- 如果 analysis 不为空且不为空字符串，则更新该字段 -->
+            <if test="analysis != null and analysis != ''">
+                analysis = #{analysis},
+            </if>
+            <!-- 如果 score 不为空，则更新该字段 -->
+            <if test="score != null">
+                score = #{score},
+            </if>
+            <!-- 如果 level 不为空且不为空字符串，则更新该字段 -->
+            <if test="level != null and level != ''">
+                level = #{level},
+            </if>
+            <!-- 如果 section 不为空且不为空字符串，则更新该字段 -->
+            <if test="section != null and section != ''">
+                section = #{section},
+            </if>
+        </set>
+        <!-- 根据 id 确定要更新的记录 -->
+        WHERE id = #{id}
+    </update>
+</mapper>

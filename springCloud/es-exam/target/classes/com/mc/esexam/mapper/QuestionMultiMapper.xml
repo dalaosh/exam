@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mc.esexam.mapper.QuestionMultiMapper">
+
+    <!--
+        定义结果映射，将数据库查询结果映射到 QuestionMulti 实体类。
+        此结果映射包含了 QuestionMulti 实体类自身属性以及关联的 Course 和 Teacher 实体类属性的映射。
+    -->
+    <resultMap id="QuestionMulti" type="com.mc.escommon.entity.exam.QuestionMulti">
+        <!-- 映射 QuestionMulti 实体类自身的属性 -->
+        <!-- 主键映射，将数据库中的 qm_id 列映射到实体类的 id 属性 -->
+        <id property="id" column="qm_id"/>
+        <!-- 将数据库中的 qm_course_id 列映射到实体类的 courseId 属性 -->
+        <result property="courseId" column="qm_course_id"/>
+        <!-- 将数据库中的 qm_question_type 列映射到实体类的 questionType 属性 -->
+        <result property="questionType" column="qm_question_type"/>
+        <!-- 将数据库中的 qm_question 列映射到实体类的 question 属性 -->
+        <result property="question" column="qm_question"/>
+        <!-- 将数据库中的 qm_answerA 列映射到实体类的 answerA 属性 -->
+        <result property="answerA" column="qm_answerA"/>
+        <!-- 将数据库中的 qm_answerB 列映射到实体类的 answerB 属性 -->
+        <result property="answerB" column="qm_answerB"/>
+        <!-- 将数据库中的 qm_answerC 列映射到实体类的 answerC 属性 -->
+        <result property="answerC" column="qm_answerC"/>
+        <!-- 将数据库中的 qm_answerD 列映射到实体类的 answerD 属性 -->
+        <result property="answerD" column="qm_answerD"/>
+        <!-- 将数据库中的 qm_rightAnswer 列映射到实体类的 rightAnswer 属性 -->
+        <result property="rightAnswer" column="qm_rightAnswer"/>
+        <!-- 将数据库中的 qm_analysis 列映射到实体类的 analysis 属性 -->
+        <result property="analysis" column="qm_analysis"/>
+        <!-- 将数据库中的 qm_score 列映射到实体类的 score 属性 -->
+        <result property="score" column="qm_score"/>
+        <!-- 将数据库中的 qm_level 列映射到实体类的 level 属性 -->
+        <result property="level" column="qm_level"/>
+        <!-- 将数据库中的 qm_section 列映射到实体类的 section 属性 -->
+        <result property="section" column="qm_section"/>
+
+        <!-- 关联映射 Course 对象的属性 -->
+        <!-- 使用 association 标签关联 Course 对象 -->
+        <association property="course" javaType="com.mc.escommon.entity.exam.Course">
+            <!-- 主键映射，将数据库中的 c_id 列映射到 Course 实体类的 id 属性 -->
+            <id property="id" column="c_id"/>
+            <!-- 将数据库中的 c_teacher_id 列映射到 Course 实体类的 teacherId 属性 -->
+            <result property="teacherId" column="c_teacher_id"/>
+            <!-- 将数据库中的 c_name 列映射到 Course 实体类的 name 属性 -->
+            <result property="name" column="c_name"/>
+            <!-- 将数据库中的 c_begin_time 列映射到 Course 实体类的 beginTime 属性 -->
+            <result property="beginTime" column="c_begin_time"/>
+            <!-- 将数据库中的 c_end_time 列映射到 Course 实体类的 endTime 属性 -->
+            <result property="endTime" column="c_end_time"/>
+            <!-- 将数据库中的 c_photo 列映射到 Course 实体类的 photo 属性 -->
+            <result property="photo" column="c_photo"/>
+            <!-- 将数据库中的 c_number 列映射到 Course 实体类的 number 属性 -->
+            <result property="number" column="c_number"/>
+            <!-- 将数据库中的 c_message 列映射到 Course 实体类的 message 属性 -->
+            <result property="message" column="c_message"/>
+        </association>
+
+        <!-- 关联映射 Teacher 对象的属性 -->
+        <!-- 使用 association 标签关联 Teacher 对象 -->
+        <association property="teacher" javaType="com.mc.escommon.entity.user.Teacher">
+            <!-- 主键映射，将数据库中的 t_id 列映射到 Teacher 实体类的 id 属性 -->
+            <id property="id" column="t_id"/>
+            <!-- 将数据库中的 t_role 列映射到 Teacher 实体类的 role 属性 -->
+            <result property="role" column="t_role"/>
+            <!-- 将数据库中的 t_photo 列映射到 Teacher 实体类的 photo 属性 -->
+            <result property="photo" column="t_photo"/>
+            <!-- 将数据库中的 t_account 列映射到 Teacher 实体类的 account 属性 -->
+            <result property="account" column="t_account"/>
+            <!-- 将数据库中的 t_password 列映射到 Teacher 实体类的 password 属性 -->
+            <result property="password" column="t_password"/>
+            <!-- 将数据库中的 t_key_sm3 列映射到 Teacher 实体类的 keySm3 属性 -->
+            <result property="keySm3" column="t_key_sm3"/>
+            <!-- 将数据库中的 t_email 列映射到 Teacher 实体类的 email 属性 -->
+            <result property="email" column="t_email"/>
+            <!-- 将数据库中的 t_name 列映射到 Teacher 实体类的 name 属性 -->
+            <result property="name" column="t_name"/>
+            <!-- 将数据库中的 t_sex 列映射到 Teacher 实体类的 sex 属性 -->
+            <result property="sex" column="t_sex"/>
+            <!-- 将数据库中的 t_phone 列映射到 Teacher 实体类的 phone 属性 -->
+            <result property="phone" column="t_phone"/>
+            <!-- 将数据库中的 t_public_key 列映射到 Teacher 实体类的 publicKey 属性 -->
+            <result property="publicKey" column="t_public_key"/>
+        </association>
+    </resultMap>
+
+    <!--
+        定义 SQL 片段，用于复用查询语句。
+        此 SQL 片段包含了从 question_multi 表以及关联的 course 和 teacher 表中查询所需字段的语句。
+    -->
+    <sql id="selectVo">
+        SELECT
+            qm.id AS qm_id,
+            qm.course_id AS qm_course_id,
+            qm.question_type AS qm_question_type,
+            qm.question AS qm_question,
+            qm.answerA AS qm_answerA,
+            qm.answerB AS qm_answerB,
+            qm.answerC AS qm_answerC,
+            qm.answerD AS qm_answerD,
+            qm.rightAnswer AS qm_rightAnswer,
+            qm.analysis AS qm_analysis,
+            qm.score AS qm_score,
+            qm.level AS qm_level,
+            qm.section AS qm_section,
+            c.id AS c_id,
+            c.teacher_id AS c_teacher_id,
+            c.name AS c_name,
+            c.begin_time AS c_begin_time,
+            c.end_time AS c_end_time,
+            c.photo AS c_photo,
+            c.number AS c_number,
+            c.message AS c_message,
+            t.id AS t_id,
+            t.role AS t_role,
+            t.photo AS t_photo,
+            t.account AS t_account,
+            t.password AS t_password,
+            t.key_sm3 AS t_key_sm3,
+            t.email AS t_email,
+            t.name AS t_name,
+            t.sex AS t_sex,
+            t.phone AS t_phone,
+            t.public_key AS t_public_key
+        FROM
+            question_multi qm
+                LEFT JOIN
+            course c ON qm.course_id = c.id
+                LEFT JOIN
+            teacher t ON c.teacher_id = t.id
+    </sql>
+
+    <!--
+        插入操作，将 QuestionMulti 实体类插入到 question_multi 表中。
+        使用 useGeneratedKeys="true" 和 keyProperty="id" 自动获取插入后的主键值。
+    -->
+    <insert id="insert" parameterType="com.mc.escommon.entity.exam.QuestionMulti" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO question_multi
+        <!-- 使用 trim 标签动态生成插入语句的列名部分 -->
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <!-- 如果 courseId 不为空，则插入该字段 -->
+            <if test="courseId != null">course_id,</if>
+            <!-- 如果 questionType 不为空，则插入该字段 -->
+            <if test="questionType != null">question_type,</if>
+            <!-- 如果 question 不为空且不为空字符串，则插入该字段 -->
+            <if test="question != null and question != ''">question,</if>
+            <!-- 如果 answerA 不为空且不为空字符串，则插入该字段 -->
+            <if test="answerA != null and answerA != ''">answerA,</if>
+            <!-- 如果 answerB 不为空且不为空字符串，则插入该字段 -->
+            <if test="answerB != null and answerB != ''">answerB,</if>
+            <!-- 如果 answerC 不为空且不为空字符串，则插入该字段 -->
+            <if test="answerC != null and answerC != ''">answerC,</if>
+            <!-- 如果 answerD 不为空且不为空字符串，则插入该字段 -->
+            <if test="answerD != null and answerD != ''">answerD,</if>
+            <!-- 如果 rightAnswer 不为空且不为空字符串，则插入该字段 -->
+            <if test="rightAnswer != null and rightAnswer != ''">rightAnswer,</if>
+            <!-- 如果 analysis 不为空且不为空字符串，则插入该字段 -->
+            <if test="analysis != null and analysis != ''">analysis,</if>
+            <!-- 如果 score 不为空，则插入该字段 -->
+            <if test="score != null">score,</if>
+            <!-- 如果 level 不为空且不为空字符串，则插入该字段 -->
+            <if test="level != null and level != ''">level,</if>
+            <!-- 如果 section 不为空且不为空字符串，则插入该字段 -->
+            <if test="section != null and section != ''">section</if>
+        </trim>
+        <!-- 使用 trim 标签动态生成插入语句的值部分 -->
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <!-- 如果 courseId 不为空，则插入该字段的值 -->
+            <if test="courseId != null">#{courseId},</if>
+            <!-- 如果 questionType 不为空，则插入该字段的值 -->
+            <if test="questionType != null">#{questionType},</if>
+            <!-- 如果 question 不为空且不为空字符串，则插入该字段的值 -->
+            <if test="question != null and question != ''">#{question},</if>
+            <!-- 如果 answerA 不为空且不为空字符串，则插入该字段的值 -->
+            <if test="answerA != null and answerA != ''">#{answerA},</if>
+            <!-- 如果 answerB 不为空且不为空字符串，则插入该字段的值 -->
+            <if test="answerB != null and answerB != ''">#{answerB},</if>
+            <!-- 如果 answerC 不为空且不为空字符串，则插入该字段的值 -->
+            <if test="answerC != null and answerC != ''">#{answerC},</if>
+            <!-- 如果 answerD 不为空且不为空字符串，则插入该字段的值 -->
+            <if test="answerD != null and answerD != ''">#{answerD},</if>
+            <!-- 如果 rightAnswer 不为空且不为空字符串，则插入该字段的值 -->
+            <if test="rightAnswer != null and rightAnswer != ''">#{rightAnswer},</if>
+            <!-- 如果 analysis 不为空且不为空字符串，则插入该字段的值 -->
+            <if test="analysis != null and analysis != ''">#{analysis},</if>
+            <!-- 如果 score 不为空，则插入该字段的值 -->
+            <if test="score != null">#{score},</if>
+            <!-- 如果 level 不为空且不为空字符串，则插入该字段的值 -->
+            <if test="level != null and level != ''">#{level},</if>
+            <!-- 如果 section 不为空且不为空字符串，则插入该字段的值 -->
+            <if test="section != null and section != ''">#{section}</if>
+        </trim>
+    </insert>
+
+    <!-- 单个删除操作，根据 id 删除 question_multi 表中的记录 -->
+    <delete id="deleteById" parameterType="int">
+        DELETE FROM question_multi WHERE id = #{id}
+    </delete>
+
+    <!-- 批量删除操作，根据多个 id 删除 question_multi 表中的记录 -->
+    <delete id="deleteByIds" parameterType="int[]">
+        DELETE FROM question_multi WHERE id IN
+        <!-- 使用 foreach 标签遍历 id 数组 -->
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 查询所有符合条件的 QuestionMulti 记录 -->
+    <select id="selectAll" parameterType="com.mc.escommon.entity.exam.QuestionMulti" resultMap="QuestionMulti">
+        <!-- 引入之前定义的 SQL 片段 -->
+        <include refid="selectVo"/>
+        <!-- 使用 where 标签动态生成 WHERE 子句 -->
+        <where>
+            <!-- 如果 id 不为空，则添加 id 的查询条件 -->
+            <if test="id != null">
+                AND qm.id = #{id} <!-- 使用表别名 qm 引用 id 列 -->
+            </if>
+            <!-- 如果 courseId 不为空，则添加 courseId 的查询条件 -->
+            <if test="courseId != null">
+                AND qm.course_id = #{courseId} <!-- 使用表别名 qm 引用 course_id 列 -->
+            </if>
+            <!-- 如果 questionType 不为空，则添加 questionType 的查询条件 -->
+            <if test="questionType != null">
+                AND qm.question_type = #{questionType} <!-- 使用表别名 qm 引用 question_type 列 -->
+            </if>
+            <!-- 如果 question 不为空且不为空字符串，则添加 question 的查询条件 -->
+            <if test="question != null and question != ''">
+                AND qm.question = #{question} <!-- 使用表别名 qm 引用 question 列 -->
+            </if>
+            <!-- 如果 answerA 不为空且不为空字符串，则添加 answerA 的查询条件 -->
+            <if test="answerA != null and answerA != ''">
+                AND qm.answerA = #{answerA} <!-- 使用表别名 qm 引用 answerA 列 -->
+            </if>
+            <!-- 如果 answerB 不为空且不为空字符串，则添加 answerB 的查询条件 -->
+            <if test="answerB != null and answerB != ''">
+                AND qm.answerB = #{answerB} <!-- 使用表别名 qm 引用 answerB 列 -->
+            </if>
+            <!-- 如果 answerC 不为空且不为空字符串，则添加 answerC 的查询条件 -->
+            <if test="answerC != null and answerC != ''">
+                AND qm.answerC = #{answerC} <!-- 使用表别名 qm 引用 answerC 列 -->
+            </if>
+            <!-- 如果 answerD 不为空且不为空字符串，则添加 answerD 的查询条件 -->
+            <if test="answerD != null and answerD != ''">
+                AND qm.answerD = #{answerD} <!-- 使用表别名 qm 引用 answerD 列 -->
+            </if>
+            <!-- 如果 rightAnswer 不为空且不为空字符串，则添加 rightAnswer 的查询条件 -->
+            <if test="rightAnswer != null and rightAnswer != ''">
+                AND qm.rightAnswer = #{rightAnswer} <!-- 使用表别名 qm 引用 rightAnswer 列 -->
+            </if>
+            <!-- 如果 analysis 不为空且不为空字符串，则添加 analysis 的查询条件 -->
+            <if test="analysis != null and analysis != ''">
+                AND qm.analysis = #{analysis} <!-- 使用表别名 qm 引用 analysis 列 -->
+            </if>
+            <!-- 如果 score 不为空，则添加 score 的查询条件 -->
+            <if test="score != null">
+                AND qm.score = #{score} <!-- 使用表别名 qm 引用 score 列 -->
+            </if>
+            <!-- 如果 level 不为空且不为空字符串，则添加 level 的查询条件 -->
+            <if test="level != null and level != ''">
+                AND qm.level = #{level} <!-- 使用表别名 qm 引用 level 列 -->
+            </if>
+            <!-- 如果 section 不为空且不为空字符串，则添加 section 的查询条件 -->
+            <if test="section != null and section != ''">
+                AND qm.section = #{section} <!-- 使用表别名 qm 引用 section 列 -->
+            </if>
+            <!-- 新增：如果教师id不为空，则添加教师id的查询条件 -->
+            <if test="course != null and course.teacherId != null">
+                AND t.id = #{course.teacherId} <!-- 使用表别名 t 引用教师表的id列 -->
+            </if>
+        </where>
+        <!-- 按 id 降序排序 -->
+        ORDER BY qm.id DESC
+    </select>
+
+    <!-- 根据 id 查询单个 QuestionMulti 记录 -->
+    <select id="selectById" parameterType="int" resultMap="QuestionMulti">
+        <!-- 引入之前定义的 SQL 片段 -->
+        <include refid="selectVo"/>
+        <!-- 根据 id 筛选记录 -->
+        WHERE qm.id = #{id}
+        <!-- 按 id 降序排序 -->
+        ORDER BY qm.id DESC
+    </select>
+
+    <!-- 根据 id 更新 QuestionMulti 记录 -->
+    <update id="updateById" parameterType="com.mc.escommon.entity.exam.QuestionMulti">
+        UPDATE question_multi
+        <set>
+            <if test="courseId != null">
+                course_id = #{courseId},
+            </if>
+            <if test="questionType != null">
+                question_type = #{questionType},
+            </if>
+            <if test="question != null">
+                question = #{question},
+            </if>
+            <if test="answerA != null">
+                answerA = #{answerA},
+            </if>
+            <if test="answerB != null">
+                answerB = #{answerB},
+            </if>
+            <if test="answerC != null">
+                answerC = #{answerC},
+            </if>
+            <if test="answerD != null">
+                answerD = #{answerD},
+            </if>
+            <if test="rightAnswer != null">
+                rightAnswer = #{rightAnswer},
+            </if>
+            <if test="analysis != null">
+                analysis = #{analysis},
+            </if>
+            <if test="score != null">
+                score = #{score},
+            </if>
+            <if test="level != null">
+                level = #{level},
+            </if>
+            <if test="section != null">
+                section = #{section},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+</mapper>

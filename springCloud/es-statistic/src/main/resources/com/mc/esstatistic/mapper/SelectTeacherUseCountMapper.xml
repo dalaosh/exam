@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mc.esstatistic.mapper.SelectTeacherUseCountMapper">
+    <resultMap id="ExamScore" type="com.mc.escommon.entity.exam.ExamScore">
+        <!-- 映射 ExamScore 实体类自身的属性 -->
+        <result property="id" column="id"/>
+        <result property="managerId" column="manager_id"/>
+        <result property="studentId" column="student_id"/>
+        <result property="score" column="score"/>
+
+        <!-- 关联映射 ExamManage 对象的属性 -->
+        <association property="examManage" javaType="com.mc.escommon.entity.exam.ExamManage">
+            <!-- 映射 ExamManage 实体类自身的属性 -->
+            <result property="id" column="exam_manage_id"/>
+            <result property="description" column="description"/>
+            <result property="courseId" column="course_id"/>
+            <result property="examDate" column="exam_date"/>
+            <result property="totalTime" column="total_time"/>
+            <result property="totalScore" column="total_score"/>
+            <result property="type" column="type"/>
+            <result property="tips" column="tips"/>
+            <result property="publicKeys" column="public_keys"/>
+            <result property="beginTime" column="em_begin_time"/>
+            <result property="endTime" column="em_end_time"/>
+            <result property="isMarked" column="em_is_marked"/>
+        </association>
+
+        <!-- 关联映射 Course 对象的属性 -->
+        <association property="course" javaType="com.mc.escommon.entity.exam.Course">
+            <!-- 映射 Course 实体类自身的属性 -->
+            <result property="id" column="course_id"/>
+            <result property="teacherId" column="teacher_id"/>
+            <result property="name" column="course_name"/>
+            <result property="beginTime" column="begin_time"/>
+            <result property="endTime" column="end_time"/>
+            <result property="photo" column="course_photo"/>
+            <result property="number" column="number"/>
+            <result property="message" column="message"/>
+        </association>
+
+        <!-- 关联映射 Teacher 对象的属性 -->
+        <association property="teacher" javaType="com.mc.escommon.entity.user.Teacher">
+            <result property="id" column="teacher_id"/>
+            <result property="role" column="role"/>
+            <result property="photo" column="teacher_photo"/>
+            <result property="account" column="account"/>
+            <result property="password" column="password"/>
+            <result property="keySm3" column="key_sm3"/>
+            <result property="email" column="email"/>
+            <result property="name" column="teacher_name"/>
+            <result property="sex" column="sex"/>
+            <result property="phone" column="phone"/>
+            <result property="publicKey" column="public_key"/>
+        </association>
+
+        <!-- 关联映射 Student 对象的属性 -->
+        <association property="student" javaType="com.mc.escommon.entity.user.Student">
+            <id property="id" column="s_id"/>
+            <result property="role" column="s_role"/>
+            <result property="photo" column="s_photo"/>
+            <result property="account" column="s_account"/>
+            <result property="password" column="s_password"/>
+            <result property="keySm3" column="s_key_sm3"/>
+            <result property="email" column="s_email"/>
+            <result property="name" column="s_name"/>
+            <result property="sex" column="s_sex"/>
+            <result property="phone" column="s_phone"/>
+            <result property="publicKey" column="s_public_key"/>
+        </association>
+    </resultMap>
+
+    <sql id="selectVo">
+        SELECT
+            es.id,
+            es.manager_id,
+            es.student_id,
+            es.score,
+            em.id AS exam_manage_id,
+            em.description,
+            em.course_id,
+            em.exam_date,
+            em.total_time,
+            em.total_score,
+            em.type,
+            em.tips,
+            em.public_keys,
+            em.is_marked AS em_is_marked,
+            em.begin_time AS em_begin_time,
+            em.end_time AS em_end_time,
+            c.id AS course_id,
+            c.teacher_id,
+            c.name AS course_name,
+            c.begin_time,
+            c.end_time,
+            c.photo AS course_photo,
+            c.number,
+            c.message,
+            t.id AS teacher_id,
+            t.role,
+            t.photo AS teacher_photo,
+            t.account,
+            t.password,
+            t.key_sm3,
+            t.email,
+            t.name AS teacher_name,
+            t.sex,
+            t.phone,
+            t.public_key,
+            s.id AS s_id,
+            s.role AS s_role,
+            s.photo AS s_photo,
+            s.account AS s_account,
+            s.password AS s_password,
+            s.key_sm3 AS s_key_sm3,
+            s.email AS s_email,
+            s.name AS s_name,
+            s.sex AS s_sex,
+            s.phone AS s_phone,
+            s.public_key AS s_public_key
+        FROM
+            exam_score es
+                LEFT JOIN
+            exam_manage em ON es.manager_id = em.id
+                LEFT JOIN
+            course c ON em.course_id = c.id
+                LEFT JOIN
+            teacher t ON c.teacher_id = t.id
+                LEFT JOIN
+            student s ON es.student_id = s.id
+    </sql>
+
+    <select id="selectQuestionCodeNum" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM question_code qc
+        LEFT JOIN course c on c.id = qc.course_id
+        WHERE c.teacher_Id=#{teacherId}
+    </select>
+    <select id="selectQuestionFillNum" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM question_fill qf
+        LEFT JOIN course c on c.id = qf.course_id
+        WHERE c.teacher_Id=#{teacherId}
+    </select>
+    <select id="selectQuestionJudgeNum" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM question_judge qj
+        LEFT JOIN course c on c.id = qj.course_id
+        WHERE c.teacher_Id=#{teacherId}
+    </select>
+    <select id="selectQuestionMultiNum" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM question_multi qm
+        LEFT JOIN course c on c.id = qm.course_id
+        WHERE c.teacher_Id=#{teacherId}
+    </select>
+    <select id="selectQuestionShortAnsNum" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM question_shortans qs
+        LEFT JOIN course c on c.id = qs.course_id
+        WHERE c.teacher_Id=#{teacherId}
+    </select>
+    <select id="selectQuestionCodeNumLevel" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM question_code qc
+        LEFT JOIN course c on c.id = qc.course_id
+        WHERE c.teacher_Id=#{teacherId}
+        AND qc.level=#{level}
+    </select>
+    <select id="selectQuestionFillNumLevel" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM question_fill qf
+        LEFT JOIN course c on c.id = qf.course_id
+        WHERE c.teacher_Id=#{teacherId}
+        AND qf.level=#{level}
+    </select>
+    <select id="SelectQuestionJudgeNumLevel" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM question_judge qj
+        LEFT JOIN course c on c.id = qj.course_id
+        WHERE c.teacher_Id=#{teacherId}
+        AND qj.level=#{level}
+    </select>
+    <select id="SelectQuestionMultiNumLevel" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM question_multi qm
+        LEFT JOIN course c on c.id = qm.course_id
+        WHERE c.teacher_Id=#{teacherId}
+        AND qm.level=#{level}
+    </select>
+    <select id="SelectQuestionShortAnsNumLevel" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM question_shortans qs
+        LEFT JOIN course c on c.id = qs.course_id
+        WHERE c.teacher_Id=#{teacherId}
+        AND qs.level=#{level}
+    </select>
+    <select id="selectExamNum" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM exam_manage em
+        LEFT JOIN course c on c.id = em.course_id
+        WHERE c.teacher_Id=#{teacherId}
+    </select>
+    <select id="selectCourseNum" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM course
+        WHERE teacher_Id=#{teacherId}
+    </select>
+    <select id="selectStudentNum" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM course_student cs
+        LEFT JOIN course c on c.id = cs.course_id
+        WHERE teacher_Id=#{teacherId}
+    </select>
+    <select id="selectScore" parameterType="com.mc.escommon.entity.exam.ExamScore" resultMap="ExamScore">
+        <include refid="selectVo"/>
+        WHERE c.teacher_id=#{teacherId}
+    </select>
+
+
+</mapper>

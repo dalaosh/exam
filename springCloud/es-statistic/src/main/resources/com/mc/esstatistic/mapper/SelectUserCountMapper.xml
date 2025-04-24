@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mc.esstatistic.mapper.SelectUserCountMapper">
+    <resultMap type="com.mc.escommon.entity.info.Log" id="LogResult">
+        <result property="id" column="id"/>
+        <result property="userId" column="userId"/>
+        <result property="role" column="role"/>
+        <result property="username" column="username"/>
+        <result property="name" column="name"/>
+        <result property="time" column="time"/>
+        <result property="ip" column="ip"/>
+    </resultMap>
+
+    <sql id="selectLogVo">
+        select id, userId, username, role, name, time, ip
+        from system_log
+    </sql>
+
+    <select id="selectCaNum" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM cainstitution
+    </select>
+    <select id="selectAdmin" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM admin
+    </select>
+    <select id="selectTeacher" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM teacher
+    </select>
+    <select id="selectStudent" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM student
+    </select>
+    <select id="selectUserList" parameterType="com.mc.escommon.entity.info.Log" resultMap="LogResult">
+        <include refid="selectLogVo"/>
+        where role = #{role}
+    </select>
+
+</mapper>

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mc.esexam.mapper.CourseMapper">
+    <resultMap id="Course" type="com.mc.escommon.entity.exam.Course">
+        <!-- 映射 Course 实体类自身的属性 -->
+        <result property="id" column="id"/>
+        <result property="teacherId" column="teacher_id"/>
+        <result property="name" column="name"/>
+        <result property="beginTime" column="begin_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="photo" column="photo"/>
+        <result property="number" column="number"/>
+        <result property="message" column="message"/>
+
+        <!-- 关联映射 Teacher 对象的属性 -->
+        <association property="teacher" javaType="com.mc.escommon.entity.user.Teacher">
+            <result property="id" column="teacher_id"/>
+            <result property="role" column="role"/>
+            <result property="photo" column="teacher_photo"/>
+            <result property="account" column="account"/>
+            <result property="password" column="password"/>
+            <result property="keySm3" column="key_sm3"/>
+            <result property="email" column="email"/>
+            <result property="name" column="teacher_name"/>
+            <result property="sex" column="sex"/>
+            <result property="phone" column="phone"/>
+            <result property="publicKey" column="public_key"/>
+        </association>
+    </resultMap>
+
+    <sql id="selectVo">
+        SELECT
+            c.id,
+            c.teacher_id,
+            c.name,
+            c.begin_time,
+            c.end_time,
+            c.photo,
+            c.number,
+            c.message,
+            t.id AS teacher_id,
+            t.role,
+            t.photo AS teacher_photo,
+            t.account,
+            t.password,
+            t.key_sm3,
+            t.email,
+            t.name AS teacher_name,
+            t.sex,
+            t.phone,
+            t.public_key
+        FROM
+            course c
+                LEFT JOIN
+            teacher t ON c.teacher_id = t.id
+    </sql>
+
+    <insert id="insert" parameterType="com.mc.escommon.entity.exam.Course" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO course
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="teacherId != null">teacher_id,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="beginTime != null">begin_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="photo != null and photo != ''">photo,</if>
+            <if test="number != null">number,</if>
+            <if test="message != null and message != ''">message</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="teacherId != null">#{teacherId},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="beginTime != null">#{beginTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="photo != null and photo != ''">#{photo},</if>
+            <if test="number != null">#{number},</if>
+            <if test="message != null and message != ''">#{message}</if>
+        </trim>
+    </insert>
+
+    <!-- 单个删除 -->
+    <delete id="deleteById" parameterType="int">
+        DELETE FROM course WHERE id = #{id}
+    </delete>
+
+    <!-- 批量删除 -->
+    <delete id="deleteByIds" parameterType="int[]">
+        DELETE FROM course WHERE id IN
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectAll" parameterType="com.mc.escommon.entity.exam.Course" resultMap="Course">
+        <!-- 引入之前定义的 SQL 片段 -->
+        <include refid="selectVo"/>
+        <!-- 使用 where 标签来动态生成 WHERE 子句 -->
+        <where>
+            <!-- 判断 id 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="id != null">
+                AND c.id = #{id} <!-- 使用表别名 c 引用 id 列 -->
+            </if>
+            <!-- 判断 teacherId 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="teacherId != null">
+                AND c.teacher_id = #{teacherId} <!-- 使用表别名 c 引用 teacher_id 列 -->
+            </if>
+            <!-- 判断 name 是否不为空且不为空字符串，如果满足条件则添加对应的查询条件 -->
+            <if test="name != null and name != ''">
+                AND c.name = #{name} <!-- 使用表别名 c 引用 name 列 -->
+            </if>
+            <!-- 判断 beginTime 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="beginTime != null">
+                AND c.begin_time = #{beginTime} <!-- 使用表别名 c 引用 begin_time 列 -->
+            </if>
+            <!-- 判断 endTime 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="endTime != null">
+                AND c.end_time = #{endTime} <!-- 使用表别名 c 引用 end_time 列 -->
+            </if>
+            <!-- 判断 photo 是否不为空且不为空字符串，如果满足条件则添加对应的查询条件 -->
+            <if test="photo != null and photo != ''">
+                AND c.photo = #{photo} <!-- 使用表别名 c 引用 photo 列 -->
+            </if>
+            <!-- 判断 number 是否不为空，如果不为空则添加对应的查询条件 -->
+            <if test="number != null">
+                AND c.number = #{number} <!-- 使用表别名 c 引用 number 列 -->
+            </if>
+            <!-- 判断 message 是否不为空且不为空字符串，如果满足条件则添加对应的查询条件 -->
+            <if test="message != null and message != ''">
+                AND c.message = #{message} <!-- 使用表别名 c 引用 message 列 -->
+            </if>
+        </where>
+        ORDER BY c.begin_time DESC
+    </select>
+
+    <select id="selectById" parameterType="int" resultMap="Course">
+        <!-- 引入之前定义的查询课程相关信息的 SQL 片段 -->
+        <include refid="selectVo"/>
+        <!-- 根据课程的唯一标识 id 进行筛选 -->
+        WHERE c.id = #{id}
+        ORDER BY c.begin_time DESC
+    </select>
+    <select id="selectByNumber" parameterType="String" resultMap="Course">
+        <!-- 引入之前定义的查询课程学生相关信息的 SQL 片段 -->
+        <include refid="selectVo"/>
+        <!-- 根据课程学生关联的唯一标识 id 进行筛选 -->
+        WHERE c.number = #{number}
+    </select>
+
+    <update id="updateById" parameterType="com.mc.escommon.entity.exam.Course">
+        <!-- 指定要更新的表为 course -->
+        UPDATE course
+        <!-- 使用 set 标签动态生成要更新的字段 -->
+        <set>
+            <!-- 如果 teacherId 不为空，则更新该字段 -->
+            <if test="teacherId != null">
+                teacher_id = #{teacherId},
+            </if>
+            <!-- 如果 name 不为空且不为空字符串，则更新该字段 -->
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <!-- 如果 beginTime 不为空，则更新该字段 -->
+            <if test="beginTime != null">
+                begin_time = #{beginTime},
+            </if>
+            <!-- 如果 endTime 不为空，则更新该字段 -->
+            <if test="endTime != null">
+                end_time = #{endTime},
+            </if>
+            <!-- 如果 photo 不为空且不为空字符串，则更新该字段 -->
+            <if test="photo != null and photo != ''">
+                photo = #{photo},
+            </if>
+            <!-- 如果 number 不为空，则更新该字段 -->
+            <if test="number != null">
+                number = #{number},
+            </if>
+            <!-- 如果 message 不为空且不为空字符串，则更新该字段 -->
+            <if test="message != null and message != ''">
+                message = #{message},
+            </if>
+        </set>
+        <!-- 根据课程的唯一标识 id 来确定要更新的记录 -->
+        WHERE id = #{id}
+    </update>
+</mapper>

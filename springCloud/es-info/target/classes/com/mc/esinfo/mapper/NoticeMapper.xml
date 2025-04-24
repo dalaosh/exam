@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mc.esinfo.mapper.NoticeMapper">
+    <!-- 定义结果映射，将数据库查询结果映射到 com.mc.escommon.entity.info.Notice 实体类 -->
+    <resultMap type="com.mc.escommon.entity.info.Notice" id="NoticeResult">
+        <!-- 主键映射 -->
+        <id property="id" column="id" />
+        <!-- 用户 ID 映射 -->
+        <result property="userId" column="user_id" />
+        <!-- 通知名称映射 -->
+        <result property="name" column="name" />
+        <!-- 通知内容映射 -->
+        <result property="content" column="content" />
+        <!-- 通知时间映射 -->
+        <result property="time" column="time" />
+        <!-- 关联映射，将通知关联的管理员信息映射到 Notice 对象的 admin 属性上 -->
+        <association property="admin" javaType="com.mc.escommon.entity.user.Admin">
+            <!-- 管理员主键映射 -->
+            <id property="id" column="admin_id" />
+            <!-- 管理员角色映射 -->
+            <result property="role" column="admin_role" />
+            <!-- 管理员头像映射 -->
+            <result property="photo" column="photo" />
+            <!-- 管理员账号映射 -->
+            <result property="account" column="account" />
+            <!-- 管理员密码映射 -->
+            <result property="password" column="password" />
+            <!-- 管理员 SM3 密钥映射 -->
+            <result property="keySm3" column="key_sm3" />
+            <!-- 管理员邮箱映射 -->
+            <result property="email" column="email" />
+            <!-- 管理员姓名映射 -->
+            <result property="name" column="admin_name" />
+            <!-- 管理员性别映射 -->
+            <result property="sex" column="sex" />
+            <!-- 管理员电话映射 -->
+            <result property="phone" column="phone" />
+        </association>
+    </resultMap>
+
+    <!-- 定义可复用的 SQL 片段，用于查询通知信息 -->
+    <sql id="selectNoticeVo">
+        SELECT
+            n.id,
+            n.user_id,
+            n.name,
+            n.content,
+            n.time,
+            a.id AS admin_id,
+            a.role AS admin_role,
+            a.photo,
+            a.account,
+            a.password,
+            a.key_sm3,
+            a.email,
+            a.name AS admin_name,
+            a.sex,
+            a.phone
+        FROM
+            system_notice n
+                LEFT JOIN
+            admin a ON n.user_id = a.id
+    </sql>
+
+    <!-- 插入通知记录 -->
+    <insert id="insert" parameterType="com.mc.escommon.entity.info.Notice" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO system_notice
+        <!-- 使用 trim 标签处理插入字段部分，去除多余逗号并添加括号 -->
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <!-- 判断是否插入 ID -->
+            <if test="id != null">id,</if>
+            <!-- 判断是否插入用户 ID -->
+            <if test="userId != null">user_id,</if>
+            <!-- 判断是否插入通知名称 -->
+            <if test="name != null and name != ''">name,</if>
+            <!-- 判断是否插入通知内容 -->
+            <if test="content != null and content != ''">content,</if>
+            <!-- 判断是否插入通知时间 -->
+            <if test="time != null">time</if>
+        </trim>
+        <!-- 使用 trim 标签处理插入值部分，去除多余逗号并添加括号 -->
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <!-- 插入 ID -->
+            <if test="id != null">#{id},</if>
+            <!-- 插入用户 ID -->
+            <if test="userId != null">#{userId},</if>
+            <!-- 插入通知名称 -->
+            <if test="name != null and name != ''">#{name},</if>
+            <!-- 插入通知内容 -->
+            <if test="content != null and content != ''">#{content},</if>
+            <!-- 插入通知时间 -->
+            <if test="time != null">#{time}</if>
+        </trim>
+    </insert>
+
+    <!-- 单个删除通知记录 -->
+    <delete id="deleteById" parameterType="int">
+        DELETE FROM system_notice WHERE id = #{id}
+    </delete>
+
+    <!-- 批量删除通知记录 -->
+    <delete id="deleteByIds" parameterType="java.util.List">
+        DELETE FROM system_notice WHERE id IN
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 根据条件查询通知记录 -->
+    <select id="selectAll" parameterType="com.mc.escommon.entity.info.Notice" resultMap="NoticeResult">
+        <include refid="selectNoticeVo" />
+        <where>
+            <!-- 根据 ID 筛选 -->
+            <if test="id != null">
+                AND n.id = #{id}
+            </if>
+            <!-- 根据用户 ID 筛选 -->
+            <if test="userId != null">
+                AND n.user_id = #{userId}
+            </if>
+            <!-- 根据通知名称模糊筛选 -->
+            <if test="name != null and name != ''">
+                AND n.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <!-- 根据通知内容模糊筛选 -->
+            <if test="content != null and content != ''">
+                AND n.content LIKE CONCAT('%', #{content}, '%')
+            </if>
+            <!-- 根据通知时间筛选 -->
+            <if test="time != null">
+                AND n.time = #{time}
+            </if>
+        </where>
+        <!-- 添加按时间降序排序的逻辑 -->
+        ORDER BY n.time DESC
+    </select>
+
+    <!-- 根据 ID 查询单个通知记录 -->
+    <select id="selectById" parameterType="int" resultMap="NoticeResult">
+        <include refid="selectNoticeVo" />
+        WHERE n.id = #{id}
+    </select>
+
+    <!-- 根据 ID 更新通知记录 -->
+    <update id="updateById" parameterType="com.mc.escommon.entity.info.Notice">
+        UPDATE system_notice
+        <set>
+            <!-- 更新用户 ID -->
+            <if test="userId != null">user_id = #{userId},</if>
+            <!-- 更新通知名称 -->
+            <if test="name != null and name != ''">name = #{name},</if>
+            <!-- 更新通知内容 -->
+            <if test="content != null and content != ''">content = #{content},</if>
+            <!-- 更新通知时间 -->
+            <if test="time != null">time = #{time},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+</mapper>

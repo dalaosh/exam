@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mc.esuser.mapper.MarkdownMapper">
+    <resultMap id="adminMd" type="com.mc.escommon.entity.markdown.Markdown">
+        <result property="id" column="markdown_id"/>
+        <result property="role" column="markdown_role"/>
+        <result property="userId" column="userId"/>
+        <result property="name" column="markdown_name"/>
+        <result property="address" column="address"/>
+        <result property="time" column="time"/>
+        <!--通过association关键字将User的属性引入进来，几乎每一个表对应的xml都有一个关于本表所有字段的resultMap，其实直接把User的全表resultMap内容复制过来即可-->
+        <association property="admin">
+            <result property="id" column="admin_id"/>
+            <result property="role" column="admin_role"/>
+            <result property="photo" column="photo"/>
+            <result property="account" column="account"/>
+            <result property="password" column="password"/>
+            <result property="keySm3" column="key_sm3"/>
+            <result property="email" column="email"/>
+            <result property="name" column="admin_name"/>
+            <result property="sex" column="sex"/>
+            <result property="phone" column="phone"/>
+        </association>
+    </resultMap>
+    <resultMap id="teacherMd" type="com.mc.escommon.entity.markdown.Markdown">
+        <result property="id" column="markdown_id"/>
+        <result property="role" column="markdown_role"/>
+        <result property="userId" column="userId"/>
+        <result property="name" column="markdown_name"/>
+        <result property="address" column="address"/>
+        <result property="time" column="time"/>
+        <!--通过association关键字将User的属性引入进来，几乎每一个表对应的xml都有一个关于本表所有字段的resultMap，其实直接把User的全表resultMap内容复制过来即可-->
+        <association property="teacher">
+            <result property="id" column="teacher_id"/>
+            <result property="role" column="teacher_role"/>
+            <result property="photo" column="photo"/>
+            <result property="account" column="account"/>
+            <result property="password" column="password"/>
+            <result property="keySm3" column="key_sm3"/>
+            <result property="email" column="email"/>
+            <result property="name" column="teacher_name"/>
+            <result property="sex" column="sex"/>
+            <result property="phone" column="phone"/>
+            <result property="publicKey" column="public_key"/>
+        </association>
+    </resultMap>
+    <resultMap id="studentMd" type="com.mc.escommon.entity.markdown.Markdown">
+        <result property="id" column="markdown_id"/>
+        <result property="role" column="markdown_role"/>
+        <result property="userId" column="userId"/>
+        <result property="name" column="markdown_name"/>
+        <result property="address" column="address"/>
+        <result property="time" column="time"/>
+        <!--通过association关键字将User的属性引入进来，几乎每一个表对应的xml都有一个关于本表所有字段的resultMap，其实直接把User的全表resultMap内容复制过来即可-->
+        <association property="student">
+            <result property="id" column="student_id"/>
+            <result property="role" column="student_role"/>
+            <result property="photo" column="photo"/>
+            <result property="account" column="account"/>
+            <result property="password" column="password"/>
+            <result property="keySm3" column="key_sm3"/>
+            <result property="email" column="email"/>
+            <result property="name" column="student_name"/>
+            <result property="sex" column="sex"/>
+            <result property="phone" column="phone"/>
+            <result property="publicKey" column="public_key"/>
+        </association>
+    </resultMap>
+
+    <sql id="selectAdminMdVo">
+        -- 使用 m 作为 markdown 表的别名，a 作为 admin 表的别名
+        select m.id as markdown_id, m.role as markdown_role, m.userId, m.name as markdown_name, m.address, m.time,
+               a.id as admin_id, a.role as admin_role, a.photo, a.account, a.password, a.key_sm3, a.email,
+               a.name as admin_name, a.sex, a.phone
+        from markdown m
+                 left join admin a on m.userId = a.id
+    </sql>
+
+    <sql id="selectTeacherMdVo">
+        -- 使用 m 作为 markdown 表的别名，t 作为 teacher 表的别名
+        select m.id as markdown_id, m.role as markdown_role, m.userId, m.name as markdown_name, m.address, m.time,
+               t.id as teacher_id, t.role as teacher_role, t.photo, t.account, t.password, t.key_sm3, t.email,
+               t.name as teacher_name, t.sex, t.phone, t.public_key
+        from markdown m
+                 left join teacher t on m.userId = t.id
+    </sql>
+
+    <sql id="selectStudentMdVo">
+        -- 使用表别名 m 代表 markdown 表，s 代表 student 表
+        select m.id as markdown_id, m.role as markdown_role, m.userId, m.name as markdown_name, m.address, m.time,
+               s.id as student_id, s.role as student_role, s.photo, s.account, s.password, s.key_sm3, s.email,
+               s.name as student_name, s.sex, s.phone, s.public_key
+        from markdown m
+                 left join student s on m.userId = s.id
+    </sql>
+    <!--    添加-->
+    <insert id="insert" parameterType="com.mc.escommon.entity.markdown.Markdown" useGeneratedKeys="true" keyProperty="id">
+        insert into markdown
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="role != null and role !='' ">role,</if>
+            <if test="userId != null and userId !='' ">userId,</if>
+            <if test="name != null and name !='' ">name,</if>
+            <if test="address != null and address !='' ">address,</if>
+            <if test="time != null and time !='' ">time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="role != null and role !='' ">#{role},</if>
+            <if test="userId != null and userId !=''">#{userId},</if>
+            <if test="name != null and name !=''">#{name},</if>
+            <if test="address != null and address !='' ">#{address},</if>
+            <if test="time != null and time !=''">#{time},</if>
+        </trim>
+    </insert>
+
+    <!--    单个删除-->
+    <delete id="deleteById" parameterType="int">
+        delete from markdown where id=#{id}
+    </delete>
+
+    <!--    批量删除-->
+    <delete id="deleteByIds" parameterType="int[]">
+        delete from markdown where id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--    根据条件查找-->
+    <select id="selectAdminAll" parameterType="com.mc.escommon.entity.markdown.Markdown" resultMap="adminMd">
+        <include refid="selectAdminMdVo"/>
+        <where>
+            <if test="id != null">
+                AND m.id = #{id} <!-- 使用表别名 m 引用 id 列 -->
+            </if>
+            <if test="role != null and role != ''">
+                AND m.role = #{role} <!-- 使用表别名 m 引用 role 列 -->
+            </if>
+            <if test="userId != null and userId != ''">
+                AND m.userId = #{userId} <!-- 使用表别名 m 引用 userId 列 -->
+            </if>
+            <if test="name != null and name != ''">
+                AND m.name like concat('%',#{name},'%') <!-- 使用表别名 m 引用 name 列 -->
+            </if>
+            <if test="address != null and address != ''">
+                AND m.address = #{address} <!-- 使用表别名 m 引用 address 列 -->
+            </if>
+            <if test="time != null and time != ''">
+                AND m.time = #{time} <!-- 使用表别名 m 引用 time 列 -->
+            </if>
+        </where>
+    </select>
+    <!--    根据条件查找-->
+    <select id="selectTeacherAll" parameterType="com.mc.escommon.entity.markdown.Markdown" resultMap="teacherMd">
+        <include refid="selectTeacherMdVo"/>
+        <where>
+            <if test="id != null">
+                AND m.id = #{id} <!-- 使用表别名 m 引用 id 列 -->
+            </if>
+            <if test="role != null and role != ''">
+                AND m.role = #{role} <!-- 使用表别名 m 引用 role 列 -->
+            </if>
+            <if test="userId != null and userId != ''">
+                AND m.userId = #{userId} <!-- 使用表别名 m 引用 userId 列 -->
+            </if>
+            <if test="name != null and name != ''">
+                AND m.name like concat('%',#{name},'%') <!-- 使用表别名 m 引用 name 列 -->
+            </if>
+            <if test="address != null and address != ''">
+                AND m.address = #{address} <!-- 使用表别名 m 引用 address 列 -->
+            </if>
+            <if test="time != null and time != ''">
+                AND m.time = #{time} <!-- 使用表别名 m 引用 time 列 -->
+            </if>
+        </where>
+    </select>
+    <!--    根据条件查找-->
+    <select id="selectStudentAll" parameterType="com.mc.escommon.entity.markdown.Markdown" resultMap="studentMd">
+        <include refid="selectStudentMdVo"/>
+        <where>
+            <if test="id != null">
+                AND m.id = #{id} <!-- 使用表别名 m 引用 id 列 -->
+            </if>
+            <if test="role != null and role != ''">
+                AND m.role = #{role} <!-- 使用表别名 m 引用 role 列 -->
+            </if>
+            <if test="userId != null and userId != ''">
+                AND m.userId = #{userId} <!-- 使用表别名 m 引用 userId 列 -->
+            </if>
+            <if test="name != null and name != ''">
+                AND m.name like concat('%',#{name},'%') <!-- 使用表别名 m 引用 name 列 -->
+            </if>
+            <if test="address != null and address != ''">
+                AND m.address = #{address} <!-- 使用表别名 m 引用 address 列 -->
+            </if>
+            <if test="time != null and time != ''">
+                AND m.time = #{time} <!-- 使用表别名 m 引用 time 列 -->
+            </if>
+        </where>
+    </select>
+    <select id="selectAdminById" parameterType="com.mc.escommon.entity.markdown.Markdown" resultMap="adminMd">
+        <include refid="selectAdminMdVo"/>
+        where markdown_id=#{id}
+    </select>
+    <select id="selectStudentById" parameterType="com.mc.escommon.entity.markdown.Markdown" resultMap="studentMd">
+        <include refid="selectStudentMdVo"/>
+        where markdown_id=#{id}
+    </select>
+    <select id="selectTeacherById" parameterType="com.mc.escommon.entity.markdown.Markdown" resultMap="teacherMd">
+        <include refid="selectTeacherMdVo"/>
+        where markdown_id=#{id}
+    </select>
+    <update id="updateById" parameterType="com.mc.escommon.entity.markdown.Markdown">
+        update markdown
+        <set>
+            <if test="role != null and role != ''">role = #{role},</if>
+            <if test="userId != null and userId != ''">userId = #{userId},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="address != null and address != ''">address = #{address},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>
