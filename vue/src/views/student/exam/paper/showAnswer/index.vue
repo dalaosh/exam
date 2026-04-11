@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="student-answer-review-page">
     <div class="head">
       <el-row>
         <el-col :span="2">
@@ -1087,4 +1087,164 @@ export default {
   height: 15vh;
 }
 
+</style>
+<style scoped>
+.student-answer-review-page {
+  min-height: calc(100vh - 148px);
+  background: #f3f6fb;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.student-answer-review-page .head {
+  height: auto;
+  min-height: 72px;
+  padding: 16px 24px;
+  background: #ffffff;
+  border-bottom: 1px solid #e8eef5;
+  font-size: 15px;
+  font-weight: 600;
+  color: #0f172a;
+  font-family: inherit;
+}
+
+.student-answer-review-page .main {
+  height: auto;
+  min-height: calc(100vh - 220px);
+  padding: 16px;
+  background: transparent;
+}
+
+.student-answer-review-page .message,
+.student-answer-review-page .shows,
+.student-answer-review-page .number,
+.student-answer-review-page .questionBody,
+.student-answer-review-page .questionBottom {
+  width: auto;
+  margin: 0 0 16px;
+  border: 1px solid #e5ebf3;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
+}
+
+.student-answer-review-page :deep(.message .el-card__body),
+.student-answer-review-page :deep(.shows .el-card__body),
+.student-answer-review-page :deep(.number .el-card__body),
+.student-answer-review-page :deep(.questionBody .el-card__body),
+.student-answer-review-page :deep(.questionBottom .el-card__body) {
+  padding: 18px 20px;
+}
+
+.student-answer-review-page .nowQ,
+.student-answer-review-page .beforeQ,
+.student-answer-review-page .afterQ,
+.student-answer-review-page .setQ,
+.student-answer-review-page .nowQQ,
+.student-answer-review-page .beforeQQ,
+.student-answer-review-page .afterQQ,
+.student-answer-review-page .setQQ {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px !important;
+  height: 42px !important;
+  margin: 0 auto 8px !important;
+  padding-top: 0 !important;
+  border-radius: 12px !important;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.student-answer-review-page .nowQ,
+.student-answer-review-page .nowQQ {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+}
+
+.student-answer-review-page .beforeQ,
+.student-answer-review-page .beforeQQ {
+  background: #cbd5e1;
+  color: #475569;
+}
+
+.student-answer-review-page .afterQ,
+.student-answer-review-page .afterQQ {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+}
+
+.student-answer-review-page .setQ,
+.student-answer-review-page .setQQ {
+  background: linear-gradient(135deg, #f97316, #ea580c);
+}
+
+.student-answer-review-page .number {
+  max-height: calc(100vh - 420px);
+  overflow-y: auto;
+}
+
+.student-answer-review-page .titleQuestion {
+  margin-bottom: 14px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.student-answer-review-page .numberQuestion {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.student-answer-review-page .questions {
+  height: calc(100vh - 220px);
+  overflow-y: auto;
+  background: transparent;
+}
+
+.student-answer-review-page .questionBody {
+  max-height: calc(100vh - 360px);
+  overflow-y: auto;
+  font-size: 15px;
+}
+
+.student-answer-review-page :deep(.el-button[type="text"]) {
+  font-size: 16px !important;
+  font-weight: 600;
+}
+
+.student-answer-review-page :deep(.questionBottom .el-button) {
+  min-width: 160px;
+  height: 42px;
+  border-radius: 10px;
+  font-size: 15px !important;
+  font-weight: 600;
+}
+
+.student-answer-review-page :deep(.el-textarea__inner) {
+  border-radius: 12px;
+  border-color: #dbe4ee;
+  min-height: 220px !important;
+  background: #f8fafc;
+}
+
+.student-answer-review-page :deep(.monaco-editor),
+.student-answer-review-page :deep(.monaco-editor-background),
+.student-answer-review-page :deep(.margin),
+.student-answer-review-page :deep(.inputarea.ime-input) {
+  background: #0f172a !important;
+}
+
+.student-answer-review-page :deep(.questionBody hr) {
+  margin: 18px 0;
+  border: none;
+  border-top: 1px solid #e5ebf3;
+}
+
+@media (max-width: 1280px) {
+  .student-answer-review-page .questions,
+  .student-answer-review-page .questionBody,
+  .student-answer-review-page .number {
+    height: auto;
+    max-height: none;
+  }
+}
 </style>

@@ -25,7 +25,7 @@ import java.io.IOException;
  * * inform
  */
 
-@FeignClient(name = "es-mail")
+@FeignClient(name = "es-mail", url = "${services.es-mail.url:http://localhost:9081}")
 public interface EmailFeignClient {
     @PostMapping("/email/sendSimpleMail")
     String sendSimpleMail(@RequestParam("address") String address,

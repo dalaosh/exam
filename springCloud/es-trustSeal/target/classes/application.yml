@@ -1,19 +1,18 @@
 spring:
   application:
     name: es-trustSeal
-  config:
-    import: nacos:es-trustSeal-dev.yml
   cloud:
     nacos:
       discovery:
-        server-addr: localhost:8848
+        enabled: false
       config:
-        server-addr: localhost:8848
-        file-extension: yml
-  redis:
-    host: localhost
-    port: 6379
-    password: 123456
+        enabled: false
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      username: default
+      password: 123456
     # 配置组件扫描路径，确保能扫描到公共模块中的异常处理器
   component-scan:
     base-packages: com.mc.escommon.exception, com.mc.estrustSeal.controller

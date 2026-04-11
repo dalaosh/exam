@@ -192,6 +192,7 @@ public class StudentServiceImpl implements StudentService {
             throw new CustomException(ResultCodeEnum.USER_PASSWORD_ERROR);
         }
         //2.做数字摘要
+        student.setAccount(student.getAccount().trim());
         String sm3 = SM3API.hashS(student.getPassword());
         //3.进行密码判断
         Student user=studentMapper.findByAccountAndSM3(student.getAccount(),sm3);

@@ -1,202 +1,58 @@
-<!--<template>-->
-<!--  <div>-->
-<!--    <el-row style="margin-top: 2vh;margin-bottom: 2vh;text-align: center">-->
-<!--      <el-col :span="6">-->
-<!--        考试科目:{{this.form.course.name}}-->
-<!--      </el-col>-->
-<!--      <el-col :span="10">-->
-<!--        考试开始时间:{{this.form.examDate}}-->
-<!--      </el-col>-->
-<!--      <el-col :span="4">-->
-<!--        考试时长:{{this.form.totalTime}}分钟-->
-<!--      </el-col>-->
-<!--      <el-col :span="4">-->
-<!--        总分:{{this.form.totalScore}}分-->
-<!--      </el-col>-->
-<!--    </el-row>-->
-<!--    <el-row style="text-align: center">-->
-<!--      <el-col :span="6">-->
-<!--        课程编码:{{this.form.course.number}}-->
-<!--      </el-col>-->
-<!--      <el-col :span="8">-->
-<!--        考试类型:{{this.form.type}}-->
-<!--      </el-col>-->
-<!--      <el-col :span="8">-->
-<!--        出题人:{{this.form.teacher.name}}-->
-<!--      </el-col>-->
-<!--    </el-row>-->
-<!--    <el-row class="body">-->
-<!--      <div style="margin: 0 30% 0 30%;width: 40%;">-->
-<!--        <el-form :model="AParams" status-icon :rules="rules" ref="AParams" label-width="100px">-->
-<!--          <el-form-item label="选择题" prop="multi">-->
-<!--            <el-input v-model.number="AParams.multi"></el-input>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item label="判断题" prop="judge">-->
-<!--            <el-input v-model.number="AParams.judge"></el-input>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item label="填空题" prop="fill">-->
-<!--            <el-input v-model.number="AParams.fill"></el-input>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item label="简答题" prop="shortAns">-->
-<!--            <el-input v-model.number="AParams.shortAns"></el-input>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item label="编程题" prop="code">-->
-<!--            <el-input v-model.number="AParams.code"></el-input>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item>-->
-<!--            <el-button type="primary" @click="submit()">提交</el-button>-->
-<!--            <el-button @click="resetForm()">重置</el-button>-->
-<!--          </el-form-item>-->
-<!--        </el-form>-->
-<!--      </div>-->
-<!--    </el-row>-->
-<!--  </div>-->
-<!--</template>-->
-
-<!--<script>-->
-<!--import request from "@/utils/request";-->
-<!--export default {-->
-<!--  props: {-->
-<!--    // 定义接收的参数，这里以 param 为例-->
-<!--    param: {-->
-<!--      type: String, // 参数类型，这里是字符串类型-->
-<!--      required: false, // 是否为必需参数，这里设为非必需-->
-<!--      default: '',// 参数的默认值-->
-<!--      form:[]-->
-<!--    },-->
-<!--    courseId: {-->
-<!--      type: String, // 参数类型，这里是字符串类型-->
-<!--      required: false, // 是否为必需参数，这里设为非必需-->
-<!--      default: '',// 参数的默认值-->
-<!--      form:[]-->
-<!--    }-->
-<!--  },-->
-<!--  data(){-->
-<!--    return{-->
-<!--      user:localStorage.getItem("user") ? (JSON).parse(localStorage.getItem("user")) : {},-->
-<!--      receivedData:"",-->
-<!--      form:{-->
-<!--      },-->
-<!--      AParams:{-->
-<!--        courseId: this.courseId,-->
-<!--        examId:this.param-->
-<!--      }-->
-<!--    }-->
-<!--  },-->
-<!--  created() {-->
-<!--    this.receivedData = this.param-->
-<!--    this.load()-->
-<!--  },-->
-<!--  mounted() {-->
-
-<!--  },-->
-<!--  methods: {-->
-<!--    load(){-->
-<!--      this.$message.success(this.receivedData)-->
-<!--      request.get("exam/examManage/selectById/"+this.receivedData).then(res=>{-->
-<!--        if (res.code === '200') {-->
-<!--          this.form=res.data-->
-<!--        } else {-->
-<!--          this.$message.error(res.msg)-->
-<!--        }-->
-<!--      })-->
-<!--    },-->
-<!--    submit(){-->
-<!--      console.log(this.AParams)-->
-<!--      request.get("/exam/examPaper/addAll", {-->
-<!--        params:this.AParams-->
-<!--      }).then(res => {-->
-<!--        if (res.code === "200") {-->
-<!--          this.$message.success("添加成功")-->
-<!--        } else {-->
-<!--          this.$message.error(res.msg)-->
-<!--        }-->
-<!--      })-->
-<!--    },-->
-<!--    resetForm(){-->
-<!--      this.AParams={-->
-<!--        courseId: this.courseId,-->
-<!--        examId:this.param-->
-<!--      }-->
-<!--    }-->
-<!--  }-->
-<!--}-->
-<!--</script>-->
-
-
-<!--<style scoped>-->
-<!--.title{-->
-<!--  margin: 4vh 4% 0 4%;-->
-<!--  width: 92%;-->
-<!--  height: 8vh;-->
-<!--  background: #f3f5f8;-->
-<!--  border-radius: 10px;-->
-<!--  font-size: 26px;-->
-<!--  text-align: center;-->
-<!--  padding-top: 2vh;-->
-<!--}-->
-<!--.body{-->
-<!--  margin: 2vh 4% 0 4%;-->
-<!--  padding: 2vh 2% 2vh 2%;-->
-<!--  width: 92%;-->
-<!--  height: 64vh;-->
-<!--  background: #bcf6dd;-->
-<!--  overflow-y: scroll;-->
-<!--  border-radius: 10px-->
-<!--}-->
-<!--.body::-webkit-scrollbar{-->
-<!--  width:0;-->
-<!--}-->
-<!--</style>-->
-
-
 <template>
-  <div style="height: 100vh;">
-    <!-- 头部信息 -->
-    <el-row style="margin: 2vh 0; text-align: center">
-      <el-col :span="6">
-        考试科目: {{ form.course?.name }}
-      </el-col>
-      <el-col :span="10">
-        考试开始时间: {{ form.examDate }}
-      </el-col>
-      <el-col :span="4">
-        考试时长: {{ form.totalTime }}分钟
-      </el-col>
-      <el-col :span="4">
-        总分: {{ form.totalScore }}分
-      </el-col>
-    </el-row>
-    <el-row style="text-align: center">
-      <el-col :span="6">
-        课程编码: {{ form.course?.number }}
-      </el-col>
-      <el-col :span="8">
-        考试类型: {{ form.type }}
-      </el-col>
-      <el-col :span="8">
-        出题人: {{ form.teacher?.name }}
-      </el-col>
-    </el-row>
+  <div class="auto-paper-page">
+    <div class="auto-paper-summary">
+      <div class="auto-paper-summary__item">
+        <span class="auto-paper-summary__label">考试科目</span>
+        <span class="auto-paper-summary__value">{{ form.course?.name }}</span>
+      </div>
+      <div class="auto-paper-summary__item auto-paper-summary__item--wide">
+        <span class="auto-paper-summary__label">考试开始时间</span>
+        <span class="auto-paper-summary__value">{{ form.examDate }}</span>
+      </div>
+      <div class="auto-paper-summary__item">
+        <span class="auto-paper-summary__label">考试时长</span>
+        <span class="auto-paper-summary__value">{{ form.totalTime }} 分钟</span>
+      </div>
+      <div class="auto-paper-summary__item">
+        <span class="auto-paper-summary__label">总分</span>
+        <span class="auto-paper-summary__value">{{ form.totalScore }} 分</span>
+      </div>
+      <div class="auto-paper-summary__item">
+        <span class="auto-paper-summary__label">课程编号</span>
+        <span class="auto-paper-summary__value">{{ form.course?.number }}</span>
+      </div>
+      <div class="auto-paper-summary__item">
+        <span class="auto-paper-summary__label">考试类型</span>
+        <span class="auto-paper-summary__value">{{ form.type }}</span>
+      </div>
+      <div class="auto-paper-summary__item">
+        <span class="auto-paper-summary__label">出题教师</span>
+        <span class="auto-paper-summary__value">{{ form.teacher?.name }}</span>
+      </div>
+    </div>
 
-    <!-- 主体内容 -->
-    <el-row class="main-container">
-      <!-- 左侧表单 -->
-      <el-col :span="8" class="form-container">
+    <div class="auto-paper-main">
+      <div class="auto-paper-form">
+        <div class="auto-paper-panel__head">
+          <div>
+            <h3 class="auto-paper-panel__title">组卷参数</h3>
+            <p class="auto-paper-panel__desc">设置题型数量与难度分布，提交后按当前参数生成试卷。</p>
+          </div>
+        </div>
+
         <el-form
-            :model="AParams"
-            status-icon
-            :rules="rules"
-            ref="AParams"
-            label-width="100px"
-            style="padding: 20px;"
+          :model="AParams"
+          status-icon
+          :rules="rules"
+          ref="AParams"
+          label-width="96px"
         >
           <el-form-item label="难度等级" prop="difficulty">
             <el-select
-                v-model="AParams.difficulty"
-                placeholder="请选择难度"
-                @change="updateChart"
-                style="width: 100%;"
+              v-model="AParams.difficulty"
+              placeholder="请选择难度"
+              @change="updateChart"
+              style="width: 100%;"
             >
               <el-option label="简单" value="easy"></el-option>
               <el-option label="中等" value="medium"></el-option>
@@ -205,35 +61,54 @@
           </el-form-item>
 
           <el-form-item
-              v-for="(item, index) in questionTypes"
-              :key="index"
-              :label="item.label"
-              :prop="item.prop"
+            v-for="(item, index) in questionTypes"
+            :key="index"
+            :label="item.label"
+            :prop="item.prop"
           >
             <el-input-number
-                v-model.number="AParams[item.prop]"
-                :min="0"
-                controls-position="right"
-                @change="updateChart"
-                style="width: 100%;"
+              v-model.number="AParams[item.prop]"
+              :min="0"
+              controls-position="right"
+              @change="updateChart"
+              :disabled="generating"
+              style="width: 100%;"
             />
           </el-form-item>
 
-          <el-form-item>
-            <el-button type="primary" @click="submit">提交</el-button>
-            <el-button @click="resetForm">重置</el-button>
-          </el-form-item>
+          <div v-if="generating || progress > 0" class="auto-paper-progress">
+            <div class="auto-paper-progress__head">
+              <span class="auto-paper-progress__label">组卷进度</span>
+              <span class="auto-paper-progress__value">{{ progress }}%</span>
+            </div>
+            <el-progress
+              :percentage="progress"
+              :stroke-width="10"
+              :show-text="false"
+              :status="progress === 100 ? 'success' : undefined"
+            />
+            <div class="auto-paper-progress__hint">{{ progressText }}</div>
+          </div>
+
+          <div class="auto-paper-form__actions">
+            <el-button type="primary" :loading="generating" @click="submit">提交</el-button>
+            <el-button :disabled="generating" @click="resetForm">重置</el-button>
+          </div>
         </el-form>
-      </el-col>
+      </div>
 
-      <!-- 右侧图表 -->
-      <el-col :span="16">
-        <div class="chart-container">
-          <div ref="chart" style="width: 600px; height: 60vh;"></div>
+      <div class="auto-paper-chart">
+        <div class="auto-paper-panel__head">
+          <div>
+            <h3 class="auto-paper-panel__title">题型数量分布</h3>
+            <p class="auto-paper-panel__desc">右侧图表会随着题型数量和难度选择实时更新。</p>
+          </div>
         </div>
-
-      </el-col>
-    </el-row>
+        <div ref="chartWrap" class="auto-paper-chart__wrap">
+          <div ref="chart" class="auto-paper-chart__canvas"></div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -253,7 +128,7 @@ export default {
         { label: '判断题', prop: 'judge' },
         { label: '填空题', prop: 'fill' },
         { label: '简答题', prop: 'shortAns' },
-        { label: '编程题', prop: 'code' }
+        { label: '代码题', prop: 'code' }
       ],
       form: {},
       AParams: {
@@ -273,15 +148,37 @@ export default {
         shortAns: [{ type: 'number', message: '必须为数字值' }],
         code: [{ type: 'number', message: '必须为数字值' }]
       },
-      chart: null
+      chart: null,
+      resizeObserver: null,
+      generating: false,
+      progress: 0,
+      progressText: '等待开始组卷',
+      progressTimer: null
     };
   },
   mounted() {
     this.initChart();
     window.addEventListener('resize', this.handleResize);
+    if (window.ResizeObserver && this.$refs.chartWrap) {
+      this.resizeObserver = new ResizeObserver(() => {
+        this.handleResize();
+      });
+      this.resizeObserver.observe(this.$refs.chartWrap);
+    }
+    this.$nextTick(() => {
+      setTimeout(() => {
+        this.handleResize();
+      }, 50);
+    });
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.handleResize);
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+    }
+    if (this.progressTimer) {
+      clearInterval(this.progressTimer);
+    }
     if (this.chart) {
       this.chart.dispose();
     }
@@ -294,67 +191,69 @@ export default {
     updateChart() {
       const option = {
         title: {
-          text: '题目数量分布',
+          text: '题型数量分布',
           left: 'center',
+          top: 0,
           textStyle: {
-            fontSize: 18,
-            color: '#130505'
+            fontSize: 16,
+            fontWeight: 600,
+            color: '#0f172a'
           }
         },
         tooltip: {
           trigger: 'axis',
-          formatter: '{b}: {c}题'
+          formatter: '{b}: {c} 题'
         },
         xAxis: {
           type: 'category',
           data: this.questionTypes.map(item => item.label),
-          axisLine: { // X轴轴线样式
+          axisLine: {
             lineStyle: {
-              color: '#606266' // 轴颜色
+              color: '#94a3b8'
             }
           },
-          axisTick: { // X轴刻度线
+          axisTick: {
             alignWithLabel: true,
             lineStyle: {
-              color: '#909399' // 刻度线颜色
+              color: '#cbd5e1'
             }
           },
-          axisLabel: { // X轴文字样式
-            color: '#303133',
-            fontSize: 14,
-            rotate: 45,
+          axisLabel: {
+            color: '#475569',
+            fontSize: 13,
+            rotate: 0,
             fontWeight: 500
           }
         },
         yAxis: {
           type: 'value',
           name: '题目数量',
-          nameTextStyle: { // Y轴名称样式
-            color: '#0756f3',
-            fontSize: 14,
+          nameTextStyle: {
+            color: '#64748b',
+            fontSize: 13,
             padding: [0, 0, 10, 0]
           },
           minInterval: 1,
-          axisLine: { // Y轴轴线
+          axisLine: {
             show: true,
             lineStyle: {
-              color: '#070c15'
+              color: '#cbd5e1'
             }
           },
-          axisTick: { // Y轴刻度线
+          axisTick: {
             show: true,
             lineStyle: {
-              color: '#0a52e1'
+              color: '#cbd5e1'
             }
           },
-          axisLabel: { // Y轴文字
-            color: '#020917',
+          axisLabel: {
+            color: '#475569',
             fontSize: 12
           },
-          splitLine: { // 网格线
+          splitLine: {
             show: true,
             lineStyle: {
-              color: '#ebeef5',
+              color: '#e2e8f0',
               type: 'dashed'
             }
           }
@@ -367,7 +266,7 @@ export default {
             color: this.getDifficultyColor(),
             borderRadius: [5, 5, 0, 0]
           },
-          barWidth: '60%',
+          barMaxWidth: 56,
           label: {
             show: true,
             position: 'top'
@@ -375,12 +274,16 @@ export default {
         }],
         grid: {
           containLabel: true,
-          left: '3%',
-          right: '3%',
-          bottom: '12%'
+          left: '5%',
+          right: '4%',
+          bottom: '10%',
+          top: 52
         }
       };
       this.chart.setOption(option);
+      this.$nextTick(() => {
+        this.handleResize();
+      });
     },
     getDifficultyColor() {
       const colors = {
@@ -391,7 +294,47 @@ export default {
       return colors[this.AParams.difficulty] || '#5470c6';
     },
     handleResize() {
-      this.chart?.resize();
+      if (this.chart) {
+        this.chart.resize();
+      }
+    },
+    startFakeProgress() {
+      this.generating = true;
+      this.progress = 0;
+      this.progressText = '正在分析组卷参数...';
+      if (this.progressTimer) {
+        clearInterval(this.progressTimer);
+      }
+      this.progressTimer = setInterval(() => {
+        if (this.progress < 32) {
+          this.progress += 8;
+          this.progressText = '正在分析组卷参数...';
+        } else if (this.progress < 68) {
+          this.progress += 6;
+          this.progressText = '正在匹配题型与难度分布...';
+        } else if (this.progress < 92) {
+          this.progress += 3;
+          this.progressText = '正在整理试卷结构...';
+        }
+      }, 180);
+    },
+    finishFakeProgress(success) {
+      return new Promise(resolve => {
+        if (this.progressTimer) {
+          clearInterval(this.progressTimer);
+          this.progressTimer = null;
+        }
+        this.progress = 100;
+        this.progressText = success ? '组卷完成，试卷已生成。' : '组卷中断，请稍后重试。';
+        setTimeout(() => {
+          this.generating = false;
+          if (!success) {
+            this.progress = 0;
+            this.progressText = '等待开始组卷';
+          }
+          resolve();
+        }, success ? 420 : 320);
+      });
     },
     async load() {
       try {
@@ -406,21 +349,31 @@ export default {
       }
     },
     async submit() {
+      if (this.generating) {
+        return;
+      }
+      this.startFakeProgress();
       try {
         const res = await request.get("/exam/examPaper/addAll", {
           params: this.AParams
         });
         if (res.code === "200") {
+          await this.finishFakeProgress(true);
           this.$message.success("试卷生成成功");
           this.resetForm();
         } else {
+          await this.finishFakeProgress(false);
           this.$message.error(res.msg);
         }
       } catch (error) {
+        await this.finishFakeProgress(false);
         this.$message.error("提交失败，请检查网络");
       }
     },
     resetForm() {
+      if (this.generating) {
+        return;
+      }
       this.AParams = {
         ...this.AParams,
         difficulty: 'medium',
@@ -440,33 +393,148 @@ export default {
 </script>
 
 <style scoped>
-.main-container {
-  height: calc(100vh - 160px);
-  margin: 20px;
-  background: #f5f7fa;
-  border-radius: 8px;
-  box-shadow: 0 2px 12px rgba(0,0,0,.1);
+.auto-paper-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-.form-container {
-  height: 60vh;
-  background: white;
-  border-right: 1px solid #ebeef5;
+.auto-paper-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
 }
 
-.chart-container {
-  width: 100%;
-  height: 60vh;
+.auto-paper-summary__item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 84px;
+  padding: 14px 18px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.auto-paper-summary__item--wide {
+  grid-column: span 2;
+}
+
+.auto-paper-summary__label {
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.auto-paper-summary__value {
+  font-size: 16px;
+  line-height: 1.6;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.auto-paper-main {
+  display: grid;
+  grid-template-columns: minmax(320px, 360px) minmax(0, 1fr);
+  gap: 20px;
+}
+
+.auto-paper-form,
+.auto-paper-chart {
   padding: 20px;
-  background: #f0ecf1;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  background: #fff;
 }
 
-.el-form-item {
-  margin-bottom: 22px;
+.auto-paper-panel__head {
+  padding-bottom: 14px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid #eef2f7;
 }
 
-.el-button {
+.auto-paper-panel__title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.auto-paper-panel__desc {
+  margin: 6px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #6b7280;
+}
+
+.auto-paper-form .el-form-item {
+  margin-bottom: 18px;
+}
+
+.auto-paper-form__actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding-top: 8px;
+}
+
+.auto-paper-progress {
   margin-top: 10px;
-  width: 48%;
+  padding: 12px 14px;
+  border: 1px solid #dbeafe;
+  border-radius: 6px;
+  background: #f8fbff;
+}
+
+.auto-paper-progress__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.auto-paper-progress__label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.auto-paper-progress__value {
+  font-size: 12px;
+  color: #0369a1;
+}
+
+.auto-paper-progress__hint {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.auto-paper-chart__wrap {
+  width: 100%;
+  min-height: 430px;
+}
+
+.auto-paper-chart__canvas {
+  width: 100%;
+  height: 430px;
+}
+
+@media (max-width: 1280px) {
+  .auto-paper-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .auto-paper-summary__item--wide {
+    grid-column: span 1;
+  }
+}
+
+@media (max-width: 1200px) {
+  .auto-paper-main {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

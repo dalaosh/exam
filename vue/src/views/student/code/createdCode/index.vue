@@ -1,72 +1,131 @@
 <template>
-  <div style="background: #fcf8f3">
-    <el-row>
-      <el-col :span="14">
-        <el-row>
-          <div class="left-top">
-            <div style="font-size: 26px;margin-bottom: 1vh">题目：</div>
-            <el-input
-                style="font-size: 26px"
-                type="textarea"
-                :autosize="{ minRows: 3, maxRows: 3}"
-                placeholder=""
-                v-model="table.title">
-            </el-input>
-          </div>
-        </el-row>
-        <el-row>
-          <div class="left-bottom">
-            <el-row>
-              <el-col style="font-size: 24px" :span="16">
-                请选择语言：
-                <el-radio v-model="language" label="c++"><a style="font-size: 24px">c++</a></el-radio>
-                <el-radio v-model="language" label="c"><a style="font-size: 24px">c</a></el-radio>
-              </el-col>
-              <el-col :span="8">
-                <el-button style="width: 50%; background-color: #dbdbec; border-color: #030303;  color: #0a0101;font-size: 18px" @click="runCpp">运 行</el-button>
-              </el-col>
-            </el-row>
-            <el-row>
-              <div style="font-size: 24px">
-                <label for="fontSize">字体大小：</label>
-                <input type="range" min="10" max="80" v-model="fontSize" id="fontSize" />
-                <span>{{ fontSize }}px</span>
-              </div>
-            </el-row>
-            <el-row>
-              <monaco-editor
-                  v-model="code"
-                  :language="language"
-                  :options="editorOptions"
-                  style="margin-top:2vh;height: 44vh"
-              ></monaco-editor>
-            </el-row>
-          </div>
-        </el-row>
-      </el-col>
-      <el-col :span="10">
-        <el-row>
-          <div class="right-top">
-            <div style="font-size: 26px;margin-bottom: 1vh">
-              运行结果：
+  <div class="student-page">
+    <section class="student-page-head">
+      <div>
+        <h2 class="student-page-head__title">代码实操</h2>
+        <p class="student-page-head__desc">将题目、语言、编辑器和运行结果整合到同一工作台中。</p>
+      </div>
+      <div class="student-page-head__meta">
+        <el-tag class="student-tag" type="info">在线运行</el-tag>
+      </div>
+    </section>
+
+    <section class="student-code-grid">
+      <div class="student-code-stack">
+        <article class="student-panel student-code-panel">
+          <h3 class="student-code-panel__title">题目内容</h3>
+          <p class="student-code-panel__desc">输入本次代码实操题目，保存时沿用当前字段与提交结构。</p>
+          <el-input
+            v-model="table.title"
+            type="textarea"
+            :autosize="{ minRows: 4, maxRows: 4 }"
+            placeholder="请输入题目内容"
+          />
+        </article>
+
+        <article class="student-panel student-code-panel">
+          <div class="student-code-toolbar">
+            <div class="student-code-toolbar__group">
+              <span class="student-code-toolbar__label">语言选择</span>
+              <el-select
+                v-model="language"
+                size="medium"
+                class="student-code-toolbar__select"
+                placeholder="请选择语言"
+              >
+                <el-option
+                  v-for="item in languageOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
             </div>
+
+            <div class="student-code-toolbar__group">
+              <div class="student-code-slider">
+                <span class="student-code-toolbar__label">字体大小</span>
+                <input id="fontSize" v-model="fontSize" type="range" min="10" max="80">
+                <span class="student-code-slider__value">{{ fontSize }}px</span>
+              </div>
+              <el-button type="primary" @click="runCode">运行代码</el-button>
+            </div>
+          </div>
+
+          <div class="student-code-editor">
+            <div class="student-code-editor__chrome">
+              <div class="student-code-editor__chrome-left">
+                <div class="student-code-editor__dots">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+                <div class="student-code-editor__tab">
+                  <i class="el-icon-document"></i>
+                  {{ fileName }}
+                </div>
+                <span class="student-code-editor__hint">Monaco Editor</span>
+              </div>
+              <div class="student-code-editor__chrome-right">
+                <span class="student-code-badge student-code-badge--accent">
+                  <i class="el-icon-cpu"></i>
+                  {{ selectedLanguageLabel || "请选择语言" }}
+                </span>
+                <span class="student-code-badge">
+                  <i class="el-icon-edit-outline"></i>
+                  {{ codeLineCount }} 行
+                </span>
+              </div>
+            </div>
+            <div class="student-code-editor__body">
+              <monaco-editor
+                v-model="code"
+                :language="editorLanguage"
+                :options="editorOptions"
+                style="height: 520px"
+              />
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="student-code-stack">
+        <article class="student-panel student-code-panel">
+          <div class="student-code-result-head">
+            <div>
+              <h3 class="student-code-panel__title" style="margin-bottom: 6px;">运行结果</h3>
+              <p class="student-code-panel__desc" style="margin: 0;">右侧结果区实时展示当前代码运行输出，便于提交前检查。</p>
+            </div>
+            <span class="student-code-result-status" :class="resultStatusClass">{{ resultStatusText }}</span>
+          </div>
+          <div class="student-code-output">
             <el-input
-                style="font-size: 18px"
-                disabled="true"
-                type="textarea"
-                :autosize="{ minRows: 19, maxRows: 19}"
-                placeholder="运行结果"
-                v-model="result">
-            </el-input>
+              v-model="result"
+              type="textarea"
+              :disabled="true"
+              :autosize="{ minRows: 22, maxRows: 22 }"
+              placeholder="运行结果"
+            />
           </div>
-        </el-row>
-        <el-row>
-          <div class="right-bottom">
-            <el-button type="primary" round style="width: 40%;font-size: 18px" @click="submit">存 档</el-button>
+        </article>
+
+        <article class="student-panel student-code-panel">
+          <div class="student-code-meta">
+            <div class="student-code-meta__item">
+              <span>当前语言</span>
+              <strong>{{ selectedLanguageLabel || "未选择" }}</strong>
+            </div>
+            <div class="student-code-meta__item">
+              <span>编辑状态</span>
+              <strong>{{ code ? "已输入代码" : "等待输入" }}</strong>
+            </div>
           </div>
-        </el-row>
-      </el-col>
-    </el-row>
+          <div class="student-code-action">
+            <el-button type="primary" @click="submit">保存</el-button>
+          </div>
+        </article>
+      </div>
+    </section>
   </div>
 </template>
 
@@ -80,94 +139,93 @@ export default {
   },
   data() {
     return {
-      user:localStorage.getItem("user") ? (JSON).parse(localStorage.getItem("user")) : "",
+      user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : "",
       code: "",
-      language:null,
-      form:{},
-      result:"",
-      fontSize:"18",
-      table:{}
+      language: null,
+      form: {},
+      result: "",
+      fontSize: "18",
+      table: {},
+      languageOptions: [
+        { value: "c", label: "C (gcc)", editorLanguage: "c", ext: "c" },
+        { value: "c++", label: "C++ (g++)", editorLanguage: "cpp", ext: "cpp" },
+        { value: "java", label: "Java (javac)", editorLanguage: "java", ext: "java" },
+        { value: "python", label: "Python (python3)", editorLanguage: "python", ext: "py" },
+      ],
     };
   },
-  methods:{
-    runCpp(){
-      if(this.language===null){
-        this.$message.error("请选择语言")
+  methods: {
+    runCode() {
+      if (this.language === null) {
+        this.$message.error("请选择语言");
+        return;
       }
-      this.form={
-        m:this.code,
-        t:this.language
-      }
-      request.post('/exam/code/cpp', this.form).then(res => {
-        this.result=res.data
-      })
+      this.form = {
+        m: this.code,
+        t: this.language,
+      };
+      request.post("/exam/code/cpp", this.form).then((res) => {
+        this.result = res.data;
+      });
     },
-    submit(){
-      this.table.studentId=this.user.id
-      this.table.type=this.language
-      this.table.codeMessage=this.code
-      this.table.runMessage=this.result
-      request.post("/exam/code/add",this.table).then(res=>{
-        if(res.code==="200"){
-          this.$message.success("添加成功")
-          this.form={}
-          this.language=null
-          this.code=""
-          this.result=""
+    submit() {
+      this.table.studentId = this.user.id;
+      this.table.type = this.language;
+      this.table.codeMessage = this.code;
+      this.table.runMessage = this.result;
+      request.post("/exam/code/add", this.table).then((res) => {
+        if (res.code === "200") {
+          this.$message.success("添加成功");
+          this.form = {};
+          this.language = null;
+          this.code = "";
+          this.result = "";
+        } else {
+          this.$message.error(res.msg);
         }
-        else {
-          this.$message.error(res.msg)
-        }
-      })
-    }
+      });
+    },
   },
-  computed:{
+  computed: {
+    selectedLanguageOption() {
+      return this.languageOptions.find((item) => item.value === this.language) || null;
+    },
+    selectedLanguageLabel() {
+      return this.selectedLanguageOption ? this.selectedLanguageOption.label : "";
+    },
+    editorLanguage() {
+      return this.selectedLanguageOption ? this.selectedLanguageOption.editorLanguage : "plaintext";
+    },
+    fileName() {
+      const ext = this.selectedLanguageOption ? this.selectedLanguageOption.ext : "txt";
+      return `practice.${ext}`;
+    },
+    codeLineCount() {
+      if (!this.code) {
+        return 1;
+      }
+      return this.code.split("\n").length;
+    },
+    resultStatusText() {
+      if (!this.result) {
+        return "等待运行";
+      }
+      return "已生成结果";
+    },
+    resultStatusClass() {
+      return this.result ? "student-code-badge--success" : "student-code-badge--warning";
+    },
     editorOptions() {
       return {
-        fontSize: this.fontSize,
-        // 你可以在这里添加更多的配置选项，如主题、minimap等
+        fontSize: Number(this.fontSize),
+        automaticLayout: true,
+        minimap: {
+          enabled: false,
+        },
+        roundedSelection: true,
+        scrollBeyondLastLine: false,
       };
     },
-  }
+  },
 };
 </script>
-
-<style scoped>
-el-input{
-  color: blue;
-}
-
-.left-top{
-  margin: 2vh 1% 1vh 3%;
-  padding: 1vh 2% 1vh 2%;
-  height: 25vh;
-  width: 96%;
-  background: #dddee0;
-  border-radius: 10px
-}
-.left-bottom{
-  margin: 1vh 1% 0 3%;
-  padding: 1vh 2% 1vh 2%;
-  height: 58vh;
-  width: 96%;
-  background: #dddee0;
-  border-radius: 10px
-}
-.right-top{
-  margin: 2vh 3% 1vh 1%;
-  padding: 1vh 2% 1vh 2%;
-  height: 73vh;
-  width: 96%;
-  background: #dddee0;
-  border-radius: 10px
-}
-.right-bottom{
-  margin: 1vh 3% 0 1%;
-  padding: 3vh 2% 1vh 2%;
-  height: 10vh;
-  width: 96%;
-  background: #dddee0;
-  border-radius: 10px;
-  text-align: center;
-}
-</style>

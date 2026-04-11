@@ -188,6 +188,7 @@ public class AdminServiceImpl implements AdminService {
             throw new CustomException(ResultCodeEnum.USER_PASSWORD_ERROR);
         }
         //2.做数字摘要
+        admin.setAccount(admin.getAccount().trim());
         String sm3 = SM3API.hashS(admin.getPassword());
         //3.进行密码判断
         Admin user=adminMapper.findByAccountAndSM3(admin.getAccount(),sm3);

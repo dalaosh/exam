@@ -1,13 +1,10 @@
 spring:
-  config:
-    import: nacos:es-websocket-dev.yml
   cloud:
     nacos:
       discovery:
-        server-addr: localhost:8848
+        enabled: false
       config:
-        server-addr: localhost:8848
-        file-extension: yml
+        enabled: false
 
 springdoc:
   api-docs:

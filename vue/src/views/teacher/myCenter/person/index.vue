@@ -1,219 +1,417 @@
 <template>
-  <div>
-    <el-card shadow="never" style="height: 82vh;background-color: rgb(244,248,247);color: #030000;border-radius:10px;margin: 1vh 20px 1vh 20px">
+  <div class="teacher-page teacher-profile-page">
+    <section class="teacher-page-head">
       <div>
-        <el-row :gutter="20">
-          <el-col :span="6">
-            <div style="height: 44vh">
-              <<img
-                style="width: 80%; height: 40vh;margin-left: 10%;margin-top: 2vh;margin-bottom: 2vh"
-                :src="myInform.photo" />
-            </div>
-            <div style="height: 30vh;margin-top: 3vh">
-              请上传照片进行更改
-              <div style="margin: 15px; text-align: center;">
-                <el-upload
-                    class="avatar-uploader"
-                    action="http://localhost:9998/files/avatar/upload"
-                    list-type="picture-card"
-                    :show-file-list="false"
-                    :on-success="handleAvatarSuccess">
-                  <img style="width: 100%;height: 24vh;" v-if="imageUrl" :src="imageUrl" class="avatar">
-                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                </el-upload>
-              </div>
-            </div>
-          </el-col>
-          <el-col :span="8">
-            <div style="height: 43vh;padding-top: 1vh;">
-              <el-descriptions :labelStyle="{'font-size':'18px'}" :contentStyle="{'font-size':'18px'}" :column=1 title="基本信息">
-                <el-descriptions-item label="账号id">
-                  <el-tag style="font-size: 18px">{{myInform.id}}</el-tag>
-                </el-descriptions-item>
-                <el-descriptions-item label="角色">
-                  <el-tag style="font-size: 18px" type="danger">{{ myInform.role }}</el-tag>
-                </el-descriptions-item>
-                <el-descriptions-item label="账号">
-                  <el-tag style="font-size: 18px" type="warning">{{ myInform.account }}</el-tag>
-                </el-descriptions-item>
-                <el-descriptions-item label="姓名">
-                  <el-tag style="font-size: 18px" type="success">{{myInform.name}}</el-tag>
-                </el-descriptions-item>
-                <el-descriptions-item label="性别">
-                  <el-tag style="font-size: 18px" type="success">{{myInform.sex}}</el-tag>
-                </el-descriptions-item>
-                <el-descriptions-item label="电话">
-                  <el-tag style="font-size: 18px" type="success">{{myInform.phone}}</el-tag>
-                </el-descriptions-item>
-                <el-descriptions-item label="邮箱地址">
-                  <el-tag style="font-size: 18px" type="success">{{myInform.email}}</el-tag>
-                </el-descriptions-item>
-              </el-descriptions>
-            </div>
-            <div style="margin-bottom: 1vh">用户信息修改</div>
-            <div style="height: 26vh;padding-top: 1vh;padding-bottom: 1vh; background: #fdfcfc">
-              <el-form :model="form" ref="formRef">
-                <el-form-item label="姓名" label-width="25%" prop="name">
-                  <el-input :readonly="setting" v-model="form.name" style="width: 85%"></el-input>
-                </el-form-item>
-                <el-form-item label="性别" label-width="25%" prop="sex">
-                  <el-input :readonly="setting" v-model="form.sex" autocomplete="off" style="width: 85%"></el-input>
-                </el-form-item>
-                <el-form-item label="电子邮件" label-width="25%" prop="email">
-                  <el-input :readonly="setting" v-model="form.email" autocomplete="off" style="width: 85%"></el-input>
-                </el-form-item>
-                <el-form-item label="电话" label-width="25%" prop="phone">
-                  <el-input :readonly="setting" v-model="form.phone" autocomplete="off" style="width: 85%"></el-input>
-                </el-form-item>
-              </el-form>
-            </div>
-            <div style="text-align: center;margin-top: 1vh">
-              <el-button type="primary" @click="cancel()">取 消</el-button>
-              <el-button type="primary" @click="set()">编 辑</el-button>
-              <el-button type="primary" @click="update()">确 定</el-button>
-            </div>
-          </el-col>
-          <el-col :span="10">
-            <div style="height: 77vh;">
-              <el-row>
-                <div>
-                  加密的密码
-                </div>
-                <el-input
-                    style="font-size: 20px;width: 90%;margin: 2vh 2%"
-                    type="textarea"
-                    :readonly="true"
-                    :autosize="{ minRows: 4, maxRows: 4}"
-                    placeholder=""
-                    v-model="user.password">
-                </el-input>
-              </el-row>
-              <el-row>
-                <div>
-                  密码摘要
-                </div>
-                <el-input
-                    style="font-size: 20px;width: 90%;margin: 2vh 2%"
-                    type="textarea"
-                    :readonly="true"
-                    :autosize="{ minRows: 2, maxRows: 2}"
-                    placeholder=""
-                    v-model="user.keySm3">
-                </el-input>
-              </el-row>
-              <el-row>
-                <div style="padding: 24px;background: #f0f8ff;border-radius: 8px;box-shadow: 0 2px 8px rgba(28, 136, 229, 0.12);height: 40vh;display: flex;flex-direction: column;gap: 20px;">
-                  <!-- 头像上传模块 -->
-                  <div style="background: white;padding: 16px;border-radius: 6px;box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);">
-                    <div style="display: flex;align-items: center;gap: 8px;margin-bottom: 12px; color: #1890ff;font-size: 18px;">
-                      <i class="el-icon-upload" style="font-size: 20px"></i>
-                      <strong>头像更改操作</strong>
-                    </div>
-                    <div style="display: flex;flex-direction: column;gap: 8px;color: #606266;padding-left: 28px; ">
-                      <div style="display: flex; align-items: center; gap: 8px">
-                        <span style="width: 20px;height: 20px;background: #1890ff;color: white;border-radius: 50%;text-align: center;line-height: 20px;">1</span>点击
-                        <span style="display: inline-flex;width: 24px;height: 24px;background: #1890ff;color: white;border-radius: 4px;align-items: center;justify-content: center;">+</span>进行图片上传
-                      </div>
-                      <div style="display: flex; align-items: center; gap: 8px">
-                        <span style="width: 20px;height: 20px;background: #1890ff;color: white;border-radius: 50%;text-align: center; line-height: 20px;">2</span>
-                        <span>支持 JPG/PNG 格式（最大 2MB）</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- 信息编辑模块 -->
-                  <div style="background: white;padding: 16px; border-radius: 6px; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);">
-                    <div style=" display: flex; align-items: center; gap: 8px; margin-bottom: 12px;color: #52c41a; font-size: 18px;">
-                      <i class="el-icon-edit" style="font-size: 20px"></i>
-                      <strong>信息更改操作</strong>
-                    </div>
-                    <div style="display: flex;flex-direction: column; gap: 8px; color: #606266; padding-left: 28px; ">
-                      <div style="display: flex; align-items: center; gap: 8px">
-                        <span style="width: 20px;height: 20px;background: #52c41a;color: white;border-radius: 50%; text-align: center; line-height: 20px; ">1</span>点击
-                        <span style="padding: 4px 12px; background: #f6ffed; border: 1px solid #b7eb8f; border-radius: 4px; color: #52c41a; ">编辑按钮</span>进入修改模式
-                      </div>
-                      <div style="display: flex; align-items: center; gap: 8px">
-                        <span style=" width: 20px;height: 20px;background: #52c41a;color: white;border-radius: 50%;text-align: center;line-height: 20px;">2</span>点击
-                        <span style="padding: 4px 12px; background: #f6ffed;border: 1px solid #b7eb8f; border-radius: 4px;color: #52c41a; ">确认提交</span>
-                        保存修改内容
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </el-row>
-            </div>
-          </el-col>
-        </el-row>
+        <h2 class="teacher-page-head__title">个人中心</h2>
+        <p class="teacher-page-head__desc">集中查看教师账号资料、头像与安全摘要，并在同一工作区内完成信息修改。</p>
       </div>
-    </el-card>
+      <div class="teacher-page-head__meta">
+        <el-tag class="teacher-tag" :type="setting ? 'info' : 'warning'">{{ setting ? '只读模式' : '编辑模式' }}</el-tag>
+      </div>
+    </section>
+
+    <div class="teacher-profile-shell">
+      <aside class="teacher-profile-sidebar">
+        <section class="teacher-panel teacher-profile-card teacher-profile-identity">
+          <div class="teacher-profile-identity__photo">
+            <img :src="imageUrl || myInform.photo" alt="教师头像" />
+          </div>
+          <div class="teacher-profile-identity__meta">
+            <h3>{{ myInform.name || '未设置姓名' }}</h3>
+            <p>{{ myInform.role || 'teacher' }}</p>
+            <span>{{ myInform.account || '暂无账号' }}</span>
+          </div>
+        </section>
+
+        <section class="teacher-panel teacher-profile-card teacher-profile-upload">
+          <div class="teacher-profile-card__head">
+            <h3>头像更新</h3>
+            <span>JPG / PNG</span>
+          </div>
+          <p class="teacher-profile-note">上传新头像后会直接提交到当前教师资料，不影响其他字段内容。</p>
+          <el-upload
+            class="teacher-profile-uploader"
+            action="http://localhost:9998/files/avatar/upload"
+            list-type="picture-card"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+          >
+            <img v-if="imageUrl" :src="imageUrl" class="teacher-profile-uploader__image" alt="预览头像" />
+            <div v-else class="teacher-profile-uploader__placeholder">
+              <i class="el-icon-plus"></i>
+              <span>上传头像</span>
+            </div>
+          </el-upload>
+        </section>
+
+        <section class="teacher-panel teacher-profile-card teacher-profile-help">
+          <div class="teacher-profile-card__head">
+            <h3>操作提示</h3>
+            <span>工作区说明</span>
+          </div>
+          <ul class="teacher-profile-help__list">
+            <li>点击“编辑”后，可修改姓名、性别、邮箱和电话。</li>
+            <li>点击“取消”会恢复当前已保存的教师信息。</li>
+            <li>密码密文与摘要仅展示，不在当前页面内直接修改。</li>
+          </ul>
+        </section>
+      </aside>
+
+      <main class="teacher-profile-main">
+        <section class="teacher-profile-grid">
+          <article class="teacher-panel teacher-profile-card">
+            <div class="teacher-profile-card__head">
+              <h3>基本信息</h3>
+              <span>当前账号资料</span>
+            </div>
+            <el-descriptions :column="2" border class="teacher-profile-descriptions">
+              <el-descriptions-item label="账号 ID">
+                <el-tag class="teacher-tag">{{ myInform.id || '-' }}</el-tag>
+              </el-descriptions-item>
+              <el-descriptions-item label="角色">
+                <el-tag class="teacher-tag" type="danger">{{ myInform.role || '-' }}</el-tag>
+              </el-descriptions-item>
+              <el-descriptions-item label="账号">
+                <el-tag class="teacher-tag" type="warning">{{ myInform.account || '-' }}</el-tag>
+              </el-descriptions-item>
+              <el-descriptions-item label="姓名">
+                <el-tag class="teacher-tag" type="success">{{ myInform.name || '-' }}</el-tag>
+              </el-descriptions-item>
+              <el-descriptions-item label="性别">
+                <el-tag class="teacher-tag" type="success">{{ myInform.sex || '-' }}</el-tag>
+              </el-descriptions-item>
+              <el-descriptions-item label="电话">
+                <el-tag class="teacher-tag" type="success">{{ myInform.phone || '-' }}</el-tag>
+              </el-descriptions-item>
+              <el-descriptions-item label="邮箱" :span="2">
+                <el-tag class="teacher-tag" type="success">{{ myInform.email || '-' }}</el-tag>
+              </el-descriptions-item>
+            </el-descriptions>
+          </article>
+
+          <article class="teacher-panel teacher-profile-card teacher-profile-security">
+            <div class="teacher-profile-card__head">
+              <h3>安全信息</h3>
+              <span>只读摘要</span>
+            </div>
+            <div class="teacher-profile-security__group">
+              <label>加密后的密码</label>
+              <el-input
+                type="textarea"
+                :readonly="true"
+                :autosize="{ minRows: 5, maxRows: 5 }"
+                v-model="user.password"
+              ></el-input>
+            </div>
+            <div class="teacher-profile-security__group">
+              <label>密码摘要</label>
+              <el-input
+                type="textarea"
+                :readonly="true"
+                :autosize="{ minRows: 3, maxRows: 3 }"
+                v-model="user.keySm3"
+              ></el-input>
+            </div>
+          </article>
+        </section>
+
+        <section class="teacher-panel teacher-profile-card teacher-profile-editor">
+          <div class="teacher-profile-card__head">
+            <h3>资料修改</h3>
+            <span>{{ setting ? '点击编辑进入修改模式' : '修改后点击确定保存' }}</span>
+          </div>
+          <el-form :model="form" ref="formRef" label-position="top" class="teacher-profile-form">
+            <div class="teacher-profile-form__grid">
+              <el-form-item label="姓名" prop="name">
+                <el-input :readonly="setting" v-model="form.name"></el-input>
+              </el-form-item>
+              <el-form-item label="性别" prop="sex">
+                <el-input :readonly="setting" v-model="form.sex" autocomplete="off"></el-input>
+              </el-form-item>
+              <el-form-item label="电子邮箱" prop="email">
+                <el-input :readonly="setting" v-model="form.email" autocomplete="off"></el-input>
+              </el-form-item>
+              <el-form-item label="电话" prop="phone">
+                <el-input :readonly="setting" v-model="form.phone" autocomplete="off"></el-input>
+              </el-form-item>
+            </div>
+          </el-form>
+
+          <div class="teacher-profile-actions">
+            <el-button @click="cancel()">取消</el-button>
+            <el-button type="warning" @click="set()">编辑</el-button>
+            <el-button type="primary" @click="update()">确定</el-button>
+          </div>
+        </section>
+      </main>
+    </div>
   </div>
 </template>
 
 <script>
-import request from "@/utils/request"
+import request from "@/utils/request";
+
 export default {
   data() {
-    return{
-      user:localStorage.getItem("user") ? (JSON).parse(localStorage.getItem("user")) : {},
-      myInform:{},
-      imageUrl: '',
-      form:{},
-      setting:true,
-      labelStyle:{
-
-      }
-    }
+    return {
+      user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {},
+      myInform: {},
+      imageUrl: "",
+      form: {},
+      setting: true
+    };
   },
   created() {
-    this.load()
-  },
-  mounted() {
-
+    this.load();
   },
   methods: {
-    load(){
-      request.get("user/teacher/selectById/"+this.user.id).then(res=>{
-        if(res.code==="200"){
-          this.myInform=res.data
-          this.form=this.myInform
+    load() {
+      request.get("user/teacher/selectById/" + this.user.id).then((res) => {
+        if (res.code === "200") {
+          this.myInform = res.data || {};
+          this.form = { ...this.myInform };
+          this.imageUrl = this.myInform.photo || "";
         }
-      })
+      });
     },
-    handleAvatarSuccess(res){
-      this.imageUrl=res.data
-      let table
-      table = {
+    handleAvatarSuccess(res) {
+      this.imageUrl = res.data;
+      const table = {
         id: this.myInform.id,
         photo: this.imageUrl
       };
-      request.put("/user/teacher/update/inform",table).then(res=>{
-        if(res.code==="200"){
-          this.$message.success("头像修改成功")
-          this.load()
+      request.put("/user/teacher/update/inform", table).then((result) => {
+        if (result.code === "200") {
+          this.$message.success("头像修改成功");
+          this.load();
         }
-      })
+      });
     },
-    update(){
-      this.form.id=this.myInform.id
-      request.put("/user/teacher/update/inform",this.form).then(res=>{
-        if(res.code==="200"){
-          this.$message.success("信息修改成功")
-          this.load()
+    update() {
+      this.form.id = this.myInform.id;
+      request.put("/user/teacher/update/inform", this.form).then((res) => {
+        if (res.code === "200") {
+          this.$message.success("信息修改成功");
+          this.setting = true;
+          this.load();
         }
-      })
+      });
     },
-    set(){
-      this.form=this.myInform
-      this.setting=false
+    set() {
+      this.form = { ...this.myInform };
+      this.setting = false;
     },
-    cancel(){
-      this.form=this.myInform
-      this.setting=true
+    cancel() {
+      this.form = { ...this.myInform };
+      this.setting = true;
     }
   }
-}
+};
 </script>
 
 <style scoped>
+.teacher-profile-shell {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr);
+  gap: 18px;
+  align-items: stretch;
+}
 
+.teacher-profile-sidebar,
+.teacher-profile-main {
+  display: grid;
+  gap: 18px;
+}
+
+.teacher-profile-card {
+  padding: 20px;
+}
+
+.teacher-profile-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.teacher-profile-card__head h3 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.teacher-profile-card__head span {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.teacher-profile-identity {
+  display: grid;
+  gap: 16px;
+}
+
+.teacher-profile-identity__photo {
+  border-radius: 18px;
+  overflow: hidden;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  aspect-ratio: 4 / 5;
+}
+
+.teacher-profile-identity__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.teacher-profile-identity__meta {
+  display: grid;
+  gap: 6px;
+}
+
+.teacher-profile-identity__meta h3 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.teacher-profile-identity__meta p,
+.teacher-profile-identity__meta span {
+  margin: 0;
+  color: #6b7280;
+  line-height: 1.6;
+}
+
+.teacher-profile-note {
+  margin: 0 0 16px;
+  color: #6b7280;
+  line-height: 1.7;
+}
+
+.teacher-profile-uploader {
+  display: block;
+}
+
+.teacher-profile-uploader :deep(.el-upload) {
+  width: 100%;
+  height: 210px;
+  border-radius: 18px;
+  border: 1px dashed #9fd7c2;
+  background: linear-gradient(180deg, #f8fffc 0%, #eefbf6 100%);
+}
+
+.teacher-profile-uploader__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 18px;
+}
+
+.teacher-profile-uploader__placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 10px;
+  color: #0f766e;
+  font-weight: 600;
+}
+
+.teacher-profile-uploader__placeholder i {
+  font-size: 28px;
+}
+
+.teacher-profile-help {
+  align-content: start;
+}
+
+.teacher-profile-help__list {
+  margin: 0;
+  padding-left: 18px;
+  color: #475569;
+  line-height: 1.8;
+}
+
+.teacher-profile-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.teacher-profile-descriptions :deep(.el-descriptions__table) {
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.teacher-profile-security {
+  display: grid;
+  gap: 16px;
+}
+
+.teacher-profile-security__group {
+  display: grid;
+  gap: 8px;
+}
+
+.teacher-profile-security__group label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #475569;
+}
+
+.teacher-profile-security :deep(.el-textarea__inner) {
+  border-radius: 14px;
+  background: #f8fafc;
+  border-color: #e2e8f0;
+  color: #334155;
+  line-height: 1.7;
+}
+
+.teacher-profile-editor {
+  display: grid;
+  gap: 18px;
+}
+
+.teacher-profile-form__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 18px;
+}
+
+.teacher-profile-form :deep(.el-form-item__label) {
+  padding-bottom: 6px;
+  font-weight: 700;
+  color: #475569;
+}
+
+.teacher-profile-form :deep(.el-input__inner) {
+  height: 40px;
+  border-radius: 12px;
+}
+
+.teacher-profile-actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.teacher-profile-actions :deep(.el-button) {
+  min-width: 108px;
+  height: 40px;
+  border-radius: 12px;
+  font-weight: 700;
+}
+
+@media (max-width: 1320px) {
+  .teacher-profile-shell,
+  .teacher-profile-grid,
+  .teacher-profile-form__grid {
+    grid-template-columns: 1fr;
+  }
+}
 </style>

@@ -1,97 +1,72 @@
 <template>
-  <div>
-    <el-row>
+  <div class="review-page">
+    <el-row :gutter="20">
       <el-col :span="8">
-        <el-row>
-          <div class="left-top">
-            <div class="title">
-              出题人信息
-            </div>
-            <el-row :gutter="20">
-              <el-col :span="10">
-                <el-image
-                    style="width: 100%; height: 24vh"
-                    :src=this.user.photo
-                    fit="fit"></el-image>
-              </el-col>
-              <el-col :span="14">
-                <div class="message">姓名: {{this.user.name}}</div>
-                <div class="message">性别: {{this.user.sex}}</div>
-                <div class="message">角色: {{this.user.role}}</div>
-                <div class="message">电话: {{this.user.phone}}</div>
-              </el-col>
-            </el-row>
-            <div class="message">邮箱: {{this.user.email}}</div>
-          </div>
-        </el-row>
-        <el-row>
-          <div class="left-bottom">
-            <div class="title">
-              题目信息
-            </div>
-            <el-row style="margin-bottom: 4vh;margin-top: 3vh">
-              <el-col :span="8">
-                课程名称:
-              </el-col>
-              <el-col :span="16">
-                {{this.course.name}}
-              </el-col>
-            </el-row>
-            <el-row style="margin-bottom: 4vh">
-              <el-col :span="8">
-                题目分值:
-              </el-col>
-              <el-col :span="16">
-                {{this.table.score}}分
-              </el-col>
-            </el-row>
-            <el-row style="margin-bottom: 4vh">
-              <el-col :span="8">
-                题目等级:
-              </el-col>
-              <el-col :span="16">
-                <el-rate
-                    v-model="this.table.level"
-                    disabled
-                    :colors="['#fdea5a', '#32ef17', '#8a2be2']"
-                    :void-color="'#e0e0e0'"
-                ></el-rate>
-              </el-col>
-            </el-row>
-            <el-row style="margin-bottom: 4vh">
-              <el-col :span="8">
-                题目章节:
-              </el-col>
-              <el-col :span="16">
-                {{this.table.section}}
-              </el-col>
-            </el-row>
-          </div>
-        </el-row>
+        <div class="review-card review-side-card">
+          <div class="review-card-title">出题人信息</div>
+          <el-row :gutter="16">
+            <el-col :span="10">
+              <el-image
+                class="review-avatar"
+                :src="user.photo"
+                fit="cover"
+              ></el-image>
+            </el-col>
+            <el-col :span="14">
+              <div class="message">姓名：{{ user.name }}</div>
+              <div class="message">性别：{{ user.sex }}</div>
+              <div class="message">角色：{{ user.role }}</div>
+              <div class="message">电话：{{ user.phone }}</div>
+            </el-col>
+          </el-row>
+          <div class="message review-email">邮箱：{{ user.email }}</div>
+        </div>
+
+        <div class="review-card review-side-card">
+          <div class="review-card-title">题目信息</div>
+          <el-row class="info-row">
+            <el-col class="info-label" :span="8">课程名称</el-col>
+            <el-col class="info-value" :span="16">{{ course.name }}</el-col>
+          </el-row>
+          <el-row class="info-row">
+            <el-col class="info-label" :span="8">题目分值</el-col>
+            <el-col class="info-value" :span="16">{{ table.score }} 分</el-col>
+          </el-row>
+          <el-row class="info-row">
+            <el-col class="info-label" :span="8">题目等级</el-col>
+            <el-col class="info-value" :span="16">
+              <el-rate
+                v-model="table.level"
+                disabled
+                :colors="['#fdea5a', '#32ef17', '#8a2be2']"
+                :void-color="'#e0e0e0'"
+              ></el-rate>
+            </el-col>
+          </el-row>
+          <el-row class="info-row">
+            <el-col class="info-label" :span="8">题目章节</el-col>
+            <el-col class="info-value" :span="16">{{ table.section }}</el-col>
+          </el-row>
+        </div>
       </el-col>
+
       <el-col :span="16">
-        <el-row>
-          <div class="right">
-            <div style="font-size: 26px;;margin-top: 2vh;margin-bottom: 1vh">
-              题目：
-            </div>
-            <div class="question">
-              <div v-html="this.table.question" class="w-e-text"></div>
-            </div>
-            <div style="font-size: 26px;;margin-top: 2vh;margin-bottom: 1vh">
-              答案：
-            </div>
-            <div class="answer">
-              <div v-html="this.table.answer" class="w-e-text"></div>
-            </div>
-            <div style="font-size: 26px;;margin-top: 2vh;margin-bottom: 1vh">
-              答案详解：
-            </div>
-            <div class="analysis">
-              <div v-html="this.table.analysis" class="w-e-text"></div>
-            </div>
+        <div class="review-card review-main-card">
+          <div class="section-title">题面</div>
+          <div class="review-panel question">
+            <div v-html="table.question" class="w-e-text"></div>
           </div>
-        </el-row>
+
+          <div class="section-title">参考答案</div>
+          <div class="review-panel answer">
+            <div v-html="table.answer" class="w-e-text"></div>
+          </div>
+
+          <div class="section-title">解析说明</div>
+          <div class="review-panel analysis">
+            <div v-html="table.analysis" class="w-e-text"></div>
+          </div>
+        </div>
       </el-col>
     </el-row>
   </div>
@@ -101,31 +76,24 @@
 import request from "@/utils/request"
 
 export default {
-  data(){
-    return{
-      user:localStorage.getItem("user") ? (JSON).parse(localStorage.getItem("user")) : {},
-      receivedData:"",
-      form:{
-        number:""
-      },
-      table:{},
-      course:{}
+  data() {
+    return {
+      user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {},
+      receivedData: "",
+      table: {},
+      course: {}
     }
   },
   created() {
-    this.receivedData = this.$route.params;
+    this.receivedData = this.$route.params
     this.load()
-    this.findCourse()
-  },
-  mounted() {
-
   },
   methods: {
-    load(){
-      request.get("/exam/questionShortAns/selectById/"+this.receivedData.id).then(res=>{
+    load() {
+      request.get("/exam/questionShortAns/selectById/" + this.receivedData.id).then(res => {
         if (res.code === "200") {
           this.table = res.data
-          this.course=this.table.course
+          this.course = this.table.course || {}
         } else {
           this.$message.error(res.msg)
         }
@@ -135,75 +103,113 @@ export default {
 }
 </script>
 
-
 <style scoped>
-.left-top{
-  margin: 2vh 3% 1vh 3%;
-  padding-left: 2%;
-  padding-top: 1vh;
-  height: 41vh;
-  width: 94%;
-  background: #dddee0;
-  border-radius: 10px
+.review-page {
+  padding-bottom: 8px;
 }
-.left-bottom{
-  margin: 1vh 3% 0 3%;
-  padding: 1vh 3% 1vh 3%;
-  height: 41vh;
-  width: 94%;
+
+.review-card {
+  margin-bottom: 20px;
+  padding: 24px;
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.96));
+  box-shadow: 0 20px 48px rgba(15, 23, 42, 0.08);
+}
+
+.review-side-card {
+  min-height: 280px;
+}
+
+.review-main-card {
+  min-height: 100%;
+}
+
+.review-card-title {
+  margin-bottom: 18px;
   font-size: 20px;
-  background: #dce1ec;
-  border-radius: 10px
+  font-weight: 700;
+  line-height: 1.4;
+  color: #0f172a;
 }
-.right{
-  margin: 2vh 3% 1vh 3%;
-  padding: 1vh 3% 1vh 3%;
-  height: 84vh;
-  width: 94%;
-  font-size: 20px;
-  background: #f2fdfd;
-  border-radius: 10px
+
+.review-avatar {
+  width: 100%;
+  height: 220px;
+  border-radius: 18px;
+  overflow: hidden;
 }
-.message{
-  font-size: 20px;
-  margin-bottom: 2vh;
-  margin-top: 2vh;
-  margin-left: 4%;
+
+.message {
+  margin-bottom: 12px;
+  font-size: 15px;
+  line-height: 1.8;
+  color: #475569;
+  word-break: break-all;
 }
-.title{
-  font-family: 'STXingkai', '华文行楷', cursive;
-  font-size: 32px;
-  padding-bottom: 3vh;
+
+.review-email {
+  margin-top: 12px;
 }
-.question{
-  padding: 2vh 2% 2vh 2%;
-  height: 20vh;
-  background: #eef3fa;
-  overflow-y: scroll;
-  border-radius: 10px
+
+.info-row {
+  margin-bottom: 18px;
 }
-.question::-webkit-scrollbar{
-  width:0;
+
+.info-label {
+  color: #64748b;
+  font-weight: 600;
 }
-.answer{
-  padding: 2vh 2% 2vh 2%;
-  height: 15vh;
-  background: #eff2fc;
-  overflow-y: scroll;
-  border-radius: 10px
+
+.info-value {
+  color: #0f172a;
+  word-break: break-word;
 }
-.answer::-webkit-scrollbar{
-  width:0;
+
+.section-title {
+  margin: 20px 0 12px;
+  padding-left: 14px;
+  border-left: 4px solid #2563eb;
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.4;
 }
-.analysis{
-  padding: 2vh 2% 2vh 2%;
-  height: 24vh;
-  background: #f3e7f8;
-  overflow-y: scroll;
-  border-radius: 10px
+
+.section-title:first-of-type {
+  margin-top: 0;
 }
-.analysis::-webkit-scrollbar{
-  width:0;
+
+.review-panel {
+  padding: 18px 20px;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  overflow: auto;
+}
+
+.question {
+  min-height: 220px;
+}
+
+.answer {
+  min-height: 160px;
+}
+
+.analysis {
+  min-height: 220px;
+}
+
+.review-panel::-webkit-scrollbar {
+  width: 6px;
+}
+
+.review-panel::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.5);
+  border-radius: 999px;
+}
+
+:deep(.el-rate__icon) {
+  font-size: 22px;
 }
 </style>
-

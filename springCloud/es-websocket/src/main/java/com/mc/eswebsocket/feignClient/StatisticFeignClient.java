@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
  * * inform
  */
 
-@FeignClient(name = "es-statistic")
+@FeignClient(name = "es-statistic", url = "${services.es-statistic.url:http://localhost:9085}")
 public interface StatisticFeignClient {
     // 系统信息
     @GetMapping("/statistic/system/info")

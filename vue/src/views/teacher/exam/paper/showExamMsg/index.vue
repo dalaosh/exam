@@ -1,48 +1,70 @@
 <template>
-  <div style="margin: 3vh 2% 3vh 2%;height: 80vh;width: 96%;background: #91aaf5;padding-top: 2vh">
-    <el-row style="margin-top: 2vh;margin-bottom: 2vh;text-align: center">
-      <el-col :span="6">
-        考试科目:{{this.form.course.name}}
-      </el-col>
-      <el-col :span="10">
-        考试开始时间:{{this.form.examDate}}
-      </el-col>
-      <el-col :span="4">
-        考试时长:{{this.form.totalTime}}分钟
-      </el-col>
-      <el-col :span="4">
-        总分:{{this.form.totalScore}}分
-      </el-col>
-    </el-row>
-    <el-row style="text-align: center">
-      <el-col :span="6">
-        课程编码:{{this.form.course.number}}
-      </el-col>
-      <el-col :span="8">
-        考试类型:{{this.form.type}}
-      </el-col>
-      <el-col :span="8">
-        出题人:{{this.form.teacher.name}}
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="12">
-        <div class="title">
-          考试介绍
+  <div class="teacher-page">
+    <section class="teacher-page-head">
+      <div>
+        <h2 class="teacher-page-head__title">试卷信息详情</h2>
+        <p class="teacher-page-head__desc">统一展示考试摘要、考试介绍和考生须知，避免旧式大色块和固定高度布局。</p>
+      </div>
+    </section>
+
+    <section class="teacher-panel teacher-panel--padded">
+      <div class="teacher-detail-summary">
+        <div class="teacher-detail-summary__item">
+          <span class="teacher-detail-summary__label">考试科目</span>
+          <span class="teacher-detail-summary__value">{{this.form.course.name}}</span>
         </div>
-        <div class="body">
+        <div class="teacher-detail-summary__item">
+          <span class="teacher-detail-summary__label">考试开始时间</span>
+          <span class="teacher-detail-summary__value">{{this.form.examDate}}</span>
+        </div>
+        <div class="teacher-detail-summary__item">
+          <span class="teacher-detail-summary__label">考试时长</span>
+          <span class="teacher-detail-summary__value">{{this.form.totalTime}} 分钟</span>
+        </div>
+        <div class="teacher-detail-summary__item">
+          <span class="teacher-detail-summary__label">总分</span>
+          <span class="teacher-detail-summary__value">{{this.form.totalScore}} 分</span>
+        </div>
+        <div class="teacher-detail-summary__item">
+          <span class="teacher-detail-summary__label">课程编码</span>
+          <span class="teacher-detail-summary__value">{{this.form.course.number}}</span>
+        </div>
+        <div class="teacher-detail-summary__item">
+          <span class="teacher-detail-summary__label">考试类型</span>
+          <span class="teacher-detail-summary__value">{{this.form.type}}</span>
+        </div>
+        <div class="teacher-detail-summary__item">
+          <span class="teacher-detail-summary__label">出题教师</span>
+          <span class="teacher-detail-summary__value">{{this.form.teacher.name}}</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="teacher-dashboard-grid">
+      <section class="teacher-panel teacher-panel--padded">
+        <div class="teacher-panel__head">
+          <div>
+            <h3 class="teacher-panel__title">考试介绍</h3>
+            <p class="teacher-panel__desc">考试内容说明和组织方式。</p>
+          </div>
+        </div>
+        <div class="teacher-detail-rich">
           <div v-html="this.form.description" class="w-e-text"></div>
         </div>
-      </el-col>
-      <el-col :span="12">
-        <div class="title">
-          考生须知
+      </section>
+
+      <section class="teacher-panel teacher-panel--padded">
+        <div class="teacher-panel__head">
+          <div>
+            <h3 class="teacher-panel__title">考生须知</h3>
+            <p class="teacher-panel__desc">考试纪律、答题要求和注意事项。</p>
+          </div>
         </div>
-        <div class="body">
+        <div class="teacher-detail-rich">
           <div v-html="this.form.tips" class="w-e-text"></div>
         </div>
-      </el-col>
-    </el-row>
+      </section>
+    </div>
   </div>
 </template>
 
@@ -77,28 +99,26 @@ export default {
 }
 </script>
 
-
 <style scoped>
-.title{
-  margin: 4vh 4% 0 4%;
-  width: 92%;
-  height: 8vh;
-  background: #f3f5f8;
-  border-radius: 10px;
-  font-size: 26px;
-  text-align: center;
-  padding-top: 2vh;
+.teacher-page .teacher-detail-summary {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
-.body{
-  margin: 2vh 4% 0 4%;
-  padding: 2vh 2% 2vh 2%;
-  width: 92%;
-  height: 50vh;
-  background: #f1f4f8;
-  overflow-y: scroll;
-  border-radius: 10px
+
+.teacher-page .teacher-detail-summary__item:nth-child(2) {
+  grid-column: span 2;
 }
-.body::-webkit-scrollbar{
-  width:0;
+
+.teacher-page .teacher-detail-summary__item {
+  min-height: 96px;
+}
+
+@media (max-width: 1280px) {
+  .teacher-page .teacher-detail-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .teacher-page .teacher-detail-summary__item:nth-child(2) {
+    grid-column: auto;
+  }
 }
 </style>

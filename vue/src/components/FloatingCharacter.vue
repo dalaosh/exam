@@ -16,7 +16,7 @@
   >
     <div class="character">
       <!-- 可以使用img标签而不是背景图 -->
-      <img src="@/assets/imgs/AI.png" alt="角色" class="character-image" />
+      <img src="@/assets/imgs/examAI.png" alt="角色" class="character-image" />
       <div class="click-effect"></div>
     </div>
   </div>

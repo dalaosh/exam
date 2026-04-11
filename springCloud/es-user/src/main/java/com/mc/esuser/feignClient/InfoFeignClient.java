@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
  * * inform
  */
 
-@FeignClient(name = "es-info")
+@FeignClient(name = "es-info", url = "${services.es-info.url:http://localhost:9082}")
 public interface InfoFeignClient {
     @PostMapping("/info/log/insert")
     Result insert(@RequestBody Log log);

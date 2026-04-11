@@ -1,116 +1,111 @@
 <template>
-  <div style="background: #fcf8f3">
-    <el-row>
-      <div class="top">
-        <div class="title">
-          题目信息
-        </div>
-        <rl-row style="text-align: center">
-          <el-col :span="6">
-            请选择课程:
-            <el-select style="width: 50%;z-index: 2" v-model="table.courseId" clearable filterable placeholder="请选择">
-              <el-option
-                  v-for="item in course"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id">
-              </el-option>
-            </el-select>
-          </el-col>
-          <el-col :span="6">
-            请输入分值:
-            <el-input style="width: 50%" clearable v-model="table.score" placeholder="请输入分值"></el-input>
-          </el-col>
-          <el-col :span="6">
-            <el-row>
-              <el-col :span="8" style="text-align: right">
-                等级:
-              </el-col>
-              <el-col :span="16">
-                <el-rate
-                    v-model="table.level"
-                    :colors="['#fdea5a', '#32ef17', '#8a2be2']"
-                    :void-color="'#070000'"
-                ></el-rate>
-              </el-col>
-            </el-row>
-          </el-col>
-          <el-col :span="6">
-            请输入章节:
-            <el-input style="width: 50%" clearable v-model="table.section" placeholder="请输入章节"></el-input>
-          </el-col>
-        </rl-row>
+  <div class="teacher-page teacher-question-editor teacher-code-editor-page">
+    <section class="teacher-page-head">
+      <div>
+        <h2 class="teacher-page-head__title">编辑编程题</h2>
+        <p class="teacher-page-head__desc">统一题面、解析、参考代码和运行结果布局，避免代码题编辑页容器失衡。</p>
       </div>
-    </el-row>
-    <el-row>
-      <el-col :span="12">
-        <div class="middle-left">
-          <div class="title">
-            问题
+    </section>
+
+    <section class="teacher-panel teacher-panel--padded">
+      <div class="teacher-question-editor__meta-grid">
+        <div class="teacher-question-editor__field">
+          <span class="teacher-question-editor__label">所属课程</span>
+          <el-select v-model="table.courseId" clearable filterable placeholder="请选择">
+            <el-option
+              v-for="item in course"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
+        </div>
+        <div class="teacher-question-editor__field">
+          <span class="teacher-question-editor__label">分值</span>
+          <el-input clearable v-model="table.score" placeholder="请输入分值"></el-input>
+        </div>
+        <div class="teacher-question-editor__field">
+          <span class="teacher-question-editor__label">难度等级</span>
+          <el-rate
+            v-model="table.level"
+            :colors="['#fdea5a', '#32ef17', '#8a2be2']"
+            :void-color="'#070000'">
+          </el-rate>
+        </div>
+        <div class="teacher-question-editor__field">
+          <span class="teacher-question-editor__label">所属章节</span>
+          <el-input clearable v-model="table.section" placeholder="请输入章节"></el-input>
+        </div>
+      </div>
+    </section>
+
+    <div class="teacher-question-editor__two-col">
+      <section class="teacher-panel teacher-panel--padded">
+        <div class="teacher-panel__head">
+          <div>
+            <h3 class="teacher-panel__title">问题</h3>
+            <p class="teacher-panel__desc">使用富文本编辑编程题题面。</p>
           </div>
-          <div class="w-e-text-container" id='editorA' style="width: 98%;height: 46vh;z-index: 1"></div>
         </div>
-      </el-col>
-      <el-col :span="12">
-        <div class="middle-right">
-          <div class="title">
-            解析
+        <div class="w-e-text-container" id="editorA" style="width: 100%; height: 320px; z-index: 1"></div>
+      </section>
+
+      <section class="teacher-panel teacher-panel--padded">
+        <div class="teacher-panel__head">
+          <div>
+            <h3 class="teacher-panel__title">解析</h3>
+            <p class="teacher-panel__desc">说明题目意图、评分点和解题思路。</p>
           </div>
-          <div class="w-e-text-container" id='editorB' style="width: 98%;height: 46vh"></div>
         </div>
-      </el-col>
-    </el-row>
-    <el-row>
-      <div class="bottom">
-        <div style="font-size: 26px;margin-bottom: 1vh">
-          答案编码(参考答案)：
-        </div>
+        <div class="w-e-text-container" id="editorB" style="width: 100%; height: 320px"></div>
+      </section>
+    </div>
+
+    <section class="teacher-panel teacher-panel--padded">
+      <div class="teacher-panel__head">
         <div>
-          <el-row>
-            <el-col :span="12">
-              <div  class="bottom-left">
-                <el-row>
-                  <el-col style="font-size: 24px" :span="16">
-                    <label for="fontSize">字体大小：</label>
-                    <input type="range" min="10" max="80" v-model="fontSize" id="fontSize" />
-                    <span>{{ fontSize }}px</span>
-                  </el-col>
-                  <el-col :span="8">
-                    <el-button style="width: 50%; background-color: #dbdbec; border-color: #030303;  color: #0a0101;font-size: 18px" @click="runCpp">运 行</el-button>
-                  </el-col>
-                </el-row>
-                <el-row>
-                  <monaco-editor
-                      v-model="table.answer"
-                      :language="language"
-                      :options="editorOptions"
-                      style="margin-top:2vh;height: 50vh;"
-                  ></monaco-editor>
-                </el-row>
-              </div>
-            </el-col>
-            <el-col :span="12">
-              <div class="bottom-right">
-                <div style="font-size: 26px;margin-bottom: 1vh">
-                  运行结果：
-                </div>
-                <el-input
-                    style="font-size: 18px"
-                    disabled
-                    type="textarea"
-                    :autosize="{ minRows: 12, maxRows: 12}"
-                    placeholder="运行结果"
-                    v-model="result">
-                </el-input>
-                <div style="margin-top: 3vh;text-align: center">
-                  <el-button type="primary" round style="width: 40%;font-size: 18px" @click="submit">修 改</el-button>
-                </div>
-              </div>
-            </el-col>
-          </el-row>
+          <h3 class="teacher-panel__title">参考代码</h3>
+          <p class="teacher-panel__desc">左侧编辑代码，右侧查看运行结果。</p>
         </div>
       </div>
-    </el-row>
+
+      <div class="teacher-question-editor__two-col">
+        <div class="teacher-question-editor__stack">
+          <div class="teacher-code-editor-page__toolbar">
+            <div class="teacher-code-editor-page__font">
+              <label for="fontSize">字体大小</label>
+              <input type="range" min="10" max="80" v-model="fontSize" id="fontSize" />
+              <span>{{ fontSize }}px</span>
+            </div>
+            <el-button type="primary" plain @click="runCpp">运行</el-button>
+          </div>
+          <div class="teacher-code-editor-page__monaco">
+            <monaco-editor
+              v-model="table.answer"
+              :language="language"
+              :options="editorOptions"
+              style="height: 420px;"
+            ></monaco-editor>
+          </div>
+        </div>
+
+        <div class="teacher-question-editor__stack">
+          <div class="teacher-code-editor-page__result">
+            <div class="teacher-code-editor-page__result-title">运行结果</div>
+            <el-input
+              disabled
+              type="textarea"
+              :autosize="{ minRows: 14, maxRows: 14}"
+              placeholder="运行结果"
+              v-model="result">
+            </el-input>
+          </div>
+          <div class="teacher-question-editor__actions">
+            <el-button type="primary" @click="submit">保存</el-button>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 </template>
 
@@ -142,6 +137,16 @@ function initWangEditorB(content){ setTimeout(() => {
   editorB.txt.html(content)
 },0)
 }
+function destroyEditors() {
+  if (editorA && typeof editorA.destroy === "function") {
+    editorA.destroy()
+  }
+  if (editorB && typeof editorB.destroy === "function") {
+    editorB.destroy()
+  }
+  editorA = null
+  editorB = null
+}
 
 export default {
   components: {
@@ -165,10 +170,12 @@ export default {
     this.findCourse()
     this.load()
   },
+  beforeDestroy() {
+    destroyEditors()
+  },
   methods:{
     load(){
-      editorA=""
-      editorB=""
+      destroyEditors()
       request.get("/exam/questionCode/selectById/"+this.receivedData.id).then(res=>{
         if (res.code === "200") {
           this.table = res.data
@@ -224,8 +231,18 @@ export default {
   computed: {
     editorOptions() {
       return {
-        fontSize: this.fontSize,
-        // 你可以在这里添加更多的配置选项，如主题、minimap等
+        theme: "vs-dark",
+        fontSize: Number(this.fontSize),
+        automaticLayout: true,
+        minimap: {
+          enabled: false
+        },
+        lineNumbersMinChars: 3,
+        scrollBeyondLastLine: false,
+        renderLineHighlight: "all",
+        padding: {
+          top: 16
+        }
       };
     },
   }
@@ -233,67 +250,71 @@ export default {
 </script>
 
 <style scoped>
-.title {
-  font-family: 'STXingkai', '华文行楷', cursive;
-  font-size: 32px;
-  padding-bottom: 3vh;
+.teacher-code-editor-page__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 
-.top {
-  margin: 2vh 1% 1vh 1%;
-  padding-left: 2%;
-  padding-top: 1vh;
-  height: 15vh;
-  width: 98%;
-  background: #dddee0;
-  border-radius: 10px
+.teacher-code-editor-page__font {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #475569;
+  font-size: 14px;
 }
 
-.middle-left {
-  margin: 1vh 1% 1vh 2%;
-  padding-left: 2%;
-  padding-top: 1vh;
-  height: 56vh;
-  width: 96%;
-  background: #dddee0;
-  border-radius: 10px
+.teacher-code-editor-page__monaco,
+.teacher-code-editor-page__result {
+  padding: 16px;
+  border: 1px solid #dbe4ee;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #f8fbff 0%, #f1f5f9 100%);
 }
 
-.middle-right {
-  margin: 1vh 1% 1vh 2%;
-  padding-left: 2%;
-  padding-top: 1vh;
-  height: 56vh;
-  width: 96%;
-  background: #dddee0;
-  border-radius: 10px
+.teacher-code-editor-page__result-title {
+  margin-bottom: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
 }
 
-.bottom {
-  margin: 2vh 1% 1vh 1%;
-  padding-left: 2%;
-  padding-top: 1vh;
-  height: 70vh;
-  width: 98%;
-  background: #dddee0;
-  border-radius: 10px
+.teacher-code-editor-page__monaco {
+  overflow: hidden;
+  background: linear-gradient(180deg, #111827 0%, #0f172a 100%);
 }
 
-.bottom-left {
-  margin: 1vh 0 1vh 0;
-  padding: 1vh 2% 1vh 2%;
-  height: 60vh;
-  width: 98%;
-  background: #81a4f5;
-  border-radius: 10px
+.teacher-code-editor-page__result {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
 }
 
-.bottom-right {
-  margin: 1vh 0 1vh 0;
-  padding: 1vh 2% 1vh 2%;
-  height: 60vh;
-  width: 98%;
-  background: #81a4f5;
-  border-radius: 10px
+:deep(.monaco-editor),
+:deep(.monaco-editor .margin),
+:deep(.monaco-editor .monaco-editor-background) {
+  background-color: #0f172a !important;
+}
+
+:deep(.monaco-editor .view-lines) {
+  color: #e2e8f0 !important;
+}
+
+:deep(.monaco-editor .selected-text) {
+  background-color: rgba(59, 130, 246, 0.22) !important;
+}
+
+:deep(.monaco-editor .current-line) {
+  border-color: rgba(34, 197, 94, 0.24) !important;
+}
+
+:deep(.monaco-editor .line-numbers) {
+  color: rgba(148, 163, 184, 0.75) !important;
+}
+
+:deep(.monaco-editor .cursor) {
+  background-color: #f8fafc !important;
+  border-color: #f8fafc !important;
 }
 </style>

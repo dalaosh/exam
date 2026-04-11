@@ -1,15 +1,12 @@
 spring:
   application:
     name: es-mail
-  config:
-    import: nacos:es-mail-dev.yml
   cloud:
     nacos:
       discovery:
-        server-addr: localhost:8848
+        enabled: false
       config:
-        server-addr: localhost:8848
-        file-extension: yml
+        enabled: false
   # 邮箱配置
   mail:
     # POP3服务器地址为“pop.qq.com”，SMTP服务器地址为“smtp.qq.com”

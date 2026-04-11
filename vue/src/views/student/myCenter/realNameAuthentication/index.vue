@@ -1,477 +1,224 @@
 <template>
-  <div>
-    <el-row>
-      <el-col :span="8">
-        <el-row>
-          <!-- 教师信息模块（原样保留） -->
-          <div class="left-top">
-            <div class="title">基本信息</div>
-            <el-row :gutter="20">
-              <el-col :span="10">
-                <el-image
-                    style="width: 100%; height: 24vh"
-                    :src="user.photo"
-                    fit="fit"></el-image>
-              </el-col>
-              <el-col :span="14">
-                <div class="message">姓名: {{user.name}}</div>
-                <div class="message">性别: {{user.sex}}</div>
-                <div class="message">角色: {{user.role}}</div>
-                <div class="message">电话: {{user.phone}}</div>
-              </el-col>
-            </el-row>
-            <div class="message">邮箱: {{user.email}}</div>
+  <div class="student-page student-realname-page">
+    <section class="student-page-head">
+      <div>
+        <h2 class="student-page-head__title">实名认证</h2>
+        <p class="student-page-head__desc">统一资料、地址、学校、照片和上传区域的布局，不改变现有认证提交流程。</p>
+      </div>
+      <div class="student-page-head__meta">
+        <el-tag class="student-tag" type="info">{{ setOrShow==='show' ? '已提交信息' : '待补全信息' }}</el-tag>
+      </div>
+    </section>
+
+    <div class="student-realname-shell">
+      <aside class="student-realname-aside">
+        <section class="student-panel student-realname-card">
+          <h3 class="student-section-title">基本信息</h3>
+          <div class="student-realname-profile">
+            <el-image class="student-realname-avatar" :src="user.photo" fit="cover"></el-image>
+            <div class="student-realname-profile__meta">
+              <div class="student-realname-item">姓名：{{ user.name }}</div>
+              <div class="student-realname-item">性别：{{ user.sex }}</div>
+              <div class="student-realname-item">角色：{{ user.role }}</div>
+              <div class="student-realname-item">电话：{{ user.phone }}</div>
+              <div class="student-realname-item">邮箱：{{ user.email }}</div>
+            </div>
           </div>
-          <!-- 操作说明模块（新增内容） -->
-          <div class="left-bottom">
-            <div class="title">操作说明</div>
-            <el-steps
-                direction="vertical"
-                :active="4"
-                class="operation-guide">
-              <el-step title="初始化引擎">
-                <div slot="description">
-                  <p class="step-desc">1. 激活SDK（首次需要网络连接）</p>
-                  <p class="step-desc">2. 初始化视频检测模式</p>
-                </div>
-              </el-step>
-              <el-step title="人脸注册">
-                <div slot="description">
-                  <p class="step-desc">1. 获取摄像头权限</p>
-                  <p class="step-desc">2. 执行活体检测</p>
-                  <p class="step-desc">3. 保存特征数据</p>
-                </div>
-              </el-step>
-              <el-step title="实时识别">
-                <div slot="description">
-                  <p class="step-desc">1. 启动识别线程</p>
-                  <p class="step-desc">2. 特征比对</p>
-                  <p class="step-desc">3. 结果处理（阈值0.82）</p>
-                </div>
-              </el-step>
-              <el-step title="异常处理">
-                <div slot="description">
-                  <p class="error-title">常见错误码:</p>
-                  <ul class="error-list">
-                    <li v-for="(desc, code) in errorMapping" :key="code">
-                      <span class="error-code">{{ code }}</span>: {{ desc }}
-                    </li>
-                  </ul>
-                </div>
-              </el-step>
-            </el-steps>
-          </div>
-        </el-row>
-      </el-col>
-      <el-col :span="16"  v-if="setOrShow==='set'">
-        <!-- 右侧内容保持不变 -->
-        <el-row>
-          <el-col :span="12">
-            <div class="right-left-top">
-              <div class="title">家庭住址</div>
-              <div style="margin-top: 2vh">
-                请选择省：
-                <!-- 使用内联函数调用 provinceChange 方法并传递 ma -->
-                <el-select style="width: 70%" v-model="adds.provinceId" placeholder="请输入省" @change="findCity()">
-                  <!-- 遍历 provinceArr 数组生成选项 -->
-                  <el-option v-for="ma in provinceArr" :label="ma.province" :value="ma.id" :key="ma.id">
-                  </el-option>
+        </section>
+
+        <section class="student-panel student-realname-card">
+          <h3 class="student-section-title">操作说明</h3>
+          <el-steps direction="vertical" :active="4" class="student-realname-guide">
+            <el-step title="初始化引擎">
+              <div slot="description">
+                <p class="student-realname-step">1. 激活 SDK（首次需要网络连接）</p>
+                <p class="student-realname-step">2. 初始化视频检测模式</p>
+              </div>
+            </el-step>
+            <el-step title="人脸注册">
+              <div slot="description">
+                <p class="student-realname-step">1. 获取摄像头权限</p>
+                <p class="student-realname-step">2. 执行活体检测</p>
+                <p class="student-realname-step">3. 保存特征数据</p>
+              </div>
+            </el-step>
+            <el-step title="实时识别">
+              <div slot="description">
+                <p class="student-realname-step">1. 启动识别线程</p>
+                <p class="student-realname-step">2. 特征比对</p>
+                <p class="student-realname-step">3. 结果处理（阈值 0.82）</p>
+              </div>
+            </el-step>
+            <el-step title="异常处理">
+              <div slot="description">
+                <p class="student-realname-error-title">常见错误码</p>
+                <ul class="student-realname-error-list">
+                  <li v-for="(desc, code) in errorMapping" :key="code">
+                    <span class="student-realname-error-code">{{ code }}</span>
+                    <span>{{ desc }}</span>
+                  </li>
+                </ul>
+              </div>
+            </el-step>
+          </el-steps>
+        </section>
+      </aside>
+
+      <main class="student-realname-main">
+        <section class="student-realname-info-grid">
+          <article class="student-panel student-realname-card">
+            <h3 class="student-section-title">家庭住址</h3>
+            <div class="student-realname-form-grid" v-if="setOrShow !== 'show'">
+              <div class="student-realname-field">
+                <span class="student-realname-field__label">省份</span>
+                <el-select v-model="adds.provinceId" placeholder="请选择省份" @change="findCity()">
+                  <el-option v-for="ma in provinceArr" :label="ma.province" :value="ma.id" :key="ma.id"></el-option>
                 </el-select>
               </div>
-              <div style="margin-top: 2vh">
-                请选择市：
-                <el-select style="width: 70%" v-model="adds.cityId" placeholder="请输入市" @change="findArea()">
+              <div class="student-realname-field">
+                <span class="student-realname-field__label">城市</span>
+                <el-select v-model="adds.cityId" placeholder="请选择城市" @change="findArea()">
                   <el-option v-for="ma in cityArr" :label="ma.city" :value="ma.id" :key="ma.id"></el-option>
                 </el-select>
               </div>
-              <div style="margin-top: 2vh">
-                请选择县：
-                <el-select style="width: 70%" v-model="adds.areaId" placeholder="请输入县">
+              <div class="student-realname-field">
+                <span class="student-realname-field__label">区县</span>
+                <el-select v-model="adds.areaId" placeholder="请选择区县">
                   <el-option v-for="ma in areaArr" :label="ma.area" :value="ma.id" :key="ma.id"></el-option>
                 </el-select>
               </div>
             </div>
-          </el-col>
-          <el-col :span="12">
-            <div class="right-right-top">
-              <div class="title">学校信息</div>
-              <div style="margin-top: 2vh">
-                请选择学校：
-                <!-- 使用内联函数调用 provinceChange 方法并传递 ma -->
-                <el-select style="width: 60%" v-model="schools.universityId" placeholder="请输入省" @change="findColleges()">
-                  <!-- 遍历 provinceArr 数组生成选项 -->
-                  <el-option v-for="ma in universityArr" :label="ma.universityName" :value="ma.id" :key="ma.id">
-                  </el-option>
+            <div class="student-realname-display" v-else>
+              <div class="student-realname-item">省份：{{ studentFace.addressProvinces.province }}</div>
+              <div class="student-realname-item">城市：{{ studentFace.addressCities.city }}</div>
+              <div class="student-realname-item">区县：{{ studentFace.addressAreas.area }}</div>
+            </div>
+          </article>
+
+          <article class="student-panel student-realname-card">
+            <h3 class="student-section-title">学校信息</h3>
+            <div class="student-realname-form-grid" v-if="setOrShow !== 'show'">
+              <div class="student-realname-field">
+                <span class="student-realname-field__label">学校</span>
+                <el-select v-model="schools.universityId" placeholder="请选择学校" @change="findColleges()">
+                  <el-option v-for="ma in universityArr" :label="ma.universityName" :value="ma.id" :key="ma.id"></el-option>
                 </el-select>
               </div>
-              <div style="margin-top: 2vh">
-                请选择学院：
-                <el-select style="width: 60%" v-model="schools.collegesId" placeholder="请输入市" @change="findMajor()">
+              <div class="student-realname-field">
+                <span class="student-realname-field__label">学院</span>
+                <el-select v-model="schools.collegesId" placeholder="请选择学院" @change="findMajor()">
                   <el-option v-for="ma in collegesArr" :label="ma.collegesName" :value="ma.id" :key="ma.id"></el-option>
                 </el-select>
               </div>
-              <div style="margin-top: 2vh">
-                请选择专业：
-                <el-select style="width: 60%" v-model="schools.majorId" placeholder="请输入县">
+              <div class="student-realname-field">
+                <span class="student-realname-field__label">专业</span>
+                <el-select v-model="schools.majorId" placeholder="请选择专业">
                   <el-option v-for="ma in majorArr" :label="ma.majorName" :value="ma.id" :key="ma.id"></el-option>
                 </el-select>
               </div>
             </div>
-          </el-col>
-        </el-row>
-        <el-row>
-          <div class="right-middle">
-            <el-row>
-              <el-row :gutter="15">
-                <!-- 左侧拍照区域 -->
-                <el-col :span="8">
-                  <div class="title">拍照功能</div>
-                  <div style="margin-bottom: 2vh; text-align: center">
-                    <el-button
-                        type="primary"
-                        @click="openCamera"
-                        :disabled="cameraEnabled"
-                        style="margin-right: 3px">
-                      开启摄像
-                    </el-button>
-                    <el-button
-                        type="danger"
-                        @click="closeCamera"
-                        :disabled="!cameraEnabled">
-                      关闭摄像
-                    </el-button>
-                    <el-button
-                        type="success"
-                        @click="takePhoto"
-                        :disabled="!cameraEnabled"
-                        style="margin-left: 3px">
-                      拍 照
-                    </el-button>
-                  </div>
-                  <div style="width: 98%; height: 22vh; border: 1px dashed #0c5bf3;text-align: center">
-                    <video
-                        ref="video"
-                        v-show="cameraEnabled"
-                        autoplay
-                        style="width: 100%; height: 100%"></video>
-                    <div v-show="!cameraEnabled" style="padding-top: 8vh;font-size: 24px">
-                      摄像头未开启
-                    </div>
-                  </div>
-                </el-col>
+            <div class="student-realname-display" v-else>
+              <div class="student-realname-item">学校：{{ studentFace.schoolsUniversity.universityName }}</div>
+              <div class="student-realname-item">学院：{{ studentFace.schoolsColleges.collegesName }}</div>
+              <div class="student-realname-item">专业：{{ studentFace.schoolsMajor.majorName }}</div>
+            </div>
+          </article>
+        </section>
 
-                <!-- 中间照片显示 -->
-                <el-col :span="8">
-                  <div class="title">照片显示</div>
-                  <div style="width: 98%">
-                    <el-image
-                        style="width: 100%; height: 28vh; border: 1px dashed #0c5bf3;text-align: center"
-                        :src="capturedPhoto"
-                        fit="contain">
-                      <div slot="error" style="padding-top: 8vh;font-size: 24px">
-                        等待拍摄照片...
-                      </div>
-                    </el-image>
-                  </div>
-                </el-col>
+        <section class="student-panel student-realname-card">
+          <h3 class="student-section-title">{{ setOrShow === 'show' ? '认证资料' : '认证采集' }}</h3>
 
-                <!-- 右侧身份证上传 -->
-                <el-col :span="8">
-                  <div class="title">身份证上传</div>
-                  <div style="width: 98%; height: 29vh;;text-align: center">
-                    <el-upload
-                        class="upload-demo"
-                        action="http://localhost:9998/files/idPhoto/upload"
-                        :limit="1"
-                        :on-success="handleUpload"
-                        :show-file-list="false">
-                      <el-button type="primary" style="margin-bottom: 20px">
-                        点击上传
-                      </el-button>
-                    </el-upload>
-                    <el-image
-                        style="width: 100%; height: 22vh; border: 1px dashed #3a44fa"
-                        :src="idCardImage"
-                        fit="contain">
-                      <div slot="error" style="padding-top: 8vh;font-size: 24px">
-                        等待上传身份证...
-                      </div>
-                    </el-image>
-                  </div>
-                </el-col>
-              </el-row>
-            </el-row>
-          </div>
-        </el-row>
-        <el-row>
-          <div class="right-bottom">
-            <el-row>
-              <el-col :span="12">
-                <div style="color: #3437f8;font-size: 24px;text-align: center">
-                  请进行实名认证
+          <div class="student-realname-media-grid" v-if="setOrShow !== 'show'">
+            <article class="student-realname-media-card">
+              <div class="student-realname-media-card__head">
+                <h4>拍照功能</h4>
+                <div class="student-realname-camera-actions">
+                  <el-button type="primary" @click="openCamera" :disabled="cameraEnabled">开启摄像</el-button>
+                  <el-button type="danger" @click="closeCamera" :disabled="!cameraEnabled">关闭摄像</el-button>
+                  <el-button type="success" @click="takePhoto" :disabled="!cameraEnabled">拍照</el-button>
                 </div>
-              </el-col>
-              <el-col :span="12">
-                <el-button
-                    type="primary"
-                    @click="insertMessage"
-                    style="width: 60%;font-size: 24px">
-                  提交资料
-                </el-button>
-              </el-col>
-            </el-row>
-          </div>
-        </el-row>
-      </el-col>
-      <el-col :span="16"  v-if="setOrShow==='update'">
-        <!-- 右侧内容保持不变 -->
-        <el-row>
-          <el-col :span="12">
-            <div class="right-left-top">
-              <div class="title">家庭住址</div>
-              <div style="margin-top: 2vh">
-                请选择省：
-                <!-- 使用内联函数调用 provinceChange 方法并传递 ma -->
-                <el-select style="width: 70%" v-model="adds.provinceId" placeholder="请输入省" @change="findCity()">
-                  <!-- 遍历 provinceArr 数组生成选项 -->
-                  <el-option v-for="ma in provinceArr" :label="ma.province" :value="ma.id" :key="ma.id">
-                  </el-option>
-                </el-select>
               </div>
-              <div style="margin-top: 2vh">
-                请选择市：
-                <el-select style="width: 70%" v-model="adds.cityId" placeholder="请输入市" @change="findArea()">
-                  <el-option v-for="ma in cityArr" :label="ma.city" :value="ma.id" :key="ma.id"></el-option>
-                </el-select>
+              <div class="student-realname-media-box">
+                <video ref="video" v-show="cameraEnabled" autoplay></video>
+                <div v-show="!cameraEnabled" class="student-realname-placeholder">摄像头未开启</div>
               </div>
-              <div style="margin-top: 2vh">
-                请选择县：
-                <el-select style="width: 70%" v-model="adds.areaId" placeholder="请输入县">
-                  <el-option v-for="ma in areaArr" :label="ma.area" :value="ma.id" :key="ma.id"></el-option>
-                </el-select>
-              </div>
-            </div>
-          </el-col>
-          <el-col :span="12">
-            <div class="right-right-top">
-              <div class="title">学校信息</div>
-              <div style="margin-top: 2vh">
-                请选择学校：
-                <!-- 使用内联函数调用 provinceChange 方法并传递 ma -->
-                <el-select style="width: 60%" v-model="schools.universityId" placeholder="请输入省" @change="findColleges()">
-                  <!-- 遍历 provinceArr 数组生成选项 -->
-                  <el-option v-for="ma in universityArr" :label="ma.universityName" :value="ma.id" :key="ma.id">
-                  </el-option>
-                </el-select>
-              </div>
-              <div style="margin-top: 2vh">
-                请选择学院：
-                <el-select style="width: 60%" v-model="schools.collegesId" placeholder="请输入市" @change="findMajor()">
-                  <el-option v-for="ma in collegesArr" :label="ma.collegesName" :value="ma.id" :key="ma.id"></el-option>
-                </el-select>
-              </div>
-              <div style="margin-top: 2vh">
-                请选择专业：
-                <el-select style="width: 60%" v-model="schools.majorId" placeholder="请输入县">
-                  <el-option v-for="ma in majorArr" :label="ma.majorName" :value="ma.id" :key="ma.id"></el-option>
-                </el-select>
-              </div>
-            </div>
-          </el-col>
-        </el-row>
-        <el-row>
-          <div class="right-middle">
-            <el-row>
-              <el-row :gutter="15">
-                <!-- 左侧拍照区域 -->
-                <el-col :span="8">
-                  <div class="title">拍照功能</div>
-                  <div style="margin-bottom: 2vh; text-align: center">
-                    <el-button
-                        type="primary"
-                        @click="openCamera"
-                        :disabled="cameraEnabled"
-                        style="margin-right: 3px">
-                      开启摄像
-                    </el-button>
-                    <el-button
-                        type="danger"
-                        @click="closeCamera"
-                        :disabled="!cameraEnabled">
-                      关闭摄像
-                    </el-button>
-                    <el-button
-                        type="success"
-                        @click="takePhoto"
-                        :disabled="!cameraEnabled"
-                        style="margin-left: 3px">
-                      拍 照
-                    </el-button>
-                  </div>
-                  <div style="width: 98%; height: 22vh; border: 1px dashed #0c5bf3;text-align: center">
-                    <video
-                        ref="video"
-                        v-show="cameraEnabled"
-                        autoplay
-                        style="width: 100%; height: 100%"></video>
-                    <div v-show="!cameraEnabled" style="padding-top: 8vh;font-size: 24px">
-                      摄像头未开启
-                    </div>
-                  </div>
-                </el-col>
+            </article>
 
-                <!-- 中间照片显示 -->
-                <el-col :span="8">
-                  <div class="title">照片显示</div>
-                  <div style="width: 98%">
-                    <el-image
-                        style="width: 100%; height: 28vh; border: 1px dashed #0c5bf3;text-align: center"
-                        :src="capturedPhoto"
-                        fit="contain">
-                      <div slot="error" style="padding-top: 8vh;font-size: 24px">
-                        等待拍摄照片...
-                      </div>
-                    </el-image>
-                  </div>
-                </el-col>
+            <article class="student-realname-media-card">
+              <div class="student-realname-media-card__head">
+                <h4>照片显示</h4>
+              </div>
+              <div class="student-realname-media-box">
+                <el-image :src="capturedPhoto" fit="contain">
+                  <div slot="error" class="student-realname-placeholder">等待拍摄照片</div>
+                </el-image>
+              </div>
+            </article>
 
-                <!-- 右侧身份证上传 -->
-                <el-col :span="8">
-                  <div class="title">身份证上传</div>
-                  <div style="width: 98%; height: 29vh;;text-align: center">
-                    <el-upload
-                        class="upload-demo"
-                        action="http://localhost:9998/files/idPhoto/upload"
-                        :limit="1"
-                        :on-success="handleUpload"
-                        :show-file-list="false">
-                      <el-button type="primary" style="margin-bottom: 20px">
-                        点击上传
-                      </el-button>
-                    </el-upload>
-                    <el-image
-                        style="width: 100%; height: 22vh; border: 1px dashed #3a44fa"
-                        :src="idCardImage"
-                        fit="contain">
-                      <div slot="error" style="padding-top: 8vh;font-size: 24px">
-                        等待上传身份证...
-                      </div>
-                    </el-image>
-                  </div>
-                </el-col>
-              </el-row>
-            </el-row>
+            <article class="student-realname-media-card">
+              <div class="student-realname-media-card__head">
+                <h4>身份证上传</h4>
+                <el-upload
+                  class="upload-demo"
+                  action="http://localhost:9998/files/idPhoto/upload"
+                  :limit="1"
+                  :on-success="handleUpload"
+                  :show-file-list="false">
+                  <el-button type="primary">点击上传</el-button>
+                </el-upload>
+              </div>
+              <div class="student-realname-media-box">
+                <el-image :src="idCardImage" fit="contain">
+                  <div slot="error" class="student-realname-placeholder">等待上传身份证</div>
+                </el-image>
+              </div>
+            </article>
           </div>
-        </el-row>
-        <el-row>
-          <div class="right-bottom">
-            <el-col :span="12">
-              <div style="color: #3437f8;font-size: 24px;text-align: center">
-                实名认证信息重新填写
+
+          <div class="student-realname-media-grid student-realname-media-grid--readonly" v-else>
+            <article class="student-realname-media-card">
+              <div class="student-realname-media-card__head">
+                <h4>验证说明</h4>
               </div>
-            </el-col>
-            <el-col :span="12">
-              <el-button
-                  type="primary"
-                  @click="updateMessage"
-                  style="width: 60%;font-size: 24px">
-                提交资料
-              </el-button>
-            </el-col>
+              <div class="student-realname-status-box">
+                <span v-if="studentFace.isSubmit==='否'">正在等待审核</span>
+                <span v-if="studentFace.isSubmit==='同意'">审核成功</span>
+                <span v-if="studentFace.isSubmit==='拒绝'">审核失败，请重新提交</span>
+              </div>
+            </article>
+
+            <article class="student-realname-media-card">
+              <div class="student-realname-media-card__head">
+                <h4>照片显示</h4>
+              </div>
+              <div class="student-realname-media-box">
+                <el-image :src="studentFace.facePath" fit="contain">
+                  <div slot="error" class="student-realname-placeholder">暂无人脸照片</div>
+                </el-image>
+              </div>
+            </article>
+
+            <article class="student-realname-media-card">
+              <div class="student-realname-media-card__head">
+                <h4>身份证照片</h4>
+              </div>
+              <div class="student-realname-media-box">
+                <el-image :src="studentFace.idPath" fit="contain">
+                  <div slot="error" class="student-realname-placeholder">暂无身份证照片</div>
+                </el-image>
+              </div>
+            </article>
           </div>
-        </el-row>
-      </el-col>
-      <el-col :span="16" v-if="setOrShow==='show'">
-        <!-- 右侧内容保持不变 -->
-        <el-row>
-          <el-col :span="12">
-            <div class="right-left-top">
-              <div class="title">家庭住址</div>
-              <div style="margin-top: 2vh">
-                请选择省：{{studentFace.addressProvinces.province}}
-              </div>
-              <div style="margin-top: 2vh">
-                请选择市：{{studentFace.addressCities.city}}
-              </div>
-              <div style="margin-top: 2vh">
-                请选择县：{{studentFace.addressAreas.area}}
-              </div>
+
+          <div class="student-realname-submit" v-if="setOrShow !== 'show'">
+            <div class="student-realname-submit__note">
+              {{ setOrShow === 'update' ? '实名认证信息重新填写' : '请进行实名认证' }}
             </div>
-          </el-col>
-          <el-col :span="12">
-            <div class="right-right-top">
-              <div class="title">学校信息</div>
-              <div style="margin-top: 2vh">
-                请选择学校：{{studentFace.schoolsUniversity.universityName}}
-              </div>
-              <div style="margin-top: 2vh">
-                请选择学院：{{studentFace.schoolsColleges.collegesName}}
-              </div>
-              <div style="margin-top: 2vh">
-                请选择专业：{{studentFace.schoolsMajor.majorName}}
-              </div>
-            </div>
-          </el-col>
-        </el-row>
-        <el-row>
-          <div class="right-middle">
-            <el-row>
-              <el-row :gutter="15">
-                <!-- 左侧拍照区域 -->
-                <el-col :span="8">
-                  <div class="title">验证说明</div>
-                  <div style="width: 100%; height: 28vh; border: 1px dashed #3a44fa">
-                    <div v-if="studentFace.isSubmit==='否'">
-                      正在等待审核
-                    </div>
-                    <div v-if="studentFace.isSubmit==='同意'">
-                      审核成功
-                    </div>
-                    <div v-if="studentFace.isSubmit==='拒绝'">
-                      审核失败，重新上传
-                    </div>
-                  </div>
-                </el-col>
-                <!-- 中间照片显示 -->
-                <el-col :span="8">
-                  <div class="title">照片显示</div>
-                  <div style="width: 98%">
-                    <el-image
-                        style="width: 100%; height: 28vh; border: 1px dashed #3a44fa"
-                        :src="studentFace.facePath"
-                        fit="contain">
-                      <div slot="error" style="padding-top: 8vh;font-size: 24px">
-                        等待上传身份证...
-                      </div>
-                    </el-image>
-                  </div>
-                </el-col>
-
-                <!-- 右侧身份证上传 -->
-                <el-col :span="8">
-                  <div class="title">身份证上传</div>
-                  <div style="width: 98%; height: 29vh;;text-align: center">
-                    <el-image
-                        style="width: 100%; height: 28vh; border: 1px dashed #3a44fa"
-                        :src="studentFace.idPath"
-                        fit="contain">
-                      <div slot="error" style="padding-top: 8vh;font-size: 24px">
-                        等待上传身份证...
-                      </div>
-                    </el-image>
-                  </div>
-                </el-col>
-              </el-row>
-            </el-row>
+            <el-button type="primary" @click="setOrShow === 'update' ? updateMessage() : insertMessage()">提交资料</el-button>
           </div>
-        </el-row>
-        <el-row>
-          <div class="right-bottom">
-
-          </div>
-        </el-row>
-      </el-col>
-    </el-row>
+        </section>
+      </main>
+    </div>
   </div>
 </template>
 
@@ -480,13 +227,10 @@ import request from "@/utils/request";
 export default {
   data() {
     return {
-      // 原有数据保持不变
       user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {},
-
-      // 新增错误处理数据
       errorMapping: {
         '0x0001': 'SDK未激活',
-        '0x0003': '图像格式错误（需要NV21）',
+        '0x0003': '图像格式错误（需要 NV21）',
         '0x0011': '超出设备授权数量',
         '0x0020': '内存分配失败'
       },
@@ -495,7 +239,6 @@ export default {
         'warning': 'warning',
         'info': 'info'
       },
-      // 地区
       provinceArr:"",
       province:"",
       cityArr:"",
@@ -630,7 +373,6 @@ export default {
         }
       })
     },
-    // 开启摄像头
     async openCamera() {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
@@ -643,58 +385,34 @@ export default {
         this.$message.error('无法访问摄像头: ' + error.message);
       }
     },
-
-    // 关闭摄像头
     closeCamera() {
       if (this.mediaStream) {
         this.mediaStream.getTracks().forEach(track => track.stop());
         this.mediaStream = null;
       }
       this.cameraEnabled = false;
-      this.$refs.video.srcObject = null;
+      if (this.$refs.video) {
+        this.$refs.video.srcObject = null;
+      }
     },
-
-    // 拍照
-    // takePhoto() {
-    //   const video = this.$refs.video;
-    //   const canvas = document.createElement('canvas');
-    //   canvas.width = video.videoWidth;
-    //   canvas.height = video.videoHeight;
-    //   canvas.getContext('2d').drawImage(video, 0, 0);
-    //   this.capturedPhoto = canvas.toDataURL('image/png');
-    // },
     takePhoto() {
       const video = this.$refs.video;
       const canvas = document.createElement('canvas');
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
       const ctx = canvas.getContext('2d');
-
-      // 绘制视频帧到canvas
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-      // 转换为JPEG格式（更适合照片）
-      const base64Data = canvas.toDataURL('image/jpeg', 0.8) // 0.8为质量参数
-
-      // 处理后端需要的格式（去掉data:image/jpeg;base64,前缀）
+      const base64Data = canvas.toDataURL('image/jpeg', 0.8)
       const processedBase64 = this.processBase64(base64Data);
-
-      // 存储到变量（根据接口需求）
       this.studentFile=base64Data
-
-      // 同时保留预览图
       this.capturedPhoto = base64Data;
+      return processedBase64
     },
-
-// Base64处理方法（与Java后端base64Process方法对应）
     processBase64(base64Str) {
       if (!base64Str) return '';
-      // 分割逗号后的部分
       const parts = base64Str.split(',');
       return parts.length > 1 ? parts[1] : base64Str;
     },
-
-    // 处理身份证上传
     handleUpload(res) {
       this.imageUrl=res.data
       this.idCardImage = this.imageUrl;
@@ -751,8 +469,6 @@ export default {
       })
     }
   },
-
-  // 组件销毁时关闭摄像头
   beforeDestroy() {
     this.closeCamera();
   }
@@ -760,114 +476,245 @@ export default {
 </script>
 
 <style scoped>
-/* 原有样式保持不变 */
-.left-top{
-  margin: 2vh 3% 1vh 3%;
-  padding-left: 2%;
-  padding-top: 1vh;
-  height: 41vh;
-  width: 94%;
-  background: #dddee0;
-  border-radius: 10px;
+.student-realname-shell {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: 18px;
+  align-items: stretch;
 }
 
-.left-bottom{
-  margin: 2vh 3% 1vh 3%;
-  padding-left: 2%;
-  padding-top: 1vh;
-  height: 41vh;
-  width: 94%;
-  background: #dddee0;
-  border-radius: 10px;
-}
-.right-left-top{
-  margin: 2vh 3% 1vh 3%;
-  padding-left: 2%;
-  padding-top: 1vh;
-  height: 30vh;
-  width: 94%;
-  background: #dddee0;
-  border-radius: 10px;
-}
-.right-right-top{
-  margin: 2vh 3% 1vh 3%;
-  padding-left: 2%;
-  padding-top: 1vh;
-  height: 30vh;
-  width: 94%;
-  background: #dddee0;
-  border-radius: 10px;
-}
-.right-middle{
-  margin: 1vh 1.5% 1vh 1.5%;
-  padding-left: 2%;
-  padding-top: 1vh;
-  height: 40vh;
-  width: 97%;
-  background: #dddee0;
-  border-radius: 10px;
-}
-.right-bottom{
-  margin: 1vh 1.5% 1vh 1.5%;
-  padding-left: 2%;
-  padding-top: 2vh;
-  height: 10vh;
-  width: 97%;
-  text-align: center;
-  background: #dddee0;
-  border-radius: 10px;
-}
-/* 新增操作说明样式 */
-.operation-guide {
-  padding: 0 15px;
-  max-height: 30vh;
-  overflow-y: scroll;
-}
-.operation-guide::-webkit-scrollbar{
-  width:0;
+.student-realname-aside,
+.student-realname-main {
+  display: grid;
+  gap: 18px;
 }
 
-.step-desc {
-  font-size: 14px;
-  color: #606266;
-  margin: 8px 0;
+.student-realname-aside {
+  grid-template-rows: auto minmax(0, 1fr);
 }
 
-.code-block {
-  background: #f5f7fa;
-  padding: 12px;
-  border-radius: 4px;
-  font-family: 'Consolas', monospace;
-  font-size: 13px;
-  line-height: 1.5;
-  margin: 10px 0;
+.student-realname-main {
+  grid-template-rows: auto minmax(0, 1fr);
 }
 
-.error-title {
-  font-weight: bold;
-  margin: 15px 0 10px;
+.student-realname-card {
+  padding: 20px;
 }
 
-.error-list {
-  padding-left: 20px;
+.student-realname-aside > .student-realname-card:last-child,
+.student-realname-main > .student-realname-card:last-child {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
 }
 
-.error-code {
+.student-realname-profile {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.student-realname-avatar {
+  width: 100%;
+  height: 220px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #f8fafc;
+}
+
+.student-realname-profile__meta,
+.student-realname-display {
+  display: grid;
+  gap: 12px;
+}
+
+.student-realname-item {
+  color: #475569;
+  line-height: 1.7;
+  word-break: break-word;
+}
+
+.student-realname-guide {
+  flex: 1;
+  min-height: 0;
+  padding-right: 4px;
+  max-height: none;
+  overflow: auto;
+}
+
+.student-realname-step {
+  margin: 6px 0;
+  color: #64748b;
+  line-height: 1.65;
+}
+
+.student-realname-error-title {
+  margin: 10px 0 8px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.student-realname-error-list {
+  padding-left: 18px;
+  margin: 0;
+  color: #64748b;
+}
+
+.student-realname-error-list li {
+  margin-bottom: 8px;
+}
+
+.student-realname-error-code {
   display: inline-block;
-  width: 60px;
-  color: #f56c6c;
-  font-weight: bold;
+  min-width: 62px;
+  color: #dc2626;
+  font-weight: 700;
 }
 
-.message{
-  font-size: 20px;
-  margin-bottom: 2vh;
-  margin-top: 2vh;
-  margin-left: 4%;
+.student-realname-info-grid,
+.student-realname-media-grid {
+  display: grid;
+  gap: 18px;
 }
-.title{
-  font-family: 'STXingkai', '华文行楷', cursive;
-  font-size: 32px;
-  padding-bottom: 3vh;
+
+.student-realname-info-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.student-realname-media-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: stretch;
+}
+
+.student-realname-form-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.student-realname-field {
+  display: grid;
+  gap: 8px;
+}
+
+.student-realname-field__label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.student-realname-media-card {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 12px;
+  height: 100%;
+  padding: 16px;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: 14px;
+  background: #f8fafc;
+}
+
+.student-realname-media-card__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.student-realname-media-card__head h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.student-realname-camera-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.student-realname-media-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 240px;
+  border: 1px dashed #93c5fd;
+  border-radius: 14px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.student-realname-media-box :deep(.el-image),
+.student-realname-media-box video {
+  width: 100%;
+  height: 240px;
+}
+
+.student-realname-media-box video {
+  object-fit: cover;
+  background: #0f172a;
+}
+
+.student-realname-placeholder,
+.student-realname-status-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 240px;
+  padding: 20px;
+  color: #64748b;
+  text-align: center;
+  line-height: 1.7;
+}
+
+.student-realname-submit {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: auto;
+  padding-top: 18px;
+  border-top: 1px solid rgba(226, 232, 240, 0.9);
+}
+
+.student-realname-submit__note {
+  color: #475569;
+  font-size: 14px;
+}
+
+.student-realname-submit :deep(.el-button) {
+  min-width: 180px;
+  height: 42px;
+}
+
+.student-realname-page :deep(.el-input__inner),
+.student-realname-page :deep(.el-select .el-input__inner) {
+  height: 38px;
+  border-radius: 10px;
+}
+
+.student-realname-page :deep(.el-button) {
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+@media (max-width: 1320px) {
+  .student-realname-shell,
+  .student-realname-info-grid,
+  .student-realname-media-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .student-realname-submit {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .student-realname-submit :deep(.el-button) {
+    width: 100%;
+  }
 }
 </style>

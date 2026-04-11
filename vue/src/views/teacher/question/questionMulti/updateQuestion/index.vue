@@ -1,177 +1,127 @@
 <template>
-  <div>
-    <el-row>
-      <div class="top">
-        <div class="title">
-          题目信息
+  <div class="teacher-page teacher-question-editor">
+    <section class="teacher-page-head">
+      <div>
+        <h2 class="teacher-page-head__title">修改选择题</h2>
+        <p class="teacher-page-head__desc">统一题干、选项、答案和解析的编辑容器，避免多块表单和富文本区域相互挤压。</p>
+      </div>
+    </section>
+
+    <div class="teacher-panel teacher-panel--padded">
+      <div class="teacher-question-editor__meta-grid">
+        <div class="teacher-question-editor__field">
+          <span class="teacher-question-editor__label">所属课程</span>
+          <el-select v-model="table.courseId" clearable filterable placeholder="请选择">
+            <el-option
+              v-for="item in course"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
         </div>
-        <rl-row style="text-align: center">
-          <el-col :span="6">
-            请选择课程:
-            <el-select style="width: 50%" v-model="table.courseId" clearable filterable placeholder="请选择">
-              <el-option
-                  v-for="item in course"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id">
-              </el-option>
-            </el-select>
-          </el-col>
-          <el-col :span="6">
-            请输入分值:
-            <el-input style="width: 50%" clearable v-model="table.score" placeholder="请输入分值"></el-input>
-          </el-col>
-          <el-col :span="6">
-            <el-row>
-              <el-col :span="8" style="text-align: right">
-                等级:
-              </el-col>
-              <el-col :span="16">
-                <el-rate
-                    v-model="table.level"
-                    :colors="['#fdea5a', '#32ef17', '#8a2be2']"
-                    :void-color="'#070000'"
-                ></el-rate>
-              </el-col>
-            </el-row>
-          </el-col>
-          <el-col :span="6">
-            请输入章节:
-            <el-input style="width: 50%" clearable v-model="table.section" placeholder="请输入章节"></el-input>
-          </el-col>
-        </rl-row>
+        <div class="teacher-question-editor__field">
+          <span class="teacher-question-editor__label">分值</span>
+          <el-input clearable v-model="table.score" placeholder="请输入分值"></el-input>
+        </div>
+        <div class="teacher-question-editor__field">
+          <span class="teacher-question-editor__label">难度等级</span>
+          <el-rate
+            v-model="table.level"
+            :colors="['#fdea5a', '#32ef17', '#8a2be2']"
+            :void-color="'#070000'">
+          </el-rate>
+        </div>
+        <div class="teacher-question-editor__field">
+          <span class="teacher-question-editor__label">所属章节</span>
+          <el-input clearable v-model="table.section" placeholder="请输入章节"></el-input>
+        </div>
       </div>
-    </el-row>
-    <el-row>
-      <div class="question">
-        <el-row>
-          <el-col :span="12">
-            <div class="title">
-              问题
+
+      <div class="teacher-question-editor__two-col">
+        <div class="teacher-panel teacher-panel--padded">
+          <div class="teacher-panel__head">
+            <div>
+              <h3 class="teacher-panel__title">问题</h3>
+              <p class="teacher-panel__desc">保持原有题干加载逻辑，仅统一阅读和编辑空间。</p>
             </div>
-            <div class="w-e-text-container" id='editorA' style="width: 98%;height: 35vh"></div>
-          </el-col>
-          <el-col :span="12">
-            <div style="margin: 8vh 2% 2vh 0;padding: 2vh 2% 2vh 2%;width: 92%;height: 34vh;">
-              <el-row>
-                <el-col :span="6">
-                  <div style="font-size: 24px;text-align: center;margin-top: 1vh">
-                    选项A
-                  </div>
-                </el-col>
-                <el-col :span="18">
-                  <el-input
-                      style="font-size: 18px;width: 100%"
-                      type="textarea"
-                      :autosize="{ minRows: 1, maxRows: 1}"
-                      placeholder="答案"
-                      v-model="table.answerA">
-                  </el-input>
-                </el-col>
-              </el-row>
-              <el-row style="margin-top: 3vh">
-                <el-col :span="6">
-                  <div style="font-size: 24px;text-align: center;margin-top: 1vh">
-                    选项B
-                  </div>
-                </el-col>
-                <el-col :span="18">
-                  <el-input
-                      style="font-size: 18px;width: 100%"
-                      type="textarea"
-                      :autosize="{ minRows: 1, maxRows: 1}"
-                      placeholder="答案"
-                      v-model="table.answerB">
-                  </el-input>
-                </el-col>
-              </el-row>
-              <el-row style="margin-top: 3vh">
-                <el-col :span="6">
-                  <div style="font-size: 24px;text-align: center;margin-top: 1vh">
-                    选项C
-                  </div>
-                </el-col>
-                <el-col :span="18">
-                  <el-input
-                      style="font-size: 18px;width: 100%"
-                      type="textarea"
-                      :autosize="{ minRows: 1, maxRows: 1}"
-                      placeholder="答案"
-                      v-model="table.answerC">
-                  </el-input>
-                </el-col>
-              </el-row>
-              <el-row style="margin-top: 3vh">
-                <el-col :span="6">
-                  <div style="font-size: 24px;text-align: center;margin-top: 1vh">
-                    选项D
-                  </div>
-                </el-col>
-                <el-col :span="18">
-                  <el-input
-                      style="font-size: 18px;width: 100%"
-                      type="textarea"
-                      :autosize="{ minRows: 1, maxRows: 1}"
-                      placeholder="答案"
-                      v-model="table.answerD">
-                  </el-input>
-                </el-col>
-              </el-row>
+          </div>
+          <div class="w-e-text-container" id="editorA" style="width: 100%; height: 320px"></div>
+        </div>
+
+        <div class="teacher-panel teacher-panel--padded">
+          <div class="teacher-panel__head">
+            <div>
+              <h3 class="teacher-panel__title">解析</h3>
+              <p class="teacher-panel__desc">说明答案依据和考查重点。</p>
             </div>
-          </el-col>
-        </el-row>
+          </div>
+          <div class="w-e-text-container" id="editorB" style="width: 100%; height: 320px"></div>
+        </div>
       </div>
-    </el-row>
-    <el-row>
-      <el-col :span="12">
-        <div class="answer">
-          <div style="font-size: 26px;;margin-bottom: 1vh">
-            题型：
-            <el-select style="width: 60%" v-model="table.questionType" clearable filterable placeholder="请选择">
-              <el-option
+
+      <div class="teacher-question-editor__two-col">
+        <div class="teacher-panel teacher-panel--padded">
+          <div class="teacher-panel__head">
+            <div>
+              <h3 class="teacher-panel__title">选项配置</h3>
+              <p class="teacher-panel__desc">四个选项统一保持固定节奏和安全留白。</p>
+            </div>
+          </div>
+          <div class="teacher-question-editor__stack">
+            <div class="teacher-question-editor__field">
+              <span class="teacher-question-editor__label">选项 A</span>
+              <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 3}" placeholder="请输入选项内容" v-model="table.answerA"></el-input>
+            </div>
+            <div class="teacher-question-editor__field">
+              <span class="teacher-question-editor__label">选项 B</span>
+              <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 3}" placeholder="请输入选项内容" v-model="table.answerB"></el-input>
+            </div>
+            <div class="teacher-question-editor__field">
+              <span class="teacher-question-editor__label">选项 C</span>
+              <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 3}" placeholder="请输入选项内容" v-model="table.answerC"></el-input>
+            </div>
+            <div class="teacher-question-editor__field">
+              <span class="teacher-question-editor__label">选项 D</span>
+              <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 3}" placeholder="请输入选项内容" v-model="table.answerD"></el-input>
+            </div>
+          </div>
+        </div>
+
+        <div class="teacher-panel teacher-panel--padded">
+          <div class="teacher-panel__head">
+            <div>
+              <h3 class="teacher-panel__title">题型与答案</h3>
+              <p class="teacher-panel__desc">保留原有多选答案回填和变更逻辑，只修布局。</p>
+            </div>
+          </div>
+          <div class="teacher-question-editor__stack">
+            <div class="teacher-question-editor__field">
+              <span class="teacher-question-editor__label">题型</span>
+              <el-select v-model="table.questionType" clearable filterable placeholder="请选择">
+                <el-option
                   v-for="item in type"
                   :key="item.data"
                   :label="item.data"
                   :value="item.data">
-              </el-option>
-            </el-select>
+                </el-option>
+              </el-select>
+            </div>
+            <div class="teacher-question-editor__answer">
+              <span class="teacher-question-editor__label">正确答案</span>
+              <div class="teacher-question-editor__answer-value">{{ table.rightAnswer ? table.rightAnswer : "请选择答案" }}</div>
+              <el-checkbox-group class="teacher-question-editor__choice-group" @change="multiChange" v-model="multiAnswer">
+                <el-checkbox v-for="m in multi" :label="m" :key="m">{{ m }}</el-checkbox>
+              </el-checkbox-group>
+            </div>
           </div>
         </div>
-      </el-col>
-      <el-col :span="12">
-        <div class="answer">
-          <el-row style="font-size: 26px;">
-            <el-col :span="4" style="margin-top: 1vh">
-              答案：
-            </el-col>
-            <el-col :span="4" style="margin-top: 1vh">
-              {{this.table.rightAnswer?this.table.rightAnswer:"请作答"}}
-            </el-col>
-            <el-col :span="16">
-              <el-checkbox-group
-                  @change="multiChange"
-                  style="margin-top: 2vh"
-                  v-model="multiAnswer">
-                <el-checkbox v-for="m in multi" :label="m" :key="m"><a style="font-size: 28px">{{m}}</a></el-checkbox>
-              </el-checkbox-group>
-            </el-col>
-          </el-row>
-        </div>
-      </el-col>
-    </el-row>
-    <el-row>
-      <div class="analysis">
-        <div class="title">
-          解析
-        </div>
-        <div class="w-e-text-container" id='editorB' style="width: 98%;height: 45vh"></div>
       </div>
-    </el-row>
-    <el-row>
-      <div class="bottom">
-        <el-button type="primary" round style="width: 60%;font-size: 24px;margin-top: 1vh" @click="submit">保 存</el-button>
+
+      <div class="teacher-question-editor__actions">
+        <el-button type="primary" @click="submit">保存</el-button>
       </div>
-    </el-row>
+    </div>
   </div>
 </template>
 
@@ -261,7 +211,6 @@ export default {
     multiChange(){
       this.table.rightAnswer=""
       const multiAnswer = this.multiAnswer.sort();
-      // 将排序后的结果拼接成字符串
       this.table.rightAnswer = multiAnswer.join('');
     },
     selectQuestion(){
@@ -272,7 +221,7 @@ export default {
       this.table.analysis=editorB.txt.html()
       request.put("/exam/questionMulti/update", this.table).then(res => {
         if (res.code === "200") {
-          this.$message.success("添加成功")
+          this.$message.success("保存成功")
           this.form = {}
         } else {
           this.$message.error(res.msg)
@@ -283,57 +232,4 @@ export default {
 }
 </script>
 
-
-<style scoped>
-.top{
-  margin: 2vh 1% 1vh 1%;
-  padding-left: 2%;
-  padding-top: 1vh;
-  height: 15vh;
-  width: 98%;
-  background: #dddee0;
-  border-radius: 10px
-}
-.question{
-  margin: 1vh 1% 1vh 1%;
-  padding-left: 2%;
-  padding-top: 1vh;
-  height: 47vh;
-  width: 98%;
-  background: #dddee0;
-  border-radius: 10px
-}
-.analysis{
-  margin: 1vh 1% 1vh 1%;
-  padding-left: 2%;
-  padding-top: 1vh;
-  height: 56vh;
-  width: 98%;
-  background: #dddee0;
-  border-radius: 10px
-}
-.answer{
-  margin: 1vh 1% 0 2%;
-  padding: 1vh 1% 0 2%;
-  height: 8vh;
-  width: 96%;
-  text-align: center;
-  background: #dddee0;
-  border-radius: 10px
-}
-.bottom{
-  margin: 1vh 1% 0 1%;
-  padding: 1vh 1% 0 2%;
-  height: 10vh;
-  width: 98%;
-  text-align: center;
-  background: #dddee0;
-  border-radius: 10px
-}
-.title{
-  font-family: 'STXingkai', '华文行楷', cursive;
-  font-size: 32px;
-  padding-bottom: 3vh;
-}
-</style>
-
+<style scoped></style>

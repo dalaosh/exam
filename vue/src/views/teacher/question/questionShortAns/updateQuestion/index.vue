@@ -1,78 +1,79 @@
 <template>
-  <div>
-    <el-row>
-      <div class="top">
-        <div class="title">
-          题目信息
-        </div>
-        <rl-row style="text-align: center">
-          <el-col :span="6">
-            请选择课程:
-            <el-select style="width: 50%;z-index: 2" v-model="table.courseId" clearable filterable placeholder="请选择">
-              <el-option
-                  v-for="item in course"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id">
-              </el-option>
-            </el-select>
-          </el-col>
-          <el-col :span="6">
-            请输入分值:
-            <el-input style="width: 50%" clearable v-model="table.score" placeholder="请输入分值"></el-input>
-          </el-col>
-          <el-col :span="6">
-            <el-row>
-              <el-col :span="8" style="text-align: right">
-                等级:
-              </el-col>
-              <el-col :span="16">
-                <el-rate
-                    v-model="table.level"
-                    :colors="['#fdea5a', '#32ef17', '#8a2be2']"
-                    :void-color="'#070000'"
-                ></el-rate>
-              </el-col>
-            </el-row>
-          </el-col>
-          <el-col :span="6">
-            请输入章节:
-            <el-input style="width: 50%" clearable v-model="table.section" placeholder="请输入章节"></el-input>
-          </el-col>
-        </rl-row>
+  <div class="teacher-page teacher-question-editor">
+    <section class="teacher-page-head">
+      <div>
+        <h2 class="teacher-page-head__title">编辑简答题</h2>
+        <p class="teacher-page-head__desc">统一问题、答案、解析三块编辑器和底部保存区间距，避免容器互相挤压。</p>
       </div>
-    </el-row>
-    <el-row>
-      <el-col :span="12">
-        <div class="middle-left">
-          <div class="title">
-            问题
+    </section>
+
+    <section class="teacher-panel teacher-panel--padded">
+      <div class="teacher-question-editor__meta-grid">
+        <div class="teacher-question-editor__field">
+          <span class="teacher-question-editor__label">所属课程</span>
+          <el-select v-model="table.courseId" clearable filterable placeholder="请选择">
+            <el-option
+              v-for="item in course"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
+        </div>
+        <div class="teacher-question-editor__field">
+          <span class="teacher-question-editor__label">分值</span>
+          <el-input clearable v-model="table.score" placeholder="请输入分值"></el-input>
+        </div>
+        <div class="teacher-question-editor__field">
+          <span class="teacher-question-editor__label">难度等级</span>
+          <el-rate
+            v-model="table.level"
+            :colors="['#fdea5a', '#32ef17', '#8a2be2']"
+            :void-color="'#070000'">
+          </el-rate>
+        </div>
+        <div class="teacher-question-editor__field">
+          <span class="teacher-question-editor__label">所属章节</span>
+          <el-input clearable v-model="table.section" placeholder="请输入章节"></el-input>
+        </div>
+      </div>
+    </section>
+
+    <div class="teacher-question-editor__two-col">
+      <section class="teacher-panel teacher-panel--padded">
+        <div class="teacher-panel__head">
+          <div>
+            <h3 class="teacher-panel__title">问题</h3>
+            <p class="teacher-panel__desc">编辑题面内容。</p>
           </div>
-          <div class="w-e-text-container" id='editorA' style="width: 98%;height: 40vh;z-index: 1"></div>
         </div>
-      </el-col>
-      <el-col :span="12">
-        <div class="middle-right">
-          <div class="title">
-            答案
+        <div class="w-e-text-container" id="editorA" style="width: 100%; height: 320px; z-index: 1"></div>
+      </section>
+
+      <section class="teacher-panel teacher-panel--padded">
+        <div class="teacher-panel__head">
+          <div>
+            <h3 class="teacher-panel__title">答案</h3>
+            <p class="teacher-panel__desc">编写标准答案内容。</p>
           </div>
-          <div class="w-e-text-container" id='editorC' style="width: 98%;height: 40vh"></div>
         </div>
-      </el-col>
-    </el-row>
-    <el-row>
-      <div class="bottom-left">
-        <div style="font-size: 26px;;margin-bottom: 1vh">
-          解析：
+        <div class="w-e-text-container" id="editorC" style="width: 100%; height: 320px"></div>
+      </section>
+    </div>
+
+    <section class="teacher-panel teacher-panel--padded">
+      <div class="teacher-panel__head">
+        <div>
+          <h3 class="teacher-panel__title">解析</h3>
+          <p class="teacher-panel__desc">说明评分依据和关键知识点。</p>
         </div>
-        <div class="w-e-text-container" id='editorB' style="width: 98%;height: 40vh"></div>
       </div>
-    </el-row>
-    <ell-row>
-      <div class="bottom-right">
-        <el-button type="primary" round style="width: 40%;font-size: 18px;margin-top: 2vh" @click="submit">保 存</el-button>
-      </div>
-    </ell-row>
+      <div class="w-e-text-container" id="editorB" style="width: 100%; height: 320px"></div>
+    </section>
+
+    <div class="teacher-question-editor__actions">
+      <el-button type="primary" @click="submit">保存</el-button>
+    </div>
   </div>
 </template>
 
@@ -183,56 +184,5 @@ export default {
 }
 </script>
 
-
 <style scoped>
-.top{
-  margin: 2vh 1% 1vh 1%;
-  padding-left: 2%;
-  padding-top: 1vh;
-  height: 15vh;
-  width: 98%;
-  background: #dddee0;
-  border-radius: 10px
-}
-.middle-left{
-  margin: 1vh 1% 1vh 2%;
-  padding-left: 2%;
-  padding-top: 1vh;
-  height: 51vh;
-  width: 96%;
-  background: #dddee0;
-  border-radius: 10px
-}
-.middle-right{
-  margin: 1vh 1% 1vh 2%;
-  padding-left: 2%;
-  padding-top: 1vh;
-  height: 51vh;
-  width: 96%;
-  background: #dddee0;
-  border-radius: 10px
-}
-.bottom-left{
-  margin: 1vh 1% 0 2%;
-  padding: 1vh 1% 0 2%;
-  height: 50vh;
-  width: 96%;
-  background: #dddee0;
-  border-radius: 10px
-}
-.bottom-right{
-  margin: 1vh 1% 0 2%;
-  padding: 1vh 1% 0 2%;
-  height: 10vh;
-  width: 96%;
-  text-align: center;
-  background: #dddee0;
-  border-radius: 10px
-}
-.title{
-  font-family: 'STXingkai', '华文行楷', cursive;
-  font-size: 32px;
-  padding-bottom: 3vh;
-}
 </style>
-

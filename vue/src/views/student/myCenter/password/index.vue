@@ -1,272 +1,532 @@
 <template>
-  <div>
-    <!--    //账号和手机号查询信息-->
-    <!--    //输入图形验证码发送qq邮箱-->
-    <!--    //进行qq邮箱的验证  上右下左-->
-    <el-row>
-      <el-col :span="8" >
-        <div class="background">
-          <div style="margin-top: 1.5vh; text-align: center; font-size: 30px; color: #3b64e1;font-family: 'STXingkai', '华文行楷', cursive;">
-            学生修改密码
+  <div class="student-page student-password-page">
+    <section class="student-page-head">
+      <div>
+        <h2 class="student-page-head__title">密码修改</h2>
+        <p class="student-page-head__desc">通过图形验证码和邮箱验证码完成密码校验，流程与原有逻辑保持一致。</p>
+      </div>
+      <div class="student-page-head__meta">
+        <el-tag class="student-tag" type="warning">分步验证</el-tag>
+      </div>
+    </section>
+
+    <div class="student-password-layout">
+      <section class="student-panel student-profile-card student-password-sidebar">
+        <h3 class="student-section-title">修改步骤</h3>
+        <p class="student-section-note">按引导完成校验后即可更新当前学生账号密码。</p>
+        <div class="student-password-sidebar__steps">
+          <el-steps direction="vertical" :active="active - 1">
+            <el-step
+              v-for="(item, index) in stepItems"
+              :key="index"
+              :title="item.title"
+              :description="item.description"
+            ></el-step>
+          </el-steps>
+        </div>
+        <div class="student-password-sidebar__tip">
+          当前只对已登录学生账号做密码重置，请确保邮箱仍可正常接收验证码。
+        </div>
+      </section>
+
+      <section class="student-panel student-password-main">
+        <div class="student-password-top">
+          <div class="student-help-card student-password-account-card">
+            <div class="student-help-card__title">
+              <i class="el-icon-user-solid"></i>
+              <span>账户信息</span>
+            </div>
+            <el-descriptions :column="2" border>
+              <el-descriptions-item label="账号">
+                <el-tag class="student-tag">{{ user.account }}</el-tag>
+              </el-descriptions-item>
+              <el-descriptions-item label="手机号">
+                <el-tag class="student-tag" type="success">{{ user.phone }}</el-tag>
+              </el-descriptions-item>
+              <el-descriptions-item label="姓名">
+                <el-tag class="student-tag" type="warning">{{ user.name }}</el-tag>
+              </el-descriptions-item>
+              <el-descriptions-item label="邮箱">
+                <el-tag class="student-tag" type="danger">{{ user.email }}</el-tag>
+              </el-descriptions-item>
+            </el-descriptions>
           </div>
-          <div style="height: 74vh;margin-left: 4%;">
-            <el-steps direction="vertical" :active="active-1">
-              <el-step title="开始" description="开始修改密码"></el-step>
-              <el-step title="邮箱验证" description="进行邮箱验证，通过邮箱验证确保是本人"></el-step>
-              <el-step title="密码修改" description="都完成后，信息确认无误，开始修改密码"></el-step>
-              <el-step title="成功" description="密码修改成功"></el-step>
-            </el-steps>
+
+          <div class="student-help-card student-password-tips-card">
+            <div class="student-help-card__title">
+              <i class="el-icon-picture"></i>
+              <span>安全提示</span>
+            </div>
+            <el-image class="student-password-tips-card__image" :src="src[0]" fit="cover"></el-image>
+            <p class="student-password-tips-card__desc">
+              建议在可信设备上完成验证和密码修改，结束后及时使用新密码重新登录。
+            </p>
           </div>
         </div>
-      </el-col>
-      <el-col :span="16">
-        <div class="background">
-          <el-row>
-            <el-col :span="12">
-              <div style="height:24vh;margin: 1vh 3% 1vh 3%;background: #0b42e8">
-                <el-card shadow="never" style="height: 24vh">
-                  <div>
-                    <el-descriptions direction="vertical" :labelStyle="{'font-size':'12px'}" :contentStyle="{'font-size':'12px'}" :column=2 title="用户信息">
-                      <el-descriptions-item label="账号">
-                        <el-tag style="font-size: 12px">{{user.account}}</el-tag>
-                      </el-descriptions-item>
-                      <el-descriptions-item :contentStyle="{'text-align': 'right'}" label="手机号">
-                        <el-tag style="font-size: 12px" type="success">{{ user.phone }}</el-tag>
-                      </el-descriptions-item>
-                      <el-descriptions-item label="姓名">
-                        <el-tag style="font-size: 12px" type="warning">{{ user.name }}</el-tag>
-                      </el-descriptions-item>
-                      <el-descriptions-item  :contentStyle="{'text-align': 'right'}" label="邮箱地址">
-                        <el-tag style="font-size: 12px" type="danger">{{user.email}}</el-tag>
-                      </el-descriptions-item>
-                    </el-descriptions>
+
+        <div class="student-password-stage">
+          <div class="student-password-stage__meta">
+            <div class="student-password-stage__meta-main">
+              <div class="student-password-stage__eyebrow">当前步骤</div>
+              <div class="student-password-stage__step">{{ currentStep.title }}</div>
+              <p class="student-password-stage__step-note">{{ currentStep.description }}</p>
+            </div>
+            <div class="student-password-stage__counter">{{ active }}/{{ stepItems.length }}</div>
+          </div>
+          <div class="student-password-stage__progress">
+            <span :style="stageProgressStyle"></span>
+          </div>
+
+          <div v-if="active === 1" class="student-password-stage__pane student-password-stage__pane--intro">
+            <div class="student-password-stage__inner">
+              <h3 class="student-password-stage__title">准备开始</h3>
+              <p class="student-password-stage__desc">
+                请按页面提示依次完成邮箱验证和密码重置，避免在公共环境下操作。
+              </p>
+            </div>
+          </div>
+
+          <div v-if="active === 2" class="student-password-stage__pane">
+            <div class="student-password-stage__inner">
+              <h3 class="student-password-stage__form-title">邮箱验证</h3>
+              <el-form :model="form" :rules="ruleB" ref="formRef">
+                <el-form-item prop="verCode">
+                  <div class="student-password-inline">
+                    <el-input
+                      v-model="form.verCode"
+                      prefix-icon="el-icon-picture-outline"
+                      placeholder="请输入图形验证码"
+                    ></el-input>
+                    <img :src="captchaUrl" @click="clickImg()" width="140" height="40" />
                   </div>
-                </el-card>
-              </div>
-            </el-col>
-            <el-col :span="12">
-              <div style="height:24vh;margin: 1vh 3% 1vh 3%;background: #0b42e8">
-                <el-image
-                    style="width: 100%; height: 24vh"
-                    :src="src[0]"
-                    fit="fit"></el-image>
-              </div>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="5">
-              <div style="margin-top:42vh;float: right">
-                <el-button round @click="over">
-                  <div style="font-size: 26px">
-                    上一步
+                </el-form-item>
+                <el-form-item prop="mailCode">
+                  <div class="student-password-inline">
+                    <el-input
+                      v-model="form.mailCode"
+                      prefix-icon="el-icon-message"
+                      placeholder="请输入邮箱验证码"
+                    ></el-input>
+                    <el-button type="primary" plain @click="getMail()">获取验证码</el-button>
                   </div>
-                </el-button>
-              </div>
-            </el-col>
-            <el-col :span="14">
-              <div style="height: 50vh;width: 80%;margin: 1vh 10% 1vh 10%;">
-                <div class='a' v-if="active===1" style="height: 50vh">
-                  <div style="margin-top: 1.5vh; text-align: center; font-size: 30px; color: #01050e;font-family: 'STXingkai', '华文行楷', cursive;">
-                    <div style="padding-top: 20vh">
-                      <strong>
-                        修改密码即将开始
-                      </strong>
-                    </div>
-                    请根据提示完成操作
-                  </div>
-                </div>
-                <div class="c" v-if="active===2" style="height: 50vh">
-                  <div style="text-align: center; font-size: 32px; margin-bottom: 10vh;padding-top: 5vh; color: white">进行验证</div>
-                  <el-form :model="form" :rules="ruleB" ref="formRef">
-                    <el-form-item prop="verCode">
-                      <div style="display: flex;justify-content: center">
-                        <el-input style="width: 48%;margin-right: 10px" prefix-icon="el-icon-user" placeholder="请输入图形验证码" v-model="form.verCode" ></el-input>
-                        <img :src="captchaUrl" @click="clickImg()" width="140px" height="33px" />
-                      </div>
-                    </el-form-item>
-                    <el-form-item prop="verCode">
-                      <div style="display: flex;justify-content: center">
-                        <el-input style="width: 48%;margin-right: 10px" prefix-icon="el-icon-user" placeholder="请输入邮箱验证码" v-model="form.mailCode" ></el-input>
-                        <el-button style='width:134px;height:33px' @click="getMail()">获取验证码</el-button>
-                      </div>
-                    </el-form-item>
-                  </el-form>
-                </div>
-                <div class="d" v-if="active===3" style="height: 50vh">
-                  <div style="text-align: center; font-size: 32px; margin-bottom: 10vh;padding-top: 5vh; color: white">进行修改</div>
-                  <el-form :model="form" :rules="ruleC" ref="formRef">
-                    <el-form-item prop="password"style="margin-left: 10%;width: 80%">
-                      <el-input style="font-size: 20px" prefix-icon="el-icon-lock" placeholder="请输入密码" show-password  v-model="form.password"></el-input>
-                    </el-form-item>
-                    <el-form-item prop="password"style="margin-left: 10%;width: 80%">
-                      <el-input style="font-size: 20px" prefix-icon="el-icon-lock" placeholder="请输入密码" show-password  v-model="password"></el-input>
-                    </el-form-item>
-                  </el-form>
-                </div>
-                <div class="e" v-if="active===4" style="height: 50vh">
-                  <div style="margin-top: 1.5vh; text-align: center; font-size: 30px; color: #01040a;font-family: 'STXingkai', '华文行楷', cursive;">
-                    <div style="padding-top: 20vh">
-                      <strong>
-                        密码成功修改
-                      </strong>
-                    </div>
-                    请记住你的新密码
-                  </div>
-                </div>
-              </div>
-            </el-col>
-            <el-col :span="5">
-              <div style="margin-top:42vh; float: left">
-                <el-button round @click="next">
-                  <div style="font-size: 26px">
-                    {{button}}
-                  </div>
-                </el-button>
-              </div>
-            </el-col>
-          </el-row>
+                </el-form-item>
+              </el-form>
+            </div>
+          </div>
+
+          <div v-if="active === 3" class="student-password-stage__pane">
+            <div class="student-password-stage__inner">
+              <h3 class="student-password-stage__form-title">重置密码</h3>
+              <el-form :model="form" :rules="ruleC" ref="formRef">
+                <el-form-item prop="password">
+                  <el-input
+                    v-model="form.password"
+                    prefix-icon="el-icon-lock"
+                    placeholder="请输入新密码"
+                    show-password
+                  ></el-input>
+                </el-form-item>
+                <el-form-item prop="confirmPassword">
+                  <el-input
+                    v-model="password"
+                    prefix-icon="el-icon-lock"
+                    placeholder="请再次输入新密码"
+                    show-password
+                  ></el-input>
+                </el-form-item>
+              </el-form>
+            </div>
+          </div>
+
+          <div v-if="active === 4" class="student-password-stage__pane student-password-stage__pane--intro">
+            <div class="student-password-stage__inner">
+              <h3 class="student-password-stage__title">修改成功</h3>
+              <p class="student-password-stage__desc">新密码已生效，请妥善保管并在后续登录中使用。</p>
+            </div>
+          </div>
         </div>
-      </el-col>
-    </el-row>
+
+        <div class="student-password-actions">
+          <div class="student-password-actions__note">只有邮箱验证通过后，系统才会提交新密码。</div>
+          <div class="student-password-actions__group">
+            <el-button round :disabled="active === 1" @click="over">上一步</el-button>
+            <el-button round type="primary" :disabled="active === stepItems.length" @click="next">
+              {{ button }}
+            </el-button>
+          </div>
+        </div>
+      </section>
+    </div>
   </div>
 </template>
 
 <script>
-import request from "@/utils/request"
-import back1 from "@/assets/forget/1.jpg"
-import back2 from "@/assets/forget/2.jpg"
-import back3 from "@/assets/forget/3.jpg"
-import back4 from "@/assets/forget/4.jpg"
+import request from "@/utils/request";
+import back1 from "@/assets/forget/1.jpg";
+import back2 from "@/assets/forget/2.jpg";
+import back3 from "@/assets/forget/3.jpg";
+import back4 from "@/assets/forget/4.jpg";
+
 export default {
   name: "forget",
   data() {
     return {
-      user:localStorage.getItem("user") ? (JSON).parse(localStorage.getItem("user")) : {},
-      src:[
-        back1,
-        back2,
-        back3,
-        back4,
-      ],//图片
-      active:1,//进度
-      form:{
-        role:"student"
-      },//发送
-      button:"开始",//下一步按钮
-      buttons:["开始","验证","修改","完成"],
-      ruleA: {
-        account: [
-          { required: true, message: '请输入账号', trigger: 'blur' },
-        ],
-        phone: [
-          { required: true, message: '请输入手机号', trigger: 'blur' },
-        ],
+      user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {},
+      src: [back1, back2, back3, back4],
+      active: 1,
+      form: {
+        role: "student"
       },
-      key1:"",
-      key2:"",
-      captchaUrl:'',
-      emailUrl:'',
-      password:""
+      button: "开始",
+      buttons: ["开始", "验证", "修改", "完成"],
+      key1: "",
+      key2: "",
+      captchaUrl: "",
+      password: "",
+      ruleB: {},
+      ruleC: {}
+    };
+  },
+  computed: {
+    stepItems() {
+      return [
+        { title: "开始", description: "进入密码修改流程" },
+        { title: "邮箱验证", description: "验证图形验证码并获取邮箱验证码" },
+        { title: "重置密码", description: "输入并确认新的登录密码" },
+        { title: "完成", description: "密码修改成功" }
+      ];
+    },
+    currentStep() {
+      return this.stepItems[this.active - 1] || this.stepItems[0];
+    },
+    stageProgressStyle() {
+      const total = this.stepItems.length - 1;
+      const percent = total > 0 ? ((this.active - 1) / total) * 100 : 0;
+      return {
+        width: `${percent}%`
+      };
     }
   },
   created() {
-    this.form=this.user
+    this.form = {
+      ...this.user,
+      role: "student"
+    };
   },
   mounted() {
-    this.key1=Math.random();//随机数
-    this.key2=Math.random();//随机数
-    this.captchaUrl=process.env.VUE_APP_BASEURL+"/user/login/captcha?key="+this.key1
+    this.clickImg();
+    this.key2 = Math.random();
   },
   methods: {
-    over(){
-      if(this.active!==1){
-        this.active-=1
-        this.button=this.buttons[this.active-1]
+    over() {
+      if (this.active !== 1) {
+        this.active -= 1;
+        this.button = this.buttons[this.active - 1];
       }
     },
-    ne(){
-      this.active+=1
-      this.button=this.buttons[this.active-1]
-    },
-    next(){
-      if(this.active===1){
-        this.ne()
+    ne() {
+      if (this.active < this.stepItems.length) {
+        this.active += 1;
+        this.button = this.buttons[this.active - 1];
       }
-      else if(this.active===2){
-        //进行校验
-        request.post('/user/forget/verify?key='+this.key2, this.form).then(res => {
-          if (res.code === '200') {
-            this.$message.success("验证成功")
-            this.ne()
+    },
+    next() {
+      if (this.active === 1) {
+        this.ne();
+      } else if (this.active === 2) {
+        request.post(`/user/forget/verify?key=${this.key2}`, this.form).then((res) => {
+          if (res.code === "200") {
+            this.$message.success("验证成功");
+            this.ne();
           } else {
-            this.$message.error(res.msg)
+            this.$message.error(res.msg);
           }
-        })
-      }
-      else if(this.active===3){
-        if(this.form.password!==this.password){
-          this.$message.error("请正确输入")
-          return
+        });
+      } else if (this.active === 3) {
+        if (this.form.password !== this.password) {
+          this.$message.error("请输入相同的新密码");
+          return;
         }
-        this.form.id=this.user.id
-        request.post('/user/forget', this.form).then(res => {
-          if (res.code === '200') {
-            this.$message.success("修改成功")
-            this.ne()
+        this.form.id = this.user.id;
+        request.post("/user/forget", this.form).then((res) => {
+          if (res.code === "200") {
+            this.$message.success("修改成功");
+            this.ne();
           } else {
-            this.$message.error(res.msg)
+            this.$message.error(res.msg);
           }
-        })
+        });
       }
     },
-    clickImg(){
-      this.key1=Math.random();//随机数
-      this.captchaUrl=process.env.VUE_APP_BASEURL+"/user/login/captcha?key="+this.key1;
-      this.form.verCode='';
+    clickImg() {
+      this.key1 = Math.random();
+      this.captchaUrl = `${process.env.VUE_APP_BASEURL}/user/login/captcha?key=${this.key1}`;
+      this.form.verCode = "";
     },
-    getMail(){
-      if(this.form.verCode===null||this.form.verCode===''){
-        this.$message.error("请输入验证码")
+    getMail() {
+      if (!this.form.verCode) {
+        this.$message.error("请输入验证码");
+        return;
       }
-      this.form.key1=this.key1
-      request.post('/user/forget/email?key='+this.key2, this.form).then(res => {
-        if (res.code === '200') {
-          this.$message.success("发送成功")
+      this.form.key1 = this.key1;
+      request.post(`/user/forget/email?key=${this.key2}`, this.form).then((res) => {
+        if (res.code === "200") {
+          this.$message.success("发送成功");
         } else {
-          this.$message.error(res.msg)
+          this.$message.error(res.msg);
         }
-      })
+      });
     }
   }
-}
+};
 </script>
 
 <style scoped>
-.background{
-  height: 80vh;
-  width: 92%;
-  margin: 2vh 4% 2vh 4%;
-  background: rgba(212, 220, 245, 0.34);
+.student-password-page .student-password-layout {
+  align-items: stretch;
+  gap: 20px;
 }
 
-.a{
-  background-image: url("@/assets/forget/2.jpg");
-  background-size: 100% 50vh;
+.student-password-page .student-password-sidebar {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  align-self: stretch;
+  position: static;
 }
-.b{
-  background-image: url("@/assets/forget/3.jpg");
-  background-size: 100% 50vh;
+
+.student-password-page .student-password-sidebar__steps {
+  flex: 1;
+  min-height: 0;
+  margin-top: 10px;
+  overflow: auto;
 }
-.c{
-  background-image: url("@/assets/forget/3.jpg");
-  background-size: 100% 50vh;
+
+.student-password-page .student-password-sidebar__tip {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(59, 130, 246, 0.08));
+  color: #475569;
+  font-size: 13px;
+  line-height: 1.7;
 }
-.d{
-  background-image: url("@/assets/forget/3.jpg");
-  background-size: 100% 50vh;
+
+.student-password-page .student-password-top {
+  align-items: stretch;
+  grid-template-columns: minmax(0, 1.25fr) minmax(240px, 0.85fr);
 }
-.e{
-  background-image: url("@/assets/forget/4.jpg");
-  background-size: 100% 50vh;
+
+.student-password-page .student-password-top > .student-help-card + .student-help-card {
+  margin-top: 0;
+}
+
+.student-password-page .student-password-main {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.student-password-page .student-password-account-card,
+.student-password-page .student-password-tips-card {
+  height: 100%;
+}
+
+.student-password-page .student-password-tips-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.student-password-page .student-password-tips-card__image {
+  width: 100%;
+  height: 180px;
+  border-radius: 12px;
+}
+
+.student-password-page .student-password-tips-card__desc {
+  margin: 12px 0 0;
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.student-password-page .student-password-stage {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 22px;
+}
+
+.student-password-page .student-password-stage__meta {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.student-password-page .student-password-stage__eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #0f766e;
+}
+
+.student-password-page .student-password-stage__step {
+  margin-top: 8px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.student-password-page .student-password-stage__step-note {
+  margin: 8px 0 0;
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.student-password-page .student-password-stage__counter {
+  flex: 0 0 auto;
+  min-width: 64px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.student-password-page .student-password-stage__progress {
+  margin-top: 16px;
+  height: 8px;
+  border-radius: 999px;
+  background: #e2e8f0;
+  overflow: hidden;
+}
+
+.student-password-page .student-password-stage__progress span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #10b981, #0ea5e9);
+  transition: width 0.25s ease;
+}
+
+.student-password-page .student-password-stage__pane {
+  display: flex;
+  flex: 1;
+  align-items: flex-start;
+  justify-content: center;
+  min-height: 320px;
+  padding: 24px 0 0;
+}
+
+.student-password-page .student-password-stage__pane--intro {
+  align-items: center;
+  min-height: 320px;
+}
+
+.student-password-page .student-password-stage__inner {
+  width: 100%;
+  max-width: 520px;
+}
+
+.student-password-page .student-password-inline {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+}
+
+.student-password-page .student-password-inline img,
+.student-password-page .student-password-inline .el-button {
+  height: 40px;
+  border-radius: 10px;
+}
+
+.student-password-page .student-password-inline img {
+  width: 140px;
+  object-fit: cover;
+  border: 1px solid #dbe4ee;
+  background: #f8fafc;
+  cursor: pointer;
+}
+
+.student-password-page :deep(.el-form-item) {
+  margin-bottom: 16px;
+}
+
+.student-password-page :deep(.el-descriptions) {
+  height: 100%;
+}
+
+.student-password-page :deep(.el-steps--vertical) {
+  gap: 4px;
+}
+
+.student-password-page :deep(.el-step__title) {
+  font-weight: 700;
+}
+
+.student-password-page :deep(.el-step__description) {
+  line-height: 1.6;
+}
+
+.student-password-page :deep(.el-step.is-process .el-step__head) {
+  color: #0f766e;
+  border-color: #10b981;
+}
+
+.student-password-page :deep(.el-step.is-finish .el-step__head) {
+  color: #0ea5e9;
+  border-color: #0ea5e9;
+}
+
+.student-password-page .student-password-actions {
+  margin-top: auto;
+  justify-content: space-between;
+}
+
+.student-password-page .student-password-actions__note {
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.student-password-page .student-password-actions__group {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+@media (max-width: 1280px) {
+  .student-password-page .student-password-sidebar {
+    position: static;
+    min-height: auto;
+  }
+
+  .student-password-page .student-password-stage__meta,
+  .student-password-page .student-password-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .student-password-page .student-password-actions__group {
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 768px) {
+  .student-password-page .student-password-top,
+  .student-password-page .student-password-inline {
+    grid-template-columns: 1fr;
+  }
+
+  .student-password-page .student-password-inline img,
+  .student-password-page .student-password-inline .el-button {
+    width: 100%;
+  }
 }
 </style>

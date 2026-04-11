@@ -1,61 +1,54 @@
 <template>
-  <div style="background-color: #fefffe;padding-top: 0;height: 79vh">
-    <el-row>
+  <div class="public-key-page">
+    <el-row :gutter="20">
       <el-col :span="12">
-        <div>
-          <el-card class="box-card" style="height: 80vh;background-color: rgb(241,231,248);color: #030000;border-radius:10px;margin: 3vh 1% 3vh 3%">
-            <div slot="header" class="clearfix" style="font-size: 26px">
-              教师环公钥
+        <div class="key-card chart-card">
+          <div class="card-header">
+            <div>
+              <div class="card-eyebrow">Public Key Ring</div>
+              <div class="card-title">教师环公钥</div>
             </div>
-            <div style="font-size: 26px">
-              <div id="lookKeys" style="height:66vh;border-radius:20px">
-              </div>
-            </div>
-          </el-card>
+          </div>
+          <div id="lookKeys" class="chart-body"></div>
         </div>
       </el-col>
+
       <el-col :span="12">
-        <el-row>
-          <el-card class="box-card" style="height: 40vh;background-color: rgb(239,244,252);color: #030000;border-radius:10px;margin: 3vh 3% 1vh 2%">
-            <div style="font-size: 26px;margin-bottom: 3vh">
-              用户使用说明
-            </div>
-            <div style="font-size: 24px">
-              &emsp;&emsp;本次考试为保障您的数据安全与隐私，提供了便捷查看教师公钥的功能。您只需点击图表中教师姓名，系统便会迅速展示其公钥信息。
-              <tr></tr>
-              &emsp;&emsp;所有教师公钥构成环公钥体系，运用先进密码学技术，采用国密算法为数据安全筑牢屏障。每位教师公钥都是体系关键，他们用专业和技术保驾护航，让您安心使用系统。
-            </div>
-          </el-card>
-        </el-row>
-        <el-row>
-          <router-view/>
-        </el-row>
+        <div class="key-card intro-card">
+          <div class="card-header">
+            <div class="card-title">使用说明</div>
+          </div>
+          <div class="intro-body">
+            本次考试为保障数据安全与隐私，提供了教师公钥环查看能力。点击左侧图表中的教师姓名，系统会展示该教师的公钥数据。
+            <br /><br />
+            所有教师公钥共同构成环公钥体系，用于支撑考试流程中的安全加密与验证环节。该区域只做查看，不改变任何考试业务逻辑。
+          </div>
+        </div>
+        <router-view />
       </el-col>
     </el-row>
   </div>
 </template>
 <script>
+import request from "@/utils/request"
+import * as echarts from "echarts"
 
-import request from "@/utils/request";
-import * as echarts from 'echarts';
 export default {
-
   name: "BookView",
   data() {
     return {
-      user:localStorage.getItem("user") ? (JSON).parse(localStorage.getItem("user")) : {},
-      params:{
-        name:"",
-        pageNum:1,
-        pageSize:5
+      user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {},
+      params: {
+        name: "",
+        pageNum: 1,
+        pageSize: 5
       },
-      dataKey:{},
-      SearchAll:"",
-      tableData:[],
-      receivedData:"",
+      dataKey: {},
+      SearchAll: "",
+      tableData: [],
+      receivedData: ""
     }
   },
-  //创建前加载前做
   created() {
     this.receivedData = this.$route.params
     this.findBySearch()
@@ -63,125 +56,150 @@ export default {
   mounted() {
     this.echartsView()
   },
-  //调用函数
   methods: {
-    //   获取数据
-    echartsView(dataKey){
-      // 随机生成不重复的颜色
-      // 随机生成不重复且颜色差异较大的颜色
+    echartsView(dataKey) {
       function getRandomColor() {
-        const letters = '0123456789ABCDEF';
-        let color = '#';
+        const letters = "0123456789ABCDEF"
+        let color = "#"
         for (let i = 0; i < 6; i++) {
-          color += letters[Math.floor(Math.random() * 16)];
+          color += letters[Math.floor(Math.random() * 16)]
         }
-        return color;
+        return color
       }
-
-// 生成一组不重复且颜色差异较大的随机颜色
       function generateUniqueRandomColors(count) {
-        const colors = new Set();
+        const colors = new Set()
         while (colors.size < count) {
-          const color = getRandomColor();
-          // 计算颜色的亮度，确保颜色差异较大
+          const color = getRandomColor()
           const brightness = Math.sqrt(
-              0.299 * parseInt(color.substring(1, 3), 16) ** 2 +
-              0.587 * parseInt(color.substring(3, 5), 16) ** 2 +
-              0.114 * parseInt(color.substring(5, 7), 16) ** 2
-          );
+            0.299 * parseInt(color.substring(1, 3), 16) ** 2 +
+            0.587 * parseInt(color.substring(3, 5), 16) ** 2 +
+            0.114 * parseInt(color.substring(5, 7), 16) ** 2
+          )
           if (brightness > 120) {
-            colors.add(color);
+            colors.add(color)
           }
         }
-        return Array.from(colors);
+        return Array.from(colors)
       }
-      var option;
-
-      option = {
+      const option = {
         tooltip: {
-          trigger: 'item',
-          formatter: function (params) {
-            var res = params.name;
-            return res;
+          trigger: "item",
+          formatter: function(params) {
+            return params.name
           }
         },
         series: [
           {
-            name: 'Access From',
-            type: 'pie',
-            radius: ['70%', '90%'],
+            type: "pie",
+            radius: ["66%", "86%"],
             avoidLabelOverlap: {
               show: true,
-              position: 'center'
+              position: "center"
             },
             label: {
               show: false,
-              position: 'center'
+              position: "center"
             },
             emphasis: {
               label: {
                 show: true,
-                fontSize: 40,
-                fontWeight: 'bold'
+                fontSize: 32,
+                fontWeight: "bold"
               }
             },
             labelLine: {
               show: true
             },
-
             data: this.tableData.map((item, index) => ({
               value: item.value,
               name: item.name,
               itemStyle: {
-                color: generateUniqueRandomColors(this.tableData.length)[index] // 使用生成的随机颜色
+                color: generateUniqueRandomColors(this.tableData.length)[index]
               }
             }))
           }
         ]
-
-      };
-      var chartDom = document.getElementById('lookKeys');
-      var myChart = echarts.init(chartDom);
-      myChart.on('click', (params) => {
-        // 在这里编写点击事件的逻辑
-        // console.log(params.name); // 可以打印出被点击的数据项信息
-        var name=params.name
-        var key=Math.random();//随机数
-        // console.log(dataKey)
+      }
+      const chartDom = document.getElementById("lookKeys")
+      const myChart = echarts.init(chartDom)
+      myChart.on("click", params => {
         this.$router.push({
-          name: 'teacherShowPublicKeysChild',
+          name: "teacherShowPublicKeysChild",
           params: {
-            name:params.name,
-            key:key,
-            dataKey:dataKey
+            name: params.name,
+            key: Math.random(),
+            dataKey: dataKey
           }
-        });
-      });
-      option && myChart.setOption(option);
-
+        })
+      })
+      myChart.setOption(option)
     },
-    findBySearch(){
-      request.post("/exam/examManage/getPublicKeys/"+this.receivedData.id).then(res=>{
-        if(res.code==='200'){
-          this.SearchAll=res.data
-          this.SearchAll.forEach(item=>{
-            this.tableData.push({name:item.name,value:1})
-            this.dataKey[item.name]=item.publicKey
+    findBySearch() {
+      request.post("/exam/examManage/getPublicKeys/" + this.receivedData.id).then(res => {
+        if (res.code === "200") {
+          this.SearchAll = res.data
+          this.SearchAll.forEach(item => {
+            this.tableData.push({ name: item.name, value: 1 })
+            this.dataKey[item.name] = item.publicKey
           })
           this.echartsView(this.dataKey)
-        }else {
+        } else {
           this.$message({
             message: res.msg,
-            type: 'error'
+            type: "error"
           })
         }
       })
-    },
+    }
   }
-
 }
 </script>
 
 <style scoped>
+.public-key-page {
+  padding-bottom: 8px;
+}
 
+.key-card {
+  margin-bottom: 20px;
+  padding: 24px;
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.96));
+  box-shadow: 0 20px 48px rgba(15, 23, 42, 0.08);
+}
+
+.card-header {
+  margin-bottom: 18px;
+}
+
+.card-eyebrow {
+  margin-bottom: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #2563eb;
+}
+
+.card-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.chart-body {
+  height: 520px;
+}
+
+.intro-body {
+  min-height: 220px;
+  padding: 18px 20px;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  color: #475569;
+  font-size: 15px;
+  line-height: 1.9;
+}
 </style>

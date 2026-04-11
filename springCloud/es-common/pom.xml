@@ -6,7 +6,7 @@
         <groupId>com.mc</groupId>
         <artifactId>springCloud</artifactId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <groupId>com.mc</groupId>
     <artifactId>es-common</artifactId>

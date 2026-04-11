@@ -1,250 +1,245 @@
 <template>
-  <div class="main">
-    <!--    搜索框-->
-    <div class="search">
-      <el-row style="margin-top: 2vh;margin-left: 2%">
-        <el-form :inline="true" :model="params" class="demo-form-inline">
-          <el-form-item label="课程名称:" style="padding-right: 4%">
-            <el-select v-model="params.courseId" style="font-size: 20px;width: 300px" clearable filterable placeholder="请选择">
+  <div class="student-page">
+    <section class="student-page-head">
+      <div>
+        <h2 class="student-page-head__title">考试列表</h2>
+        <p class="student-page-head__desc">按课程和考试类型筛选试卷，统一查看详情、环公钥、答案和成绩榜单。</p>
+      </div>
+      <div class="student-page-head__meta">
+        <el-tag class="student-tag" type="info">共 {{ total }} 场考试</el-tag>
+      </div>
+    </section>
+
+    <section class="student-panel student-panel--toolbar">
+      <div class="student-toolbar">
+        <el-form :inline="true" :model="params" class="student-toolbar__form">
+          <el-form-item label="课程名称">
+            <el-select v-model="params.courseId" clearable filterable placeholder="请选择课程">
               <el-option
-                  v-for="item in course"
-                  :key="item.courseId"
-                  style="font-size: 20px; width: 100%;"
-                  :label="item.course.name+'==='+item.course.number"
-                  :value="item.courseId"
-              >
-                <span style="float: left;margin-left: 6px; color: #8492a6; font-size: 18px">课程:{{ item.course.name }}</span>
-                <span style="float: left;margin-left: 6px; color: #8492a6; font-size: 18px">编号:{{ item.course.number }}</span>
-              </el-option>
+                v-for="item in course"
+                :key="item.courseId"
+                :label="item.course.name + ' === ' + item.course.number"
+                :value="item.courseId"
+              />
             </el-select>
           </el-form-item>
-          <el-form-item label="考试类型:" style="padding-right: 4%">
-            <el-input v-model="params.type" placeholder="考试类型"></el-input>
+          <el-form-item label="考试类型">
+            <el-input v-model="params.type" clearable placeholder="请输入考试类型"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button style="width: 150px"  clearable type="primary" @click="findBySearch">查询</el-button>
+            <el-button type="primary" @click="findBySearch">查询</el-button>
           </el-form-item>
         </el-form>
-      </el-row>
-    </div>
-    <!--    表单-->
-    <div class="cards">
-      <!-- 使用 el-row 组件定义行布局，设置列之间的间距为 20 -->
-      <el-row v-if="this.visit!==-1&&this.visit!==0" class="cards">
-        <!-- 使用 v-for 指令遍历 jsonData 数组，为每个元素渲染一个 el-col 组件 -->
-        <el-col :span="8" v-for="(item, index) in tableData" :key="index">
-          <el-card class="card cardMsg" :body-style="{ padding: '0px' }">
-            <div style="padding: 14px;">
-              <el-row style="margin-top: 2vh;margin-bottom: 2vh">
-                <el-col :span="14">
-                  科目:{{item.course.name}}
-                </el-col>
-                <el-col :span="10">
-                  编码:{{item.course.number}}
-                </el-col>
-              </el-row>
-              <el-row style="margin-top: 2vh;margin-bottom: 2vh;">
-                考试开始时间:{{item.examManage.examDate}}
-              </el-row>
-              <el-row style="margin-top: 2vh;margin-bottom: 2vh;">
-                <el-col :span="14">
-                  考试类型:{{item.examManage.type}}
-                </el-col>
-                <el-col :span="10">
-                  考试时长:{{item.examManage.totalTime}}分钟
-                </el-col>
-              </el-row>
-              <el-row style="">
-                <el-col :span="14">
-                  总分:{{item.examManage.totalScore}}分
-                </el-col>
-                <el-col :span="10">
-                  出题人:{{item.teacher.name}}
-                </el-col>
-              </el-row>
+      </div>
+    </section>
+
+    <section class="student-panel student-panel--padded">
+      <div class="student-panel__head">
+        <div>
+          <h3 class="student-panel__title">考试资源</h3>
+          <p class="student-panel__desc">保持原有操作顺序，优化卡片层级、留白和动作区统一性。</p>
+        </div>
+      </div>
+
+      <div v-if="visit !== -1 && visit !== 0" class="student-resource-grid">
+        <article v-for="(item, index) in tableData" :key="index" class="student-resource-card">
+          <div class="student-resource-card__meta">
+            <div>
+              <h4 class="student-resource-card__title">{{ item.course.name }}</h4>
+              <p class="student-resource-card__subtitle">课程编码：{{ item.course.number }}</p>
             </div>
-            <div style="padding: 0 2% 0 2%;text-align: center">
-              <el-button type="text" @click="showPublicKeys(item)" size="small" style="color: #009dff;font-size: 20px;margin-right: 3%">查看环公钥</el-button>
-              <el-button type="text" @click="showManager(item)" size="small" style="color: #009dff;font-size: 20px">查看详情</el-button>
-              <el-button type="text" @click="beginExam(item)" size="small" style="color: #009dff;font-size: 20px">开始考试</el-button>
-              <el-button type="text" @click="beginShowExam(item)" size="small" style="color: #009dff;font-size: 20px;margin-right: 3%">查看答案</el-button>
-              <el-button type="text" @click="showScore(item)" size="small" style="color: #009dff;font-size: 20px">查看榜单</el-button>
+            <el-tag class="student-tag" effect="plain">{{ item.examManage.type }}</el-tag>
+          </div>
+
+          <div class="student-resource-card__list">
+            <div class="student-resource-card__item">
+              <span>考试开始</span>
+              <span>{{ item.examManage.examDate }}</span>
             </div>
-          </el-card>
-        </el-col>
-      </el-row>
-      <el-row style="font-family: '华文行楷', cursive;font-weight: bold;font-size: 6vh;text-align: center;margin-top: 30vh;color: #0b42e8" v-if="visit===-1">
-        请先选择课程进行考试的查询
-      </el-row>
-      <el-row style="font-family: '华文行楷', cursive;font-weight: bold;font-size: 6vh;text-align: center;margin-top: 30vh;color: #05fd09" v-if="visit===0">
-        该课程还未发布试卷
-      </el-row>
-    </div>
-    <div style="margin-top: 2vh;text-align: center">
-      <el-pagination
+            <div class="student-resource-card__item">
+              <span>考试时长</span>
+              <span>{{ item.examManage.totalTime }} 分钟</span>
+            </div>
+            <div class="student-resource-card__item">
+              <span>考试总分</span>
+              <span>{{ item.examManage.totalScore }} 分</span>
+            </div>
+            <div class="student-resource-card__item">
+              <span>出题教师</span>
+              <span>{{ item.teacher.name }}</span>
+            </div>
+          </div>
+
+          <div class="student-resource-card__actions">
+            <el-button type="primary" plain @click="showPublicKeys(item)">查看环公钥</el-button>
+            <el-button type="primary" plain @click="showManager(item)">查看详情</el-button>
+            <el-button type="primary" @click="beginExam(item)">开始考试</el-button>
+            <el-button type="success" plain @click="beginShowExam(item)">查看答案</el-button>
+            <el-button type="warning" plain @click="showScore(item)">查看榜单</el-button>
+          </div>
+        </article>
+      </div>
+
+      <div v-else-if="visit === -1" class="student-empty">
+        请先选择课程进行考试查询。
+      </div>
+
+      <div v-else class="student-empty">
+        该课程暂未发布试卷。
+      </div>
+
+      <div class="student-pagination">
+        <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="pageNum"
-          :page-sizes="[5,10,15,20]"
+          :page-sizes="[5, 10, 15, 20]"
           :page-size="pageSize"
           layout="total, prev, pager, next, jumper"
-          :total="total">
-      </el-pagination>
-    </div>
+          :total="total"
+        />
+      </div>
+    </section>
   </div>
 </template>
 
 <script>
-import request from "@/utils/request"
-import studentShowExam from "@/views/student/exam/manager/showExam/index.vue";
+import request from "@/utils/request";
+
 export default {
-  data(){
-    return{
-      user:localStorage.getItem("user") ? (JSON).parse(localStorage.getItem("user")) : {},
-      form:{},
+  data() {
+    return {
+      user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {},
+      form: {},
       tableData: [],
-      pageNum: 1,   // 当前的页码
-      pageSize: 6,  // 每页显示的个数
+      pageNum: 1,
+      pageSize: 6,
       total: 0,
-      course:[],
+      course: [],
       params: {
-        pageNum:1,
-        pageSize:6,
+        pageNum: 1,
+        pageSize: 6,
       },
-      visit:-1,
-    }
+      visit: -1,
+    };
   },
   created() {
-    this.findCourse()
-    this.load()
-  },
-  mounted() {
-
+    this.initPage();
   },
   methods: {
-    handleSizeChange(pageSize){
-      this.params.pageSize=pageSize;
-      //查询
-      this.findBySearch()
-    },
-    handleCurrentChange(pageNum){
-      this.params.pageNum=pageNum;
-      //查询
-      this.findBySearch()
-    },
-    load(){
-      this.params.studentId=this.user.id
-      request.get('/exam/examStudent/selectPage', {
-        params:this.params
-      }).then(res => {
-        if (res.code === '200') {
-          this.total=res.data.total
-          this.tableData=res.data.list
-          this.visit=this.tableData.length
-
-        } else {
-          this.$message.error(res.msg)
-        }
-      })
-    },
-    findCourse(){
-      let params;
-      params= {
+    initPage() {
+      this.params = {
+        pageNum: this.pageNum,
+        pageSize: this.pageSize,
         studentId: this.user.id,
-        isAdd:"同意"
-      }
-      request.get('/exam/courseStudent/selectAll', {
-        params:params
-      }).then(res => {
-        if (res.code === '200') {
-          this.course=res.data
-        } else {
-          this.$message.error(res.msg)
+        type: this.params.type || ""
+      };
+      this.findCourse().then(() => {
+        if (!this.params.courseId && this.course.length) {
+          this.params.courseId = this.course[0].courseId;
         }
-      })
+        if (this.params.courseId) {
+          this.load();
+        } else {
+          this.total = 0;
+          this.tableData = [];
+          this.visit = 0;
+        }
+      });
     },
-    findBySearch(){
-      request.get('/exam/examStudent/selectPage', {
-        params:this.params
-      }).then(res => {
+    handleSizeChange(pageSize) {
+      this.params.pageSize = pageSize;
+      this.findBySearch();
+    },
+    handleCurrentChange(pageNum) {
+      this.params.pageNum = pageNum;
+      this.findBySearch();
+    },
+    load() {
+      this.params.studentId = this.user.id;
+      request.get("/exam/examStudent/selectPage", {
+        params: this.params
+      }).then((res) => {
         if (res.code === "200") {
-          this.total=res.data.total
-          this.tableData=res.data.list
-          this.visit=this.tableData.length
+          this.total = res.data.total;
+          this.tableData = res.data.list;
+          this.visit = this.tableData.length;
         } else {
-          this.$message.error(res.msg)
+          this.$message.error(res.msg);
         }
-      })
+      });
     },
-    showManager(row){
+    findCourse() {
+      const params = {
+        studentId: this.user.id,
+        isAdd: "同意"
+      };
+      return request.get("/exam/courseStudent/selectAll", {
+        params
+      }).then((res) => {
+        if (res.code === "200") {
+          this.course = res.data;
+        } else {
+          this.$message.error(res.msg);
+        }
+        return this.course;
+      });
+    },
+    findBySearch() {
+      this.params.studentId = this.user.id;
+      request.get("/exam/examStudent/selectPage", {
+        params: this.params
+      }).then((res) => {
+        if (res.code === "200") {
+          this.total = res.data.total;
+          this.tableData = res.data.list;
+          this.visit = this.tableData.length;
+        } else {
+          this.$message.error(res.msg);
+        }
+      });
+    },
+    showManager(row) {
       this.$router.push({
         name: "studentShowExam",
         params: {
-          id:row.examManage.id
+          id: row.examManage.id
         }
       });
     },
-    showPublicKeys(row){
+    showPublicKeys(row) {
       this.$router.push({
         name: "studentShowPublicKeys",
         params: {
-          id:row.examManage.id
+          id: row.examManage.id
         }
       });
     },
-    beginExam(row){
+    beginExam(row) {
       this.$router.push({
         name: "studentTips",
         params: {
-          id:row.examManage.id,
-          examStudent:row.id
+          id: row.examManage.id,
+          examStudent: row.id
         }
       });
     },
-    beginShowExam(row){
+    beginShowExam(row) {
       this.$router.push({
         name: "studentShowTips",
         params: {
-          id:row.examManage.id
+          id: row.examManage.id
         }
       });
     },
-    showScore(row){
+    showScore(row) {
       this.$router.push({
         name: "studentScore",
         params: {
-          id:row.examManage.id
+          id: row.examManage.id
         }
       });
     }
   }
-}
+};
 </script>
-
-
-<style scoped>
-.main{
-  padding-left: 3px;
-  padding-right: 3px;
-}
-.search{
-  height: 7vh;
-}
-.cards{
-  margin: 0 1% 0 1%;
-  border-radius: 10px;
-  height: 70vh;
-  width: 98%;
-  background: #ecf1f6;
-  overflow-y: scroll;
-}
-.cards::-webkit-scrollbar{
-  width:0;
-}
-.cardMsg{
-  margin: 2vh 2% 0 2%;
-  width: 96%;
-  height: 32vh;
-}
-</style>
-

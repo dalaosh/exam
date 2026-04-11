@@ -3,6 +3,7 @@ package com.mc.escommon.SmUtils.jwtutils;
 
 import com.mc.escommon.SmUtils.jwtutils.cert.SM2CertUtil;
 import com.mc.escommon.SmUtils.smutils.BCECUtil;
+import com.mc.escommon.path.SpringCloudPathResolver;
 import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPrivateKey;
 import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPublicKey;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -24,7 +25,7 @@ public class TxtUtil {
     public static InputStream streamPri;
     private static BCECPublicKey publicKey;
     private static BCECPrivateKey privateKey;
-    private static final String filePath = System.getProperty("user.dir") + "/files/sm2File/";
+    private static final String filePath = SpringCloudPathResolver.resolveSm2Dir();
     public static void readKey(String name) throws CertificateException, NoSuchProviderException, NoSuchAlgorithmException, InvalidKeySpecException, IOException {
         Security.addProvider(new BouncyCastleProvider());
         X509Certificate cert;

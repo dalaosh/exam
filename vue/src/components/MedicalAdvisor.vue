@@ -1,4 +1,4 @@
-<!-- 医疗顾问聊天组件 -->
+<!-- 智慧考试 AI 助手组件 -->
 <template>
   <div class="medical-advisor markdown-body">
     <el-drawer
@@ -12,8 +12,8 @@
         <!-- 标题区域 -->
         <div class="advisor-header">
           <div class="title">
-            <img src="@/assets/imgs/AI.png" alt="AI答疑助手" class="advisor-avatar">
-            <h3>AI答疑助手</h3>
+            <img src="@/assets/imgs/examAI.png" alt="智慧考试AI助手" class="advisor-avatar">
+            <h3>智慧考试AI助手</h3>
           </div>
           <div class="header-actions">
             <el-switch
@@ -40,10 +40,10 @@
             :class="{'bot-message': message.sender === 'bot', 'user-message': message.sender === 'user'}"
           >
             <div v-if="message.sender === 'bot'" class="avatar">
-              <img src="@/assets/imgs/AI.png" alt="AI">
+              <img src="@/assets/imgs/examAI.png" alt="AI">
             </div>
             <div v-else class="avatar">
-              <img src="@/assets/imgs/doctor.png" alt="医生">
+              <img src="@/assets/imgs/doctor.png" alt="用户">
             </div>
             <div class="message-content">
               <!-- 思考内容区域 - 确保在有reasoningContent且不等于content时显示 -->
@@ -59,7 +59,7 @@
           <!-- 加载中显示 -->
           <div v-if="loading" class="message bot-message">
             <div class="avatar">
-              <img src="@/assets/imgs/AI.png" alt="AI">
+              <img src="@/assets/imgs/examAI.png" alt="AI">
             </div>
             <div class="message-content">
               <div class="typing-indicator">
@@ -77,7 +77,7 @@
             type="textarea"
             :autosize="{ minRows: 2, maxRows: 4 }"
             v-model="inputMessage"
-            placeholder="请输入您的医疗问题..."
+            placeholder="请输入您的考试问题..."
             @keydown.enter.native="handleEnterKey"
           ></el-input>
           <div class="input-actions">
@@ -154,7 +154,7 @@ export default {
       this.drawerVisible = newVal;
       if (newVal && this.chatMessages.length === 0) {
         // 第一次打开时发送欢迎消息
-        this.addBotMessage("您好，我是AI答疑助手，可以帮你进行学术答疑，有疑难问题尽管问我");
+        this.addBotMessage("您好，我是智慧考试AI助手，可以为您解答考试、课程和平台使用问题。");
       }
     },
     drawerVisible(newVal) {
@@ -363,12 +363,12 @@ export default {
         this.currentReasoningContent = "";
 
         // 重新添加欢迎消息
-        this.addBotMessage("您好，我是AI答疑助手，可以帮你进行学术答疑，有疑难问题尽管问我");
+        this.addBotMessage("您好，我是智慧考试AI助手，可以为您解答考试、课程和平台使用问题。");
 
         // 添加到历史
         this.messages.push({
           role: 'assistant',
-          content: "您好，我是AI答疑助手，可以帮你进行学术答疑，有疑难问题尽管问我"
+          content: "您好，我是智慧考试AI助手，可以为您解答考试、课程和平台使用问题。"
         });
       }).catch(() => {});
     },

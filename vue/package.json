@@ -21,7 +21,6 @@
     "mavon-editor": "^2.10.4",
     "monaco-editor-vue": "^1.0.10",
     "nanoid": "^5.0.1",
-    "node-sass": "^9.0.0",
     "opn": "^6.0.0",
     "qrcodejs2": "^0.0.2",
     "reconnecting-websocket": "^4.4.0",
@@ -40,6 +39,7 @@
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-router": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
+    "sass": "^1.77.8",
     "sass-loader": "^14.0.0",
     "vue-template-compiler": "^2.6.14"
   },

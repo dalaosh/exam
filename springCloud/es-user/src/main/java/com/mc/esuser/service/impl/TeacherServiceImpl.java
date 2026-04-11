@@ -194,6 +194,7 @@ public class TeacherServiceImpl implements TeacherService {
             throw new CustomException(ResultCodeEnum.USER_PASSWORD_ERROR);
         }
         //2.做数字摘要
+        teacher.setAccount(teacher.getAccount().trim());
         String sm3 = SM3API.hashS(teacher.getPassword());
         //3.进行密码判断
         Teacher user=teacherMapper.findByAccountAndSM3(teacher.getAccount(),sm3);

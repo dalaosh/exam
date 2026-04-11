@@ -1,13 +1,17 @@
 <template>
   <div id="app">
     <router-view/>
-<!--    <floating-character-->
-<!--        :target-route="''"-->
-<!--        :size="60"-->
-<!--        :drag-threshold="5"-->
-<!--        @click="openMedicalAdvisor"-->
-<!--    />-->
-    <medical-advisor :visible.sync="medicalAdvisorVisible" />
+    <floating-character
+      v-if="showAiAssistant"
+      :target-route="''"
+      :size="60"
+      :drag-threshold="5"
+      @click="openMedicalAdvisor"
+    />
+    <medical-advisor
+      v-if="showAiAssistant"
+      :visible.sync="medicalAdvisorVisible"
+    />
   </div>
 </template>
 
@@ -24,6 +28,12 @@ export default {
   data() {
     return {
       medicalAdvisorVisible: false
+    }
+  },
+  computed: {
+    showAiAssistant() {
+      const homeRoutes = ['/', '/admin/home', '/teacher/home', '/student/home', '/caInstitution/home']
+      return homeRoutes.includes(this.$route.path)
     }
   },
   methods: {

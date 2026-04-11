@@ -1,90 +1,104 @@
 <template>
-  <div>
-    <!-- 个人密钥卡片 -->
-    <el-card shadow="never" class="main-card">
-      <div class="card-title">个人密钥</div>
-      <el-row :gutter="24">
-        <el-col :span="12">
-          <el-card class="key-card">
-            <div class="key-label">公钥</div>
-            <el-input
-                type="textarea"
-                readonly
-                v-model="key.selfPub"
-                :autosize="{ minRows: 5, maxRows: 5 }"
-                class="key-input"
-                resize="none"
-            />
-          </el-card>
-        </el-col>
-        <el-col :span="12">
-          <el-card class="key-card">
-            <div class="key-label">私钥</div>
-            <el-input
-                type="textarea"
-                readonly
-                v-model="key.selfPri"
-                :autosize="{ minRows: 5, maxRows: 5 }"
-                class="key-input"
-                resize="none"
-            />
-          </el-card>
-        </el-col>
-      </el-row>
-    </el-card>
+  <div class="admin-page">
+    <section class="admin-page-head">
+      <div>
+        <h2 class="admin-page-head__title">密钥查看</h2>
+        <p class="admin-page-head__desc">集中展示个人密钥与考试密钥信息，便于管理员核验。</p>
+      </div>
+      <div class="admin-page-head__meta">
+        <el-tag class="admin-tag" type="info">只读展示</el-tag>
+      </div>
+    </section>
 
-    <!-- 考试密钥卡片 -->
-    <el-card shadow="never" class="main-card">
-      <div class="card-title">考试密钥</div>
-      <el-row :gutter="24">
-        <el-col :span="12">
-          <el-card class="key-card">
-            <div class="key-label">公钥</div>
-            <el-input
-                type="textarea"
-                readonly
-                v-model="key.examPub"
-                :autosize="{ minRows: 5, maxRows: 5 }"
-                class="key-input"
-                resize="none"
-            />
-          </el-card>
-        </el-col>
-        <el-col :span="12">
-          <el-card class="key-card">
-            <div class="key-label">私钥</div>
-            <el-input
-                type="textarea"
-                readonly
-                v-model="key.examPri"
-                :autosize="{ minRows: 5, maxRows: 5 }"
-                class="key-input"
-                resize="none"
-            />
-          </el-card>
-        </el-col>
-      </el-row>
-    </el-card>
+    <section class="admin-panel admin-profile-card">
+      <h3 class="admin-section-title">个人密钥</h3>
+      <p class="admin-section-note">用于当前管理员账户的身份识别与签名处理。</p>
+      <div class="admin-key-grid">
+        <el-card class="admin-help-card" shadow="never">
+          <div class="admin-help-card__title">
+            <i class="el-icon-key"></i>
+            <span>公钥</span>
+          </div>
+          <el-input
+            type="textarea"
+            readonly
+            v-model="key.selfPub"
+            :autosize="{ minRows: 7, maxRows: 7 }"
+            class="admin-table__textarea"
+            resize="none"
+          />
+        </el-card>
+        <el-card class="admin-help-card" shadow="never">
+          <div class="admin-help-card__title">
+            <i class="el-icon-lock"></i>
+            <span>私钥</span>
+          </div>
+          <el-input
+            type="textarea"
+            readonly
+            v-model="key.selfPri"
+            :autosize="{ minRows: 7, maxRows: 7 }"
+            class="admin-table__textarea"
+            resize="none"
+          />
+        </el-card>
+      </div>
+    </section>
+
+    <section class="admin-panel admin-profile-card">
+      <h3 class="admin-section-title">考试密钥</h3>
+      <p class="admin-section-note">用于考试过程中的加解密处理与数据安全校验。</p>
+      <div class="admin-key-grid">
+        <el-card class="admin-help-card" shadow="never">
+          <div class="admin-help-card__title">
+            <i class="el-icon-key"></i>
+            <span>公钥</span>
+          </div>
+          <el-input
+            type="textarea"
+            readonly
+            v-model="key.examPub"
+            :autosize="{ minRows: 7, maxRows: 7 }"
+            class="admin-table__textarea"
+            resize="none"
+          />
+        </el-card>
+        <el-card class="admin-help-card" shadow="never">
+          <div class="admin-help-card__title">
+            <i class="el-icon-lock"></i>
+            <span>私钥</span>
+          </div>
+          <el-input
+            type="textarea"
+            readonly
+            v-model="key.examPri"
+            :autosize="{ minRows: 7, maxRows: 7 }"
+            class="admin-table__textarea"
+            resize="none"
+          />
+        </el-card>
+      </div>
+    </section>
   </div>
 </template>
 
 <script>
-import request from "@/utils/request"
+import request from "@/utils/request";
 
 export default {
   data() {
     return {
       user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {},
       key: {
-        selfPub: '',
-        selfPri: '',
-        examPub: '',
-        examPri: ''
+        selfPub: "",
+        selfPri: "",
+        examPub: "",
+        examPri: ""
       }
-    }
+    };
   },
   created() {
-    this.load()
+    this.load();
   },
   methods: {
     async load() {
@@ -92,72 +106,19 @@ export default {
         const res = await request.post("/user/admin/getKey", {
           account: this.user.account,
           id: this.user.id
-        })
+        });
         if (res.code === "200") {
           this.key = {
-            selfPub: res.data.selfPub || '暂无公钥',
-            selfPri: res.data.selfPri || '暂无私钥',
-            examPub: res.data.examPub || '暂无公钥',
-            examPri: res.data.examPri || '暂无私钥'
-          }
+            selfPub: res.data.selfPub || "暂无公钥",
+            selfPri: res.data.selfPri || "暂无私钥",
+            examPub: res.data.examPub || "暂无公钥",
+            examPri: res.data.examPri || "暂无私钥"
+          };
         }
       } catch (error) {
-        console.error("密钥获取失败:", error)
-        this.$message.error("密钥加载失败")
+        this.$message.error("密钥加载失败");
       }
     }
   }
-}
+};
 </script>
-
-<style scoped>
-.main-card {
-  height: 38vh;
-  background: #f8faf9;
-  border-radius: 12px;
-  margin: 16px 20px;
-  border: 1px solid #e8eceb;
-}
-
-.card-title {
-  color: #2c3e50;
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 16px;
-  letter-spacing: 0.5px;
-}
-
-.key-card {
-  border-radius: 8px;
-  margin-bottom: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  border: 1px solid #ebf0ef;
-}
-
-.key-label {
-  color: #5a5e66;
-  font-size: 14px;
-  margin-bottom: 8px;
-  font-weight: 500;
-}
-
-.key-input {
-  font-family: 'Menlo', monospace;
-  font-size: 14px;
-  line-height: 1.6;
-  background: #f5fffd;
-  border-radius: 6px;
-}
-
-.key-input ::v-deep .el-textarea__inner {
-  transition: all 0.3s ease;
-  border-color: #dcdfe6;
-  padding: 12px;
-  background: #f5fffd;
-}
-
-.key-input ::v-deep .el-textarea__inner:hover {
-  border-color: #42b983;
-  box-shadow: 0 0 8px rgba(66, 185, 131, 0.1);
-}
-</style>

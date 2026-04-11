@@ -1,52 +1,65 @@
 <template>
-  <div style="background: #fdf9f9; padding: 20px">
-    <!-- 统计看板模块 -->
-    <el-row>
-      <el-col :span="6">
-        <div class="box">
-          <div style="color: #666">课程</div>
-          <div style="margin-top: 10px; font-size: 20px">{{ basicNum.selectCourseNum }}</div>
-        </div>
-      </el-col>
-      <el-col :span="6">
-        <div class="box">
-          <div style="color: #666">考试数量</div>
-          <div style="margin-top: 10px; font-size: 20px">{{ basicNum.selectExamNum }}</div>
-        </div>
-      </el-col>
-      <el-col :span="6">
-        <div class="box">
-          <div style="color: #666">学生数量</div>
-          <div style="margin-top: 10px; font-size: 20px">{{ basicNum.selectAnswerNum }}</div>
-        </div>
-      </el-col>
-      <el-col :span="6">
-        <div class="box">
-          <div style="color: #666">及格率(及格人数/总人数)</div>
-          <div style="margin-top: 10px; font-size: 20px">{{ basicNum.selectS }}/{{ basicNum.selectSS }}</div>
-        </div>
-      </el-col>
-    </el-row>
+  <div class="student-page student-dashboard">
+    <section class="student-page-head student-page-head--compact">
+      <div>
+        <h2 class="student-page-head__title">学习概览</h2>
+        <p class="student-page-head__desc">查看课程、考试、答题情况和题型数据。</p>
+      </div>
+      <div class="student-page-head__meta student-page-head__meta--plain">
+        <span class="student-page-head__meta-text">学习统计</span>
+      </div>
+    </section>
 
-    <!-- 图表展示模块 -->
-    <el-row :gutter="20" style="margin-top: 2vh">
-      <el-col :span="12">
-        <div class="chart-container">
-          <div ref="radarChart" style="width: 100%; height: 60vh"></div>
+    <section class="student-stat-grid">
+      <article class="student-stat-card">
+        <div class="student-stat-card__label">课程数量</div>
+        <div class="student-stat-card__value">{{ basicNum.selectCourseNum || 0 }}</div>
+        <div class="student-stat-card__hint">当前参与课程</div>
+      </article>
+      <article class="student-stat-card">
+        <div class="student-stat-card__label">考试数量</div>
+        <div class="student-stat-card__value">{{ basicNum.selectExamNum || 0 }}</div>
+        <div class="student-stat-card__hint">可参加考试</div>
+      </article>
+      <article class="student-stat-card">
+        <div class="student-stat-card__label">答题数量</div>
+        <div class="student-stat-card__value">{{ basicNum.selectAnswerNum || 0 }}</div>
+        <div class="student-stat-card__hint">累计有效答题记录</div>
+      </article>
+      <article class="student-stat-card">
+        <div class="student-stat-card__label">及格情况</div>
+        <div class="student-stat-card__value">{{ basicNum.selectS || 0 }}/{{ basicNum.selectSS || 0 }}</div>
+        <div class="student-stat-card__hint">及格人数 / 总人数</div>
+      </article>
+    </section>
+
+    <section class="student-dashboard-grid">
+      <article class="student-panel student-panel--padded student-panel--radar">
+        <div class="student-panel__head">
+          <div>
+            <h3 class="student-panel__title">题目分析雷达图</h3>
+            <p class="student-panel__desc">对比题库总量、已答数量和正确数量。</p>
+          </div>
         </div>
-      </el-col>
-      <el-col :span="12">
-        <div class="chart-container">
-          <div ref="barLineChart" style="width: 100%; height: 60vh"></div>
+        <div ref="radarChart" class="student-chart student-chart--radar"></div>
+      </article>
+
+      <article class="student-panel student-panel--padded">
+        <div class="student-panel__head">
+          <div>
+            <h3 class="student-panel__title">题型分析</h3>
+            <p class="student-panel__desc">查看不同题型的总题量与正确量。</p>
+          </div>
         </div>
-      </el-col>
-    </el-row>
+        <div ref="barLineChart" class="student-chart"></div>
+      </article>
+    </section>
   </div>
 </template>
 
 <script>
 import request from "@/utils/request";
-import * as echarts from 'echarts';
+import * as echarts from "echarts";
 
 export default {
   data() {
@@ -68,21 +81,21 @@ export default {
   },
   created() {
     Promise.all([this.load1(), this.load2(), this.load3()])
-        .then(() => {
-          this.$nextTick(() => {
-            this.initRadarChart();
-            this.initBarLineChart();
-          });
-        })
-        .catch(error => {
-          console.error("数据加载失败:", error);
+      .then(() => {
+        this.$nextTick(() => {
+          this.initRadarChart();
+          this.initBarLineChart();
         });
+      })
+      .catch((error) => {
+        console.error("数据加载失败:", error);
+      });
   },
   mounted() {
-    window.addEventListener('resize', this.handleResize);
+    window.addEventListener("resize", this.handleResize);
   },
   beforeDestroy() {
-    window.removeEventListener('resize', this.handleResize);
+    window.removeEventListener("resize", this.handleResize);
     if (this.radarChart) {
       this.radarChart.dispose();
     }
@@ -99,22 +112,19 @@ export default {
         this.barLineChart.resize();
       }
     },
-
     initRadarChart() {
       const chartDom = this.$refs.radarChart;
       this.radarChart = echarts.init(chartDom);
 
-      // 指标定义（使用questionTypeAll作为最大值）
       const indicators = [
-        { name: '多选题', max: this.studentStrong.questionTypeAll.questionMultiAll || 1 },
-        { name: '填空题', max: this.studentStrong.questionTypeAll.questionFillAll || 1 },
-        { name: '判断题', max: this.studentStrong.questionTypeAll.questionJudgeAll || 1 },
-        { name: '简答题', max: this.studentStrong.questionTypeAll.questionShortAnsAll || 1 },
-        { name: '编程题', max: this.studentStrong.questionTypeAll.questionCodeAll || 1 }
+        { name: "多选题", max: this.studentStrong.questionTypeAll.questionMultiAll || 1 },
+        { name: "填空题", max: this.studentStrong.questionTypeAll.questionFillAll || 1 },
+        { name: "判断题", max: this.studentStrong.questionTypeAll.questionJudgeAll || 1 },
+        { name: "简答题", max: this.studentStrong.questionTypeAll.questionShortAnsAll || 1 },
+        { name: "编程题", max: this.studentStrong.questionTypeAll.questionCodeAll || 1 }
       ];
 
-      // 三个数据集
-      const totalData = [  // 总题数（questionTypeAll）
+      const totalData = [
         this.studentStrong.questionTypeAll.questionMultiAll || 0,
         this.studentStrong.questionTypeAll.questionFillAll || 0,
         this.studentStrong.questionTypeAll.questionJudgeAll || 0,
@@ -122,7 +132,7 @@ export default {
         this.studentStrong.questionTypeAll.questionCodeAll || 0
       ];
 
-      const answerData = [  // 答题数（questionType）
+      const answerData = [
         this.studentStrong.questionType.questionMulti || 0,
         this.studentStrong.questionType.questionFill || 0,
         this.studentStrong.questionType.questionJudge || 0,
@@ -130,7 +140,7 @@ export default {
         this.studentStrong.questionType.questionCode || 0
       ];
 
-      const correctData = [  // 正确数（questionTypeRight）
+      const correctData = [
         this.studentStrong.questionTypeRight.questionMultiRight || 0,
         this.studentStrong.questionTypeRight.questionFillRight || 0,
         this.studentStrong.questionTypeRight.questionJudgeRight || 0,
@@ -138,68 +148,90 @@ export default {
         this.studentStrong.questionTypeRight.questionCodeRight || 0
       ];
 
-      const option = {
-        title: {
-          text: '题目分析雷达图',
-          left: 'center'
-        },
-        tooltip: {
-          trigger: 'item'
-        },
+      const radarIndicators = indicators.map((item, index) => {
+        const currentMax = Math.max(totalData[index], answerData[index], correctData[index], 1);
+        return {
+          ...item,
+          max: Math.ceil(currentMax * 1.15)
+        };
+      });
+
+      this.radarChart.setOption({
+        color: ["#94a3b8", "#0ea5e9", "#f97316"],
+        tooltip: { trigger: "item" },
         legend: {
-          data: ['题库总量', '已答数量', '正确数量'],
-          top: 30
+          data: ["题库总量", "已答数量", "正确数量"],
+          top: 10,
+          left: "center",
+          itemWidth: 18,
+          itemHeight: 10,
+          itemGap: 18,
+          textStyle: {
+            color: "#64748b",
+            fontSize: 13,
+            padding: [0, 0, 0, 4]
+          }
         },
         radar: {
-          indicator: indicators,
-          shape: 'polygon',
-          center: ['50%', '55%'],
-          radius: '70%',
+          indicator: radarIndicators,
+          shape: "polygon",
+          center: ["50%", "60%"],
+          radius: "58%",
           axisName: {
-            color: '#666',
-            position: 'end',
-            offset: [0, 15]
+            color: "#475569",
+            fontSize: 14,
+            padding: [2, 8]
           },
+          splitNumber: 5,
           splitArea: {
             areaStyle: {
-              color: ['rgba(250,250,250,0.8)', 'rgba(200,200,200,0.8)']
+              color: ["rgba(248, 250, 252, 0.9)", "rgba(226, 232, 240, 0.7)"]
+            }
+          },
+          splitLine: {
+            lineStyle: {
+              color: "#dbe4ee"
+            }
+          },
+          axisLine: {
+            lineStyle: {
+              color: "rgba(148, 163, 184, 0.45)"
             }
           }
         },
         series: [{
-          type: 'radar',
+          type: "radar",
+          symbol: "circle",
+          symbolSize: 7,
+          lineStyle: { width: 2.5 },
           data: [
             {
               value: totalData,
-              name: '题库总量',
-              symbol: 'rect',
-              lineStyle: { type: 'dashed', color: '#999' },
-              areaStyle: { color: 'rgba(200, 200, 200, 0.1)' }
+              name: "题库总量",
+              areaStyle: { color: "rgba(148, 163, 184, 0.12)" },
+              lineStyle: { type: "dashed", width: 2.5 },
+              itemStyle: { color: "#94a3b8" }
             },
             {
               value: answerData,
-              name: '已答数量',
-              symbol: 'circle',
-              lineStyle: { color: '#5470C6', width: 2 },
-              areaStyle: { color: 'rgba(84, 112, 198, 0.3)' }
+              name: "已答数量",
+              areaStyle: { color: "rgba(14, 165, 233, 0.18)" },
+              itemStyle: { color: "#0ea5e9" }
             },
             {
               value: correctData,
-              name: '正确数量',
-              symbol: 'triangle',
-              lineStyle: { color: '#EE6666', width: 2 },
-              areaStyle: { color: 'rgba(238, 102, 102, 0.3)' }
+              name: "正确数量",
+              areaStyle: { color: "rgba(249, 115, 22, 0.14)" },
+              itemStyle: { color: "#f97316" }
             }
           ]
         }]
-      };
-      this.radarChart.setOption(option);
+      });
     },
     initBarLineChart() {
       const chartDom = this.$refs.barLineChart;
       this.barLineChart = echarts.init(chartDom);
-
-      const categories = ['多选题', '填空题', '判断题', '简答题', '编程题'];
+      const categories = ["多选题", "填空题", "判断题", "简答题", "编程题"];
       const totalData = [
         this.questionType.questionType.questionMulti || 0,
         this.questionType.questionType.questionFill || 0,
@@ -215,113 +247,99 @@ export default {
         this.questionType.questionTypeRight.questionCodeRight || 0
       ];
 
-      const option = {
-        title: {
-          text: '题型分析',
-          left: 'center'
-        },
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'shadow'
-          }
-        },
+      this.barLineChart.setOption({
+        color: ["#38bdf8", "#fb7185"],
+        tooltip: { trigger: "axis", axisPointer: { type: "shadow" } },
         legend: {
-          data: ['总题数', '正确数'],
-          top: '7%'
+          data: ["总题数", "正确数"],
+          top: 8,
+          textStyle: { color: "#64748b" }
         },
         grid: {
-          left: '3%',
-          right: '4%',
-          bottom: '3%',
+          left: "4%",
+          right: "4%",
+          bottom: "6%",
+          top: 56,
           containLabel: true
         },
         xAxis: {
-          type: 'category',
+          type: "category",
           data: categories,
-          axisLabel: {
-            rotate: 45
-          }
+          axisLine: { lineStyle: { color: "#cbd5e1" } },
+          axisLabel: { color: "#475569" }
         },
         yAxis: {
-          type: 'value',
-          name: '题目数量'
+          type: "value",
+          name: "题目数量",
+          nameTextStyle: { color: "#64748b" },
+          axisLine: { show: false },
+          splitLine: { lineStyle: { color: "#e2e8f0" } },
+          axisLabel: { color: "#64748b" }
         },
         series: [
           {
-            name: '总题数',
-            type: 'bar',
+            name: "总题数",
+            type: "bar",
             data: totalData,
-            barWidth: '40%',
+            barWidth: "40%",
             itemStyle: {
+              borderRadius: [10, 10, 0, 0],
               color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                {offset: 0, color: '#83bff6'},
-                {offset: 0.5, color: '#188df0'},
-                {offset: 1, color: '#188df0'}
+                { offset: 0, color: "#67e8f9" },
+                { offset: 1, color: "#0ea5e9" }
               ])
             }
           },
           {
-            name: '正确数',
-            type: 'line',
+            name: "正确数",
+            type: "line",
             data: correctData,
-            symbol: 'circle',
-            symbolSize: 10,
-            lineStyle: {
-              color: '#FF6B6B',
-              width: 3
-            },
-            itemStyle: {
-              color: '#FF6B6B',
-              borderWidth: 2
-            }
+            symbol: "circle",
+            symbolSize: 8,
+            smooth: true,
+            lineStyle: { width: 3 }
           }
         ]
-      };
-      this.barLineChart.setOption(option);
+      });
     },
-
     load1() {
-      return request.get(`statistic/selectStudentUseCount/selectQuestionType/${this.user.id}`)
-          .then(res => {
-            if (res.code === '200') this.questionType = res.data;
-          });
+      return request.get(`statistic/selectStudentUseCount/selectQuestionType/${this.user.id}`).then((res) => {
+        if (res.code === "200") {
+          this.questionType = res.data;
+        }
+      });
     },
     load2() {
-      return request.get(`statistic/selectStudentUseCount/selectStudentStrong/${this.user.id}`)
-          .then(res => {
-            if (res.code === '200') this.studentStrong = res.data;
-          });
+      return request.get(`statistic/selectStudentUseCount/selectStudentStrong/${this.user.id}`).then((res) => {
+        if (res.code === "200") {
+          this.studentStrong = res.data;
+        }
+      });
     },
     load3() {
-      return request.get(`statistic/selectStudentUseCount/selectBasicNum/${this.user.id}`)
-          .then(res => {
-            if (res.code === '200') this.basicNum = res.data;
-          });
+      return request.get(`statistic/selectStudentUseCount/selectBasicNum/${this.user.id}`).then((res) => {
+        if (res.code === "200") {
+          this.basicNum = res.data;
+        }
+      });
     }
   }
 };
 </script>
 
-<style scoped>
-.box {
-  background: white;
-  border-radius: 8px;
-  padding: 20px;
-  margin: 10px;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s;
-  text-align: center;
+<style scoped lang="scss">
+.student-panel--radar {
+  overflow: hidden;
 }
 
-.box:hover {
-  transform: translateY(-5px);
+.student-chart--radar {
+  height: 470px;
+  margin-top: 4px;
 }
 
-.chart-container {
-  background: white;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+@media (max-width: 1200px) {
+  .student-chart--radar {
+    height: 430px;
+  }
 }
 </style>

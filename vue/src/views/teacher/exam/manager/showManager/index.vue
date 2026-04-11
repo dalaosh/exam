@@ -1,41 +1,45 @@
 <template>
-  <div>
-    <el-tabs class="main" type="border-card">
+  <div class="exam-workspace">
+    <div class="workspace-header">
+      <div>
+        <div class="workspace-title">考试管理工作台</div>
+      </div>
+      <div class="workspace-copy">统一查看考试详情、题目配置与自动组卷内容。</div>
+    </div>
+
+    <el-tabs class="workspace-tabs" type="border-card">
       <el-tab-pane label="考试详情">
-        <div class="title">
-          考试详情
-        </div>
-        <div style="height: 70vh" class="body">
+        <div class="tab-panel">
           <show :param="receivedData.id"></show>
         </div>
       </el-tab-pane>
       <el-tab-pane label="自动组卷">
-        <div class="body">
+        <div class="tab-panel">
           <AIExam :param="receivedData.id" :courseId="receivedData.courseId"></AIExam>
         </div>
       </el-tab-pane>
       <el-tab-pane label="选择题">
-        <div class="body">
+        <div class="tab-panel">
           <multi :examId="receivedData.id" :courseId="receivedData.courseId"></multi>
         </div>
       </el-tab-pane>
       <el-tab-pane label="判断题">
-        <div class="body">
+        <div class="tab-panel">
           <judge :examId="receivedData.id" :courseId="receivedData.courseId"></judge>
         </div>
       </el-tab-pane>
       <el-tab-pane label="填空题">
-        <div class="body">
+        <div class="tab-panel">
           <fill :examId="receivedData.id" :courseId="receivedData.courseId"></fill>
         </div>
       </el-tab-pane>
       <el-tab-pane label="简答题">
-        <div class="body">
+        <div class="tab-panel">
           <shortAns :examId="receivedData.id" :courseId="receivedData.courseId"></shortAns>
         </div>
       </el-tab-pane>
       <el-tab-pane label="代码题">
-        <div class="body">
+        <div class="tab-panel">
           <codes :examId="receivedData.id" :courseId="receivedData.courseId"></codes>
         </div>
       </el-tab-pane>
@@ -45,12 +49,13 @@
 
 <script>
 import codes from "@/views/teacher/exam/manager/showManager/code"
-import fill from "@/views/teacher/exam/manager/showManager/fill";
-import judge from "@/views/teacher/exam/manager/showManager/judge";
-import multi from "@/views/teacher/exam/manager/showManager/multi";
-import show from "@/views/teacher/exam/manager/showManager/show";
-import shortAns from "@/views/teacher/exam/manager/showManager/shortAns";
-import AIExam from "@/views/teacher/exam/manager/showManager/AIExam/index.vue";
+import fill from "@/views/teacher/exam/manager/showManager/fill"
+import judge from "@/views/teacher/exam/manager/showManager/judge"
+import multi from "@/views/teacher/exam/manager/showManager/multi"
+import show from "@/views/teacher/exam/manager/showManager/show"
+import shortAns from "@/views/teacher/exam/manager/showManager/shortAns"
+import AIExam from "@/views/teacher/exam/manager/showManager/AIExam/index.vue"
+
 export default {
   components: {
     codes,
@@ -61,41 +66,221 @@ export default {
     shortAns,
     AIExam
   },
-  data(){
-    return{
-      user:localStorage.getItem("user") ? (JSON).parse(localStorage.getItem("user")) : {},
-      form:{},
-      receivedData:"",
+  data() {
+    return {
+      user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {},
+      form: {},
+      receivedData: ""
     }
   },
   created() {
     this.receivedData = this.$route.params
-
-  },
-  mounted() {
-
-  },
-  methods: {
-
   }
 }
 </script>
 
-
 <style scoped>
-.main{
-  margin: 1vh 2% 1vh 2%;
-  border-radius: 10px;
+.exam-workspace {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-bottom: 8px;
 }
-.title{
-  font-family: 'STXingkai', '华文行楷', cursive;
-  font-size: 26px;
-  text-align: center;
+
+.workspace-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0;
+  padding-bottom: 2px;
 }
-.body {
-  margin: 1vh 1% 0 1%;
-  width: 98%;
-  height: 75vh;
+
+.workspace-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #0f172a;
+  line-height: 1.3;
+}
+
+.workspace-copy {
+  color: #64748b;
+  font-size: 13px;
+}
+
+.workspace-tabs {
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+  box-shadow: none;
+}
+
+.workspace-tabs :deep(.el-tabs__header) {
+  padding: 8px 12px 0;
+  margin: 0;
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.workspace-tabs :deep(.el-tabs__item) {
+  height: 38px;
+  line-height: 38px;
+  border-radius: 6px 6px 0 0;
+  font-weight: 600;
+  color: #475569;
+}
+
+.workspace-tabs :deep(.el-tabs__item.is-active) {
+  color: #1d4ed8;
+}
+
+.workspace-tabs :deep(.el-tabs__content) {
+  padding: 16px;
+  background: #fff;
+}
+
+.tab-panel {
+  min-height: 620px;
+}
+
+.workspace-tabs :deep(.heads) {
+  display: flex;
+  align-items: center;
+  min-height: 52px;
+  margin-bottom: 14px;
+  padding: 0 4px;
+  border-bottom: 1px solid #eef2f7;
+}
+
+.workspace-tabs :deep(.heads::before),
+.workspace-tabs :deep(.heads::after) {
+  display: none;
+}
+
+.workspace-tabs :deep(.heads .el-col) {
+  float: none;
+  display: flex;
+  align-items: center;
+  min-height: 52px;
+}
+
+.workspace-tabs :deep(.heads .el-col:first-child) {
+  justify-content: flex-start;
+}
+
+.workspace-tabs :deep(.heads .el-col:nth-child(2)) {
+  justify-content: center;
+  flex: 1;
+}
+
+.workspace-tabs :deep(.heads .el-col:last-child) {
+  justify-content: flex-end;
+}
+
+.workspace-tabs :deep(.heads .el-button) {
+  margin: 0;
+  padding: 0;
+  font-size: 14px !important;
+  font-weight: 600;
+}
+
+.workspace-tabs :deep(.mains) {
+  height: auto !important;
+  min-height: 500px;
+  padding: 4px 0 10px;
+  border-radius: 6px;
+  background: #fff;
+  overflow: visible;
+}
+
+.workspace-tabs :deep(.mains::-webkit-scrollbar) {
+  width: 6px;
+}
+
+.workspace-tabs :deep(.mains::-webkit-scrollbar-thumb) {
+  background: rgba(148, 163, 184, 0.5);
+  border-radius: 999px;
+}
+
+.workspace-tabs :deep(.cards) {
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  box-shadow: none;
+}
+
+.workspace-tabs :deep(.cards .el-card__body) {
+  padding: 18px 20px;
+}
+
+.workspace-tabs :deep(.main .search) {
+  height: auto !important;
+  padding: 16px 18px;
+  border-bottom: 1px solid #eef2f7;
+}
+
+.workspace-tabs :deep(.main .search .el-row) {
+  margin-top: 0 !important;
+  margin-left: 0 !important;
+}
+
+.workspace-tabs :deep(.main .search .el-form) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 10px;
+  align-items: flex-end;
+}
+
+.workspace-tabs :deep(.main .search .el-form-item) {
+  margin-right: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.workspace-tabs :deep(.main .search .el-input),
+.workspace-tabs :deep(.main .search .el-select) {
+  width: 190px;
+  max-width: 100%;
+}
+
+.workspace-tabs :deep(.main .table) {
+  height: auto !important;
+  padding: 18px;
+}
+
+.workspace-tabs :deep(.el-drawer__header) {
+  margin-bottom: 0;
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.workspace-tabs :deep(.el-drawer__body) {
+  overflow: auto;
+  background: #fff;
+}
+
+.workspace-tabs :deep(.el-drawer__body .main) {
+  min-height: 100%;
+}
+
+.workspace-tabs :deep(.question),
+.workspace-tabs :deep(.teacher-rich-content) {
+  line-height: 1.75;
+}
+
+@media (max-width: 1100px) {
+  .workspace-header {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .workspace-copy {
+    width: 100%;
+  }
+
+  .workspace-tabs :deep(.heads) {
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: flex-start;
+  }
 }
 </style>
-

@@ -1,15 +1,12 @@
 spring:
   application:
     name: es-files
-  config:
-    import: nacos:es-files-dev.yml
   cloud:
     nacos:
       discovery:
-        server-addr: localhost:8848
+        enabled: false
       config:
-        server-addr: localhost:8848
-        file-extension: yml
+        enabled: false
   servlet:
     multipart:
       max-file-size: 100MB

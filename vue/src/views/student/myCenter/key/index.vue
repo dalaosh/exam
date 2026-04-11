@@ -1,87 +1,86 @@
 <template>
-  <div>
-    <el-card shadow="never" style="height: 40vh;background-color: rgb(244,248,247);color: #030000;border-radius:10px;margin: 1vh 20px 1vh 20px">
-      <div style="margin-bottom: 2vh">个人密钥</div>
+  <div class="student-page">
+    <section class="student-page-head">
       <div>
-        <el-row :gutter="20">
-          <el-col :span="14">
-            <el-card class="box-card" style="margin-bottom: 3vh">
-              <div>
-                公钥
-              </div>
-              <div>
-                <el-input
-                    style="font-size: 16px;width: 96%;margin: 2vh 2%"
-                    type="textarea"
-                    :readonly="true"
-                    :autosize="{ minRows: 5, maxRows: 5}"
-                    placeholder=""
-                    v-model="key.selfPub">
-                </el-input>
-              </div>
-            </el-card>
-          </el-col>
-          <el-col :span="10">
-            <el-card class="box-card">
-              <div>
-                私钥
-              </div>
-              <div>
-                <el-input
-                    style="font-size: 16px;width: 90%;margin: 2vh 2%"
-                    type="textarea"
-                    :readonly="true"
-                    :autosize="{ minRows: 5, maxRows: 5}"
-                    placeholder=""
-                    v-model="key.selfPri">
-                </el-input>
-              </div>
-            </el-card>
-          </el-col>
-        </el-row>
+        <h2 class="student-page-head__title">密钥查看</h2>
+        <p class="student-page-head__desc">集中查看个人密钥与考试密钥，保持只读展示和统一后台样式。</p>
       </div>
-    </el-card>
-    <el-card shadow="never" style="height: 40vh;background-color: rgb(244,248,247);color: #030000;border-radius:10px;margin: 1vh 20px 1vh 20px">
-      <div style="margin-bottom: 2vh">考试密钥</div>
-      <div>
-        <el-row :gutter="20">
-          <el-col :span="14">
-            <el-card class="box-card" style="margin-bottom: 3vh">
-              <div>
-                公钥
-              </div>
-              <div>
-                <el-input
-                    style="font-size: 16px;width: 96%;margin: 2vh 2%"
-                    type="textarea"
-                    :readonly="true"
-                    :autosize="{ minRows: 5, maxRows: 5}"
-                    placeholder=""
-                    v-model="key.examPub">
-                </el-input>
-              </div>
-            </el-card>
-          </el-col>
-          <el-col :span="10">
-            <el-card class="box-card">
-              <div>
-                私钥
-              </div>
-              <div>
-                <el-input
-                    style="font-size: 16px;width: 90%;margin: 2vh 2%"
-                    type="textarea"
-                    :readonly="true"
-                    :autosize="{ minRows: 5, maxRows: 5}"
-                    placeholder=""
-                    v-model="key.examPri">
-                </el-input>
-              </div>
-            </el-card>
-          </el-col>
-        </el-row>
+      <div class="student-page-head__meta">
+        <el-tag class="student-tag" type="info">只读信息</el-tag>
       </div>
-    </el-card>
+    </section>
+
+    <section class="student-panel student-panel--padded">
+      <h3 class="student-section-title">个人密钥</h3>
+      <p class="student-section-note">用于当前学生账户的身份识别与签名校验。</p>
+      <div class="student-key-grid">
+        <div class="student-help-card student-key-card">
+          <div class="student-help-card__title">
+            <i class="el-icon-key"></i>
+            <span>公钥</span>
+          </div>
+          <el-input
+            type="textarea"
+            readonly
+            resize="none"
+            v-model="key.selfPub"
+            :rows="7"
+            class="student-text-block student-key-textarea"
+          />
+        </div>
+
+        <div class="student-help-card student-key-card">
+          <div class="student-help-card__title">
+            <i class="el-icon-lock"></i>
+            <span>私钥</span>
+          </div>
+          <el-input
+            type="textarea"
+            readonly
+            resize="none"
+            v-model="key.selfPri"
+            :rows="7"
+            class="student-text-block student-key-textarea"
+          />
+        </div>
+      </div>
+    </section>
+
+    <section class="student-panel student-panel--padded">
+      <h3 class="student-section-title">考试密钥</h3>
+      <p class="student-section-note">用于考试过程中的加解密与数据校验。</p>
+      <div class="student-key-grid">
+        <div class="student-help-card student-key-card">
+          <div class="student-help-card__title">
+            <i class="el-icon-key"></i>
+            <span>公钥</span>
+          </div>
+          <el-input
+            type="textarea"
+            readonly
+            resize="none"
+            v-model="key.examPub"
+            :rows="7"
+            class="student-text-block student-key-textarea"
+          />
+        </div>
+
+        <div class="student-help-card student-key-card">
+          <div class="student-help-card__title">
+            <i class="el-icon-lock"></i>
+            <span>私钥</span>
+          </div>
+          <el-input
+            type="textarea"
+            readonly
+            resize="none"
+            v-model="key.examPri"
+            :rows="7"
+            class="student-text-block student-key-textarea"
+          />
+        </div>
+      </div>
+    </section>
   </div>
 </template>
 
@@ -120,6 +119,4 @@ export default {
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

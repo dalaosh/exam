@@ -1,67 +1,79 @@
 <template>
-  <div style="background: #fdf9f9">
-    <!-- 统计看板模块 -->
-    <el-row>
-      <el-col :span="24">
-        <h2 class="main-title" style="text-align: center">系统成员统计</h2>
-      </el-col>
-      <el-col :span="6">
-        <div class="box">
-          <div style="color: #666">CA机构中心</div>
-          <div style="margin-top: 10px; font-size: 20px">{{ dataCount.caCount }}</div>
-        </div>
-      </el-col>
-      <el-col :span="6">
-        <div class="box">
-          <div style="color: #666">管理员</div>
-          <div style="margin-top: 10px; font-size: 20px">{{ dataCount.adminCount }}</div>
-        </div>
-      </el-col>
-      <el-col :span="6">
-        <div class="box">
-          <div style="color: #666">教师</div>
-          <div style="margin-top: 10px; font-size: 20px">{{ dataCount.teacherCount }}</div>
-        </div>
-      </el-col>
-      <el-col :span="6">
-        <div class="box">
-          <div style="color: #666">学生</div>
-          <div style="margin-top: 10px; font-size: 20px">{{ dataCount.studentCount }}</div>
-        </div>
-      </el-col>
-    </el-row>
+  <div class="ca-page">
+    <div class="ca-page-head">
+      <div>
+        <h2 class="ca-page-head__title">CA 中心概览</h2>
+        <p class="ca-page-head__desc">查看机构用户规模、登录趋势以及核心认证能力说明。</p>
+      </div>
+      <div class="ca-page-head__meta">
+        <span class="ca-page-head__meta-text">数据范围：平台实时汇总</span>
+      </div>
+    </div>
 
-    <div ref="chart" style="width: 90%;margin-left: 5%; height: 60vh;margin-top: 2vh"></div>
-    <!-- 技术展示模块 -->
-    <div class="tech-container">
-      <el-row :gutter="20">
-        <el-col :span="24">
-          <h2 class="main-title">数字身份认证与管理技术</h2>
-        </el-col>
-        <el-col
+    <div class="ca-stat-grid">
+      <div class="ca-stat-card">
+        <div class="ca-stat-card__label">CA 机构数量</div>
+        <div class="ca-stat-card__value">{{ dataCount.caCount }}</div>
+        <div class="ca-stat-card__hint">平台接入机构总量</div>
+      </div>
+      <div class="ca-stat-card">
+        <div class="ca-stat-card__label">管理员数量</div>
+        <div class="ca-stat-card__value">{{ dataCount.adminCount }}</div>
+        <div class="ca-stat-card__hint">后台维护账户总量</div>
+      </div>
+      <div class="ca-stat-card">
+        <div class="ca-stat-card__label">教师数量</div>
+        <div class="ca-stat-card__value">{{ dataCount.teacherCount }}</div>
+        <div class="ca-stat-card__hint">教师端入驻账户总量</div>
+      </div>
+      <div class="ca-stat-card">
+        <div class="ca-stat-card__label">学生数量</div>
+        <div class="ca-stat-card__value">{{ dataCount.studentCount }}</div>
+        <div class="ca-stat-card__hint">学生端活跃用户基础</div>
+      </div>
+    </div>
+
+    <div class="ca-dashboard-grid">
+      <div class="ca-panel ca-panel--padded">
+        <div class="ca-panel__head">
+          <div>
+            <h3 class="ca-panel__title">用户登录趋势</h3>
+            <p class="ca-panel__desc">按角色展示近期开启登录的变化情况。</p>
+          </div>
+        </div>
+        <div ref="chart" class="ca-chart"></div>
+      </div>
+
+      <div class="ca-panel ca-panel--padded">
+        <div class="ca-panel__head">
+          <div>
+            <h3 class="ca-panel__title">能力说明</h3>
+            <p class="ca-panel__desc">围绕身份认证、密钥管理与平台治理的核心能力。</p>
+          </div>
+        </div>
+        <div class="ca-feature-grid">
+          <div
             v-for="(tech, index) in technologies"
             :key="index"
-            :xs="24" :sm="12" :md="12" :lg="6" :xl="6"
-        >
-          <el-card class="tech-card" style="height: 40vh">
-            <div class="icon-wrapper">
-              <i :class="tech.icon" class="tech-icon"></i>
+            class="ca-feature-card"
+          >
+            <span class="ca-feature-card__icon">
+              <i :class="tech.icon"></i>
+            </span>
+            <div>
+              <h4 class="ca-feature-card__title">{{ tech.title }}</h4>
             </div>
-            <div class="content">
-              <h3 class="tech-title">{{ tech.title }}</h3>
-              <div class="description">
-                <p
-                    v-for="(paragraph, pIndex) in tech.description"
-                    :key="pIndex"
-                    class="description-paragraph"
-                >
-                  {{ paragraph }}
-                </p>
-              </div>
-            </div>
-          </el-card>
-        </el-col>
-      </el-row>
+            <ul class="ca-feature-card__list">
+              <li
+                v-for="(paragraph, pIndex) in tech.description"
+                :key="pIndex"
+              >
+                {{ paragraph }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -81,35 +93,35 @@ export default {
           icon: 'el-icon-user-solid',
           description: [
             '基于深度学习算法实现高精度面部特征提取与验证',
-            '支持活体检测功能，有效防止照片/视频等伪造攻击',
-            '毫秒级响应速度，提供无感身份认证体验'
+            '支持活体检测功能，有效防止照片与视频伪造攻击',
+            '秒级响应识别结果，保障实名校验效率'
           ]
         },
         {
           title: '国密算法体系',
           icon: 'el-icon-key',
           description: [
-            '全面采用SM2/SM3/SM4国密算法标准',
-            '支持国产密码硬件设备集成与调用',
+            '全面采用 SM2 / SM3 / SM4 国密算法标准',
+            '支持与国产密码设备集成调用',
             '实现数据全生命周期加密保护'
           ]
         },
         {
-          title: '环签名技术',
+          title: '环签名认证',
           icon: 'el-icon-connection',
           description: [
-            '基于群签名的匿名身份验证方案',
-            '满足隐私保护场景下的可验证需求',
-            '支持可撤销匿名性的审计机制'
+            '基于群签名能力实现匿名身份验证',
+            '满足隐私保护场景下的可验签需求',
+            '支持可追溯匿名性的审计能力'
           ]
         },
         {
           title: '微服务架构',
           icon: 'el-icon-s-operation',
           description: [
-            '基于Spring Cloud的分布式系统架构',
-            '模块化设计支持弹性伸缩与快速迭代',
-            '容器化部署保障高可用性与故障隔离'
+            '基于 Spring Cloud 的分布式系统架构',
+            '模块化设计支持扩展与快速迭代',
+            '容器化部署提升可用性与故障隔离能力'
           ]
         }
       ]
@@ -140,14 +152,12 @@ export default {
       });
     },
     initChart() {
-      // 处理日期数据
       const dates = new Set();
       Object.values(this.data).forEach(role => {
         Object.keys(role).forEach(date => dates.add(date));
       });
       const sortedDates = Array.from(dates).sort();
 
-      // 角色中文映射
       const roleMap = {
         teacher: '教师',
         caInstitution: '机构',
@@ -155,37 +165,17 @@ export default {
         admin: '管理员'
       };
 
-      // 生成系列数据
-      // const series = Object.keys(this.data).map(role => {
-      //   const roleData = this.data[role];
-      //   return {
-      //     name: roleMap[role],
-      //     type: 'line',
-      //     stack: '总量',
-      //     smooth: true,
-      //     data: sortedDates.map(date => roleData[date] || 0)
-      //   };
-      // });
       const series = Object.keys(this.data).map(role => {
         const roleData = this.data[role];
         return {
           name: roleMap[role],
           type: 'line',
-          smooth: true,  // 保留平滑曲线
+          smooth: true,
           data: sortedDates.map(date => roleData[date] || 0)
         };
       });
 
-      // 配置选项
       const option = {
-        title: {
-          text: '用户登录统计',
-          left: 'center',
-          textStyle: {          // 新增标题样式
-            fontSize: 24,       // 字号调整
-            color: '#0a0a0a'       // 颜色设置
-          },
-        },
         tooltip: {
           trigger: 'axis',
           axisPointer: {
@@ -194,49 +184,51 @@ export default {
         },
         legend: {
           data: Object.keys(this.data).map(role => roleMap[role]),
-          // orient: 'vertical',  // 设置为竖向排列
-          right: '1%',        // 距离右侧 5%
-          top: '1%',         // 距离顶部 10%
-          itemGap: 15,        // 图例项间隔
+          top: 8,
+          left: 'center',
           textStyle: {
-            fontSize: 18
+            fontSize: 12,
+            color: '#64748b'
           },
-          itemWidth: 15,      // 图例标记宽度
-          itemHeight: 12      // 图例标记高度
+          itemWidth: 14,
+          itemHeight: 10
         },
         grid: {
           left: '3%',
-          right: '1%',  // 增加右边距给图例腾出空间
-          bottom: '12%',
+          right: '3%',
+          bottom: '8%',
+          top: '18%',
           containLabel: true
         },
-        // toolbox: {
-        //   feature: {
-        //     saveAsImage: {
-        //       title: '保存为图片'
-        //     },
-        //     dataZoom: {
-        //       yAxisIndex: 'none'
-        //     },
-        //     restore: {}
-        //   }
-        // },
         xAxis: {
           type: 'category',
           boundaryGap: false,
           data: sortedDates,
+          axisLine: {
+            lineStyle: {
+              color: '#cbd5e1'
+            }
+          },
           axisLabel: {
+            color: '#64748b',
             formatter: value => echarts.format.formatTime('MM-dd', value)
           }
         },
         yAxis: {
           type: 'value',
-          minInterval: 1
+          minInterval: 1,
+          splitLine: {
+            lineStyle: {
+              color: '#e2e8f0'
+            }
+          },
+          axisLabel: {
+            color: '#64748b'
+          }
         },
         series: series
       };
 
-      // 初始化图表
       if (!this.chart) {
         this.chart = echarts.init(this.$refs.chart);
       }
@@ -247,81 +239,4 @@ export default {
 </script>
 
 <style scoped>
-/* 统计看板样式 */
-.box {
-  width: 94%;
-  box-shadow: 0 0 10px -2px rgba(0, 0, 0, .2);
-  border-radius: 5px;
-  padding: 20px;
-  text-align: center;
-  margin: 2vh 3% 2vh 3%;
-}
-
-/* 技术展示模块样式 */
-.tech-container {
-  padding: 20px;
-  margin-top: 20px;
-  background: #f8f9fa;
-
-  .main-title {
-    color: #2c3e50;
-    text-align: center;
-    margin-bottom: 30px;
-  }
-
-  .tech-card {
-    margin-bottom: 20px;
-    border-radius: 8px;
-    transition: transform 0.3s;
-
-    &:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-
-    .icon-wrapper {
-      text-align: center;
-      padding: 15px 0;
-      background: #fff;
-
-      .tech-icon {
-        font-size: 40px;
-        color: #409EFF;
-      }
-    }
-
-    .content {
-      padding: 15px;
-
-      .tech-title {
-        color: #303133;
-        font-size: 16px;
-        margin-bottom: 12px;
-      }
-
-      .description-paragraph {
-        color: #606266;
-        font-size: 14px;
-        line-height: 1.6;
-        margin: 8px 0;
-      }
-    }
-  }
-}
-
-@media (max-width: 768px) {
-  .tech-container {
-    padding: 10px;
-
-    .tech-card {
-      .tech-title {
-        font-size: 15px;
-      }
-
-      .description-paragraph {
-        font-size: 13px;
-      }
-    }
-  }
-}
 </style>

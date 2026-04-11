@@ -3,6 +3,7 @@ package com.mc.escommon.SmUtils.smutils;
 
 import com.mc.escommon.SmUtils.jwtutils.cert.*;
 import com.mc.escommon.SmUtils.jwtutils.cert.exception.InvalidX500NameException;
+import com.mc.escommon.path.SpringCloudPathResolver;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.X500NameBuilder;
 import org.bouncycastle.asn1.x500.style.BCStyle;
@@ -21,7 +22,7 @@ public class SM2X509CertMakerUtil {
     static {
         Security.addProvider(new BouncyCastleProvider());
     }
-    private static final String filePath = System.getProperty("user.dir") + "/sm2File/";
+    private static final String filePath = SpringCloudPathResolver.resolveSm2Dir();
     public static boolean MakeCertificate(String name) {
         try {
             KeyPair subKP = SM2Util.generateKeyPair();

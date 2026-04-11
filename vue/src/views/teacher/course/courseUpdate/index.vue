@@ -1,97 +1,82 @@
 <template>
-  <div>
-    <el-row>
-      <el-col :span="8">
-        <el-row>
-          <div class="left">
-            <div class="title">
-              操作者信息
-            </div>
-            <div style="text-align: center">
-              <el-image
-                style="width: 50%; height: 30vh"
-                :src=this.user.photo
-                fit="fit">
-              </el-image>
-            </div>
-            <div class="message">姓名: {{this.user.name}}</div>
-            <div class="message">性别: {{this.user.sex}}</div>
-            <div class="message">角色: {{this.user.role}}</div>
-            <div class="message">电话: {{this.user.phone}}</div>
-            <div class="message">账号: {{this.user.account}}</div>
-            <div class="message">邮箱: {{this.user.email}}</div>
-          </div>
-        </el-row>
-      </el-col>
-      <el-col :span="16">
-        <el-row>
-          <div class="right-top">
-            <el-row>
-              <el-col :span="6">
-                <div style="margin: 15px; text-align: center;">
-                  <el-upload
-                      class="avatar-uploader"
-                      action="http://localhost:9998/files/course/upload"
-                      list-type="picture-card"
-                      :show-file-list="false"
-                      :on-success="handleAvatarSuccess">
-                    <img style="width: 100%;height: 24vh;" v-if="imageUrl" :src="imageUrl" class="course">
-                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                  </el-upload>
-                </div>
-              </el-col>
-              <el-col :span="18">
-                <div style="margin-top: 2vh">
-                  课程名称：{{form.name}}
-<!--                  <el-input-->
-<!--                      style="font-size: 16px;width: 400px"-->
-<!--                      placeholder="请输入课程名称"-->
-<!--                      v-model="form.name">-->
-<!--                  </el-input>-->
-                </div>
-<!--                <div class="w-e-menu" style="margin-top: 2vh">-->
-<!--                  日期范围:-->
-<!--                  <el-date-picker-->
-<!--                      style="margin-left: 2%"-->
-<!--                      @change="times"-->
-<!--                      v-model="value1"-->
-<!--                      type="datetimerange"-->
-<!--                      range-separator="至"-->
-<!--                      start-placeholder="开始日期"-->
-<!--                      end-placeholder="结束日期">-->
-<!--                  </el-date-picker>-->
-<!--                </div>-->
-                <div class="w-e-menu" style="margin-top: 2vh">
-                  开始时间:{{form.beginTime}}
+  <div class="teacher-page">
+    <section class="teacher-page-head">
+      <div>
+        <h2 class="teacher-page-head__title">课程修改</h2>
+        <p class="teacher-page-head__desc">保留原有课程数据与保存逻辑，只统一封面、课程信息和简介编辑区域的布局规则。</p>
+      </div>
+    </section>
 
-                </div>
-                <div class="w-e-menu" style="margin-top: 2vh">
-                  结束时间:{{form.endTime}}
-
-                </div>
-                <div style="margin-top: 2vh">
-                  课程编码：{{form.number}}
-<!--                  <el-input-->
-<!--                      style="font-size: 16px;width: 250px;margin-right: 50px"-->
-<!--                      placeholder="请点击右边按钮"-->
-<!--                      disabled-->
-<!--                      v-model="form.number">-->
-<!--                  </el-input>-->
-<!--                  <el-button type="primary" style="width: 100px;font-size: 18px" @click="random">点击生成</el-button>-->
-                </div>
-              </el-col>
-            </el-row>
-            <div style="margin: 6vh 0 2vh 0">
-              请输入课程简介
-            </div>
-            <div class="w-e-text-container" id='editor' style="width: 98%;height: 35vh"></div>
+    <div class="teacher-editor-layout">
+      <aside class="teacher-panel teacher-editor-sidebar">
+        <h3 class="teacher-panel__title">操作员信息</h3>
+        <div class="teacher-editor-meta">
+          <el-image class="teacher-editor-profile" :src="user.photo" fit="cover"></el-image>
+          <div class="teacher-editor-profile__list">
+            <div><strong>姓名：</strong>{{ user.name }}</div>
+            <div><strong>性别：</strong>{{ user.sex }}</div>
+            <div><strong>角色：</strong>{{ user.role }}</div>
+            <div><strong>电话：</strong>{{ user.phone }}</div>
+            <div><strong>账号：</strong>{{ user.account }}</div>
+            <div><strong>邮箱：</strong>{{ user.email }}</div>
           </div>
-        </el-row>
-        <div class="right-bottom">
-          <el-button type="primary" round style="width: 40%;font-size: 18px" @click="submit">提 交</el-button>
         </div>
-      </el-col>
-    </el-row>
+      </aside>
+
+      <section class="teacher-panel teacher-editor-main">
+        <div class="teacher-editor-main__stack">
+          <div class="teacher-editor-upload">
+            <div class="teacher-editor-form-item">
+              <span class="teacher-editor-form-item__label">课程封面</span>
+              <el-upload
+                class="avatar-uploader"
+                action="http://localhost:9998/files/course/upload"
+                list-type="picture-card"
+                :show-file-list="false"
+                :on-success="handleAvatarSuccess">
+                <img class="teacher-editor-upload__preview" v-if="imageUrl" :src="imageUrl" alt="">
+                <div v-else class="teacher-empty" style="min-height: 220px;">
+                  <i class="el-icon-plus"></i>
+                </div>
+              </el-upload>
+            </div>
+
+            <div class="teacher-editor-form-grid">
+              <div class="teacher-editor-form-item">
+                <span class="teacher-editor-form-item__label">课程名称</span>
+                <div>{{ form.name }}</div>
+              </div>
+              <div class="teacher-editor-form-item">
+                <span class="teacher-editor-form-item__label">课程编号</span>
+                <div>{{ form.number }}</div>
+              </div>
+              <div class="teacher-editor-form-item">
+                <span class="teacher-editor-form-item__label">开始时间</span>
+                <div>{{ form.beginTime }}</div>
+              </div>
+              <div class="teacher-editor-form-item">
+                <span class="teacher-editor-form-item__label">结束时间</span>
+                <div>{{ form.endTime }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="teacher-panel teacher-panel--padded">
+            <div class="teacher-panel__head">
+              <div>
+                <h3 class="teacher-panel__title">课程简介</h3>
+                <p class="teacher-panel__desc">保留原有富文本编辑与保存方式。</p>
+              </div>
+            </div>
+            <div class="w-e-text-container" id="editor" style="width: 100%; height: 380px"></div>
+          </div>
+
+          <div class="teacher-editor-actions">
+            <el-button type="primary" @click="submit">提交</el-button>
+          </div>
+        </div>
+      </section>
+    </div>
   </div>
 </template>
 
@@ -148,16 +133,13 @@ export default {
       this.form.endTime=this.time(this.value1[1])
     },
     time(dataTime){
-      // 假设 this.form.violationTime 是日期字符串或者时间戳
       const date = new Date(dataTime);
-// 提取年、月、日、时、分、秒信息
       const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, '0'); // 月份从 0 开始，所以要加 1
+      const month = String(date.getMonth() + 1).padStart(2, '0');
       const day = String(date.getDate()).padStart(2, '0');
       const hours = String(date.getHours()).padStart(2, '0');
       const minutes = String(date.getMinutes()).padStart(2, '0');
       const seconds = String(date.getSeconds()).padStart(2, '0');
-// 按照 YYYY-MM-DD HH:mm:ss 格式拼接字符串
       return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     },
     handleAvatarSuccess(res){
@@ -188,52 +170,27 @@ export default {
 }
 </script>
 
-
 <style scoped>
-.left{
-  margin: 2vh 3% 1vh 3%;
-  padding-left: 2%;
-  padding-top: 1vh;
-  height: 84vh;
-  width: 94%;
-  background: #dddee0;
-  border-radius: 10px
+:deep(.w-e-text-container) {
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #fff;
 }
-.right-top{
-  margin: 2vh 3% 1vh 3%;
-  padding-left: 2%;
-  padding-top: 1vh;
-  height: 72vh;
-  width: 94%;
-  background: #dddee0;
-  border-radius: 10px
+
+:deep(.w-e-toolbar) {
+  border: none !important;
+  border-bottom: 1px solid #e5e7eb !important;
+  background: #f9fafb;
 }
-.right-bottom{
-  margin: 1vh 3% 0 3%;
-  padding-left: 2%;
-  padding-top: 3vh;
-  height: 10vh;
-  width: 94%;
-  background: #dce1ec;
-  border-radius: 10px;
-  text-align: center;
+
+:deep(.w-e-text) {
+  padding: 16px;
+  line-height: 1.7;
 }
-.message{
-  font-size: 24px;
-  margin-bottom: 3vh;
-  margin-top: 3vh;
-  margin-left: 4%;
-}
-.title{
-  font-family: 'STXingkai', '华文行楷', cursive;
-  font-size: 32px;
-  padding-bottom: 3vh;
-}
-.w-e-menu {
-  z-index: 2 !important;
-}
-.w-e-text-container {
-  z-index: 1 !important;
+
+:deep(.avatar-uploader .el-upload) {
+  width: 100%;
+  border: none;
 }
 </style>
-

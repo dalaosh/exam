@@ -188,6 +188,7 @@ public class CaInstitutionServiceImpl implements CaInstitutionService {
             throw new CustomException(ResultCodeEnum.USER_PASSWORD_ERROR);
         }
         //2.做数字摘要
+        caInstitution.setAccount(caInstitution.getAccount().trim());
         String sm3 = SM3API.hashS(caInstitution.getPassword());
         //3.进行密码判断
         CaInstitution user= caInstitutionMapper.findByAccountAndSM3(caInstitution.getAccount(),sm3);
