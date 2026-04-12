@@ -155,7 +155,7 @@
           <el-row>
             <el-col :span="6">
               <div class="filter-panel">
-                <el-button style="margin-bottom: 1vh;margin-top: 1vh"  class="buttonSize" type="primary"  @click="changeMultiAll()">自动批阅选择题</el-button>
+                <el-button style="margin-bottom: 1vh;margin-top: 1vh"  class="buttonSize" type="primary"  @click="startFakeAgentMark('multi')">自动批阅选择题</el-button>
                 <el-button style="margin-bottom: 1vh" class="buttonSize" type="primary" @click="findAll('multi')">全部</el-button>
                 <el-button style="margin-bottom: 1vh" class="buttonSize" type="primary" @click="findIsMark('multi')">已批</el-button>
                 <el-button style="margin-bottom: 1vh" class="buttonSize" type="primary" @click="findNoMark('multi')">未批</el-button>
@@ -260,7 +260,7 @@
           <el-row>
             <el-col :span="6">
               <div class="filter-panel">
-                <el-button style="margin-bottom: 1vh;margin-top: 1vh"  class="buttonSize" type="primary"  @click="changeJudgeAll()">自动批阅判断题</el-button>
+                <el-button style="margin-bottom: 1vh;margin-top: 1vh"  class="buttonSize" type="primary"  @click="startFakeAgentMark('judge')">自动批阅判断题</el-button>
                 <el-button style="margin-bottom: 1vh" class="buttonSize" type="primary" @click="findAll('judge')">全部</el-button>
                 <el-button style="margin-bottom: 1vh" class="buttonSize" type="primary" @click="findIsMark('judge')">已批</el-button>
                 <el-button style="margin-bottom: 1vh" class="buttonSize" type="primary" @click="findNoMark('judge')">未批</el-button>
@@ -379,6 +379,29 @@
         </div>
       </el-tab-pane>
     </el-tabs>
+    <el-dialog
+        :visible.sync="agentVisible"
+        width="420px"
+        :show-close="false"
+        :close-on-click-modal="false"
+        :close-on-press-escape="false"
+        custom-class="agent-progress-dialog">
+      <div class="agent-progress">
+        <div class="agent-progress__eyebrow">智能批阅 Agent</div>
+        <h3 class="agent-progress__title">{{ agentTitle }}</h3>
+        <p class="agent-progress__desc">{{ agentStage }}</p>
+        <el-progress
+            :percentage="agentPercent"
+            :stroke-width="16"
+            :show-text="false"
+            color="#0f766e">
+        </el-progress>
+        <div class="agent-progress__meta">
+          <span>当前进度</span>
+          <strong>{{ agentPercent }}%</strong>
+        </div>
+      </div>
+    </el-dialog>
     <!--    侧面抽屉-->
     <el-drawer
         title="问题详情"
@@ -663,6 +686,11 @@ export default {
       questionShortAns: [],
       questionJudge: [],
       drawer:false,
+      agentVisible:false,
+      agentPercent:0,
+      agentStage:"",
+      agentTitle:"",
+      agentTimer:null,
       question:{
         examPaper:[]
       },
@@ -678,7 +706,65 @@ export default {
   mounted() {
 
   },
+  beforeDestroy() {
+    this.stopFakeAgentMark()
+  },
   methods: {
+    startFakeAgentMark(questionType) {
+      if (this.agentVisible) {
+        return
+      }
+      const configMap = {
+        multi: {
+          title: "Agent 正在批阅选择题",
+          action: () => this.changeMultiAll()
+        },
+        judge: {
+          title: "Agent 正在批阅判断题",
+          action: () => this.changeJudgeAll()
+        }
+      }
+      const config = configMap[questionType]
+      if (!config) {
+        return
+      }
+      const stages = [
+        "正在解析题目结构与标准答案...",
+        "正在抽取待批阅题目并建立任务队列...",
+        "正在模拟智能体分批阅卷...",
+        "正在整理批阅结果并准备回写...",
+        "即将完成，正在同步最终状态..."
+      ]
+      this.stopFakeAgentMark()
+      this.agentVisible = true
+      this.agentPercent = 0
+      this.agentTitle = config.title
+      this.agentStage = stages[0]
+      let stageIndex = 0
+      this.agentTimer = setInterval(() => {
+        const step = Math.floor(Math.random() * 8) + 6
+        this.agentPercent = Math.min(this.agentPercent + step, 100)
+        const nextStage = Math.min(Math.floor(this.agentPercent / 22), stages.length - 1)
+        if (nextStage !== stageIndex) {
+          stageIndex = nextStage
+          this.agentStage = stages[stageIndex]
+        }
+        if (this.agentPercent >= 100) {
+          this.stopFakeAgentMark()
+          this.agentStage = "智能体批阅完成，正在刷新结果..."
+          setTimeout(() => {
+            this.agentVisible = false
+            config.action()
+          }, 500)
+        }
+      }, 260)
+    },
+    stopFakeAgentMark() {
+      if (this.agentTimer) {
+        clearInterval(this.agentTimer)
+        this.agentTimer = null
+      }
+    },
     findExamManager(){
       request.get("exam/examManage/selectById/"+this.receivedData.id).then(res=>{
         if (res.code === '200') {
@@ -1532,6 +1618,66 @@ export default {
 
 .main :deep(.demo-drawer .el-drawer__body) {
   padding: 0;
+}
+
+.main :deep(.agent-progress-dialog) {
+  border-radius: 22px;
+  overflow: hidden;
+}
+
+.main :deep(.agent-progress-dialog .el-dialog__header) {
+  display: none;
+}
+
+.main :deep(.agent-progress-dialog .el-dialog__body) {
+  padding: 0;
+}
+
+.agent-progress {
+  padding: 26px 24px 22px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(246, 250, 252, 0.96) 100%),
+    radial-gradient(circle at top right, rgba(45, 212, 191, 0.18), transparent 38%);
+}
+
+.agent-progress__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: rgba(15, 118, 110, 0.1);
+  color: #0f766e;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.agent-progress__title {
+  margin: 16px 0 8px;
+  font-size: 24px;
+  line-height: 1.35;
+  color: #0f172a;
+}
+
+.agent-progress__desc {
+  margin: 0 0 18px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #475569;
+}
+
+.agent-progress__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+  color: #475569;
+  font-size: 14px;
+}
+
+.agent-progress__meta strong {
+  color: #0f766e;
+  font-size: 18px;
 }
 
 .main :deep(.w-e-text) {

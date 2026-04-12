@@ -1,44 +1,43 @@
 <template>
-  <div class="teacher-page">
+  <div class="teacher-page teacher-question-list-page">
     <section class="teacher-page-head">
       <div>
         <h2 class="teacher-page-head__title">学生管理</h2>
-        <p class="teacher-page-head__desc">统一查看学生账号、联系方式和密钥摘要，保持查询、选择和导出行为不变。</p>
+        <p class="teacher-page-head__desc">
+          统一查看学生账号、联系方式和密钥摘要，保持查询、选择和导出行为不变。
+        </p>
       </div>
       <div class="teacher-page-head__meta">
         <el-tag class="teacher-tag" type="info">共 {{ total }} 条记录</el-tag>
       </div>
     </section>
 
-    <section class="teacher-panel teacher-panel--toolbar">
-      <div class="teacher-toolbar">
-        <el-form :inline="true" :model="params" class="teacher-toolbar__form">
-          <el-form-item label="账号">
-            <el-input v-model="params.account" clearable placeholder="请输入账号"></el-input>
-          </el-form-item>
-          <el-form-item label="姓名">
-            <el-input v-model="params.name" clearable placeholder="请输入姓名"></el-input>
-          </el-form-item>
-          <el-form-item label="性别">
-            <el-input v-model="params.sex" clearable placeholder="请输入性别"></el-input>
-          </el-form-item>
-          <el-form-item label="电话">
-            <el-input v-model="params.phone" clearable placeholder="请输入电话"></el-input>
-          </el-form-item>
-          <el-form-item label="电子邮箱">
-            <el-input v-model="params.email" clearable placeholder="请输入电子邮箱"></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="findBySearch">查询</el-button>
-          </el-form-item>
-        </el-form>
+    <section class="teacher-panel teacher-question-list-page__toolbar">
+      <el-form :inline="true" :model="params" class="teacher-toolbar__form teacher-question-list-page__filters">
+        <el-form-item label="账号">
+          <el-input v-model="params.account" clearable placeholder="请输入账号"></el-input>
+        </el-form-item>
+        <el-form-item label="姓名">
+          <el-input v-model="params.name" clearable placeholder="请输入姓名"></el-input>
+        </el-form-item>
+        <el-form-item label="性别">
+          <el-input v-model="params.sex" clearable placeholder="请输入性别"></el-input>
+        </el-form-item>
+        <el-form-item label="电话">
+          <el-input v-model="params.phone" clearable placeholder="请输入电话"></el-input>
+        </el-form-item>
+        <el-form-item label="电子邮箱">
+          <el-input v-model="params.email" clearable placeholder="请输入电子邮箱"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="findBySearch">查询</el-button>
+        </el-form-item>
+      </el-form>
 
-        <div class="teacher-toolbar__actions">
-          <el-button type="primary" plain @click="selectAll">全选</el-button>
-          <el-button type="warning" plain @click="DeselectAll">清空选择</el-button>
-          <span class="teacher-toolbar__spacer"></span>
-          <el-button type="success" plain @click="exp()">批量导出</el-button>
-        </div>
+      <div class="teacher-question-list-page__actions">
+        <el-button type="primary" plain @click="selectAll">全选</el-button>
+        <el-button type="warning" plain @click="DeselectAll">清空选择</el-button>
+        <el-button type="success" plain @click="exp()">批量导出</el-button>
       </div>
     </section>
 
@@ -60,8 +59,8 @@
         stripe
         style="width: 100%"
         height="560"
-        @selection-change="handleSelectionChange"
         :row-key="getRowKeys"
+        @selection-change="handleSelectionChange"
       >
         <el-table-column ref="table" type="selection" width="55" align="center" :reserve-selection="true" fixed />
         <el-table-column prop="id" label="学生 ID" width="110" align="center" fixed />
@@ -83,33 +82,33 @@
         <el-table-column label="密码" width="250" align="center">
           <template slot-scope="scope">
             <el-input
+              v-model="scope.row.password"
               class="teacher-table__textarea"
               type="textarea"
               :readonly="true"
               :autosize="{ minRows: 2, maxRows: 2 }"
-              v-model="scope.row.password"
             />
           </template>
         </el-table-column>
         <el-table-column label="密码摘要" width="250" align="center">
           <template slot-scope="scope">
             <el-input
+              v-model="scope.row.keySm3"
               class="teacher-table__textarea"
               type="textarea"
               :readonly="true"
               :autosize="{ minRows: 2, maxRows: 2 }"
-              v-model="scope.row.keySm3"
             />
           </template>
         </el-table-column>
         <el-table-column label="考试公钥" width="250" align="center">
           <template slot-scope="scope">
             <el-input
+              v-model="scope.row.publicKey"
               class="teacher-table__textarea"
               type="textarea"
               :readonly="true"
               :autosize="{ minRows: 2, maxRows: 2 }"
-              v-model="scope.row.publicKey"
             />
           </template>
         </el-table-column>
@@ -117,26 +116,26 @@
 
       <div class="teacher-pagination">
         <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
           :current-page="pageNum"
           :page-sizes="[5, 10, 15, 20]"
           :page-size="pageSize"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
         />
       </div>
     </section>
 
     <el-dialog title="请填写信息" :visible.sync="dialogFormVisible" width="560px" custom-class="teacher-dialog">
-      <el-form :model="form" :rules="rules" ref="formRef" class="teacher-dialog__form" label-width="88px">
+      <el-form ref="formRef" :model="form" :rules="rules" class="teacher-dialog__form" label-width="88px">
         <el-form-item label="姓名" prop="name">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
         <el-form-item label="性别" prop="sex">
           <el-input v-model="form.sex" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="电子邮件" prop="email">
+        <el-form-item label="电子邮箱" prop="email">
           <el-input v-model="form.email" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="电话" prop="phone">
@@ -199,28 +198,32 @@ export default {
         pageNum: this.pageNum,
         pageSize: this.pageSize
       };
-      request.get("/user/student/selectPage", {
-        params: this.params
-      }).then((res) => {
-        if (res.code === "200") {
-          this.total = res.data.total;
-          this.tableData = res.data.list;
-        } else {
-          this.$message.error(res.msg);
-        }
-      });
+      request
+        .get("/user/student/selectPage", {
+          params: this.params
+        })
+        .then((res) => {
+          if (res.code === "200") {
+            this.total = res.data.total;
+            this.tableData = res.data.list;
+          } else {
+            this.$message.error(res.msg);
+          }
+        });
     },
     findBySearch() {
-      request.get("/user/student/selectPage", {
-        params: this.params
-      }).then((res) => {
-        if (res.code === "200") {
-          this.total = res.data.total;
-          this.tableData = res.data.list;
-        } else {
-          this.$message.error(res.msg);
-        }
-      });
+      request
+        .get("/user/student/selectPage", {
+          params: this.params
+        })
+        .then((res) => {
+          if (res.code === "200") {
+            this.total = res.data.total;
+            this.tableData = res.data.list;
+          } else {
+            this.$message.error(res.msg);
+          }
+        });
     },
     selectAll() {
       this.$refs.table.toggleAllSelection();
@@ -231,7 +234,8 @@ export default {
     },
     submit() {
       this.form.username = this.form.id ? "" : this.user.name;
-      this.form.photo = "https://tse2-mm.cn.bing.net/th/id/OIP-C.-UuSAtM_GHACvgnxzzvj7AHaHa?w=193&h=193&c=7&r=0&o=5&dpr=1.5&pid=1.7";
+      this.form.photo =
+        "https://tse2-mm.cn.bing.net/th/id/OIP-C.-UuSAtM_GHACvgnxzzvj7AHaHa?w=193&h=193&c=7&r=0&o=5&dpr=1.5&pid=1.7";
       request({
         url: this.form.id ? "/user/student/update" : "/user/student/add",
         method: this.form.id ? "PUT" : "POST",
@@ -256,7 +260,7 @@ export default {
     },
     exp() {
       location.href = "http://localhost:9998/user/student/export";
-    },
+    }
   }
 };
 </script>

@@ -252,7 +252,9 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  padding: 4px 18px 4px 0;
+  width: 100%;
+  padding: 2px 0;
+  box-sizing: border-box;
 }
 
 .course-option__name,
@@ -273,13 +275,21 @@ export default {
 
 :deep(.course-option-dropdown .el-select-dropdown__item) {
   height: auto;
-  min-height: 60px;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  line-height: 1.4;
+  min-height: 74px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  line-height: 1.6;
   white-space: normal;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  box-sizing: border-box;
+}
+
+:deep(.course-option-dropdown .el-select-dropdown__item > span) {
+  display: block;
+  width: 100%;
+  white-space: normal;
+  line-height: inherit;
 }
 
 :deep(.course-option-dropdown .el-select-dropdown__wrap) {
