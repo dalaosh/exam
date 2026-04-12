@@ -1,416 +1,204 @@
-﻿<template>
-  <!-- 原有的模板代码保持不变 -->
-  <div>
+<template>
+  <div class="grading-page">
     <el-row v-if="visit===1">
       <el-col :span="8">
         <div class="mains">
-          <div>
-            <div class="title">
-              选择题
-              <el-button type="text" @click="changeMultiAll()" plain style="width: 60%;font-size: 20px;text-align: center">自动阅卷选择题</el-button>
+          <div class="question-group">
+            <div class="title title--section">
+              <span>选择题</span>
+              <el-button type="text" @click="changeMultiAll()" plain class="action-link action-link--wide">自动阅卷选择题</el-button>
             </div>
             <div>
               <el-card shadow="hover" class="cards" v-for="(data, index) in questionMulti" :key="index">
-                <el-row style="text-align: right;color: #bd0a4f">
+                <el-row class="card-head">
                   <el-col :span="12">
-                    <el-button type="text" @click="changeMulti(data,index)" plain style="width: 70%;font-size: 20px">阅卷</el-button>
+                    <el-button type="text" @click="changeMulti(data,index)" plain class="action-link">阅卷</el-button>
                   </el-col>
-                  <el-col style="font-size: 20px" :span="12">
+                  <el-col :span="12" class="score-badge">
                     {{data.questionMulti.score}}分
                   </el-col>
                 </el-row>
-                <el-row>
-                  <el-col :span="2">
-                    {{index+1}}、
-                  </el-col>
-                  <el-col :span="22">
-                    <div v-html="data.questionMulti.question" class="w-e-text divs"></div>
-                  </el-col>
-                  <el-col :span="2" >
-                    A、
-                  </el-col>
-                  <el-col :span="22">
-                    <div v-html="data.questionMulti.answerA" class="w-e-text divs"></div>
-                  </el-col>
-                  <el-col :span="2" >
-                    B、
-                  </el-col>
-                  <el-col :span="22">
-                    <div v-html="data.questionMulti.answerB" class="w-e-text divs"></div>
-                  </el-col>
-                  <el-col :span="2" >
-                    C、
-                  </el-col>
-                  <el-col :span="22">
-                    <div v-html="data.questionMulti.answerC" class="w-e-text divs"></div>
-                  </el-col>
-                  <el-col :span="2" >
-                    D、
-                  </el-col>
-                  <el-col :span="22">
-                    <div v-html="data.questionMulti.answerD" class="w-e-text divs"></div>
-                  </el-col>
+                <el-row class="card-body">
+                  <el-col :span="2" class="serial-no">{{index+1}}、</el-col>
+                  <el-col :span="22"><div v-html="data.questionMulti.question" class="w-e-text divs card-rich"></div></el-col>
+                  <el-col :span="2" class="serial-no">A、</el-col>
+                  <el-col :span="22"><div v-html="data.questionMulti.answerA" class="w-e-text divs card-rich"></div></el-col>
+                  <el-col :span="2" class="serial-no">B、</el-col>
+                  <el-col :span="22"><div v-html="data.questionMulti.answerB" class="w-e-text divs card-rich"></div></el-col>
+                  <el-col :span="2" class="serial-no">C、</el-col>
+                  <el-col :span="22"><div v-html="data.questionMulti.answerC" class="w-e-text divs card-rich"></div></el-col>
+                  <el-col :span="2" class="serial-no">D、</el-col>
+                  <el-col :span="22"><div v-html="data.questionMulti.answerD" class="w-e-text divs card-rich"></div></el-col>
                 </el-row>
               </el-card>
             </div>
           </div>
-          <div>
-            <div class="title">
-              判断题
-              <el-button type="text" @click="changeJudgeAll()" plain style="width: 60%;font-size: 20px;text-align: center">自动阅卷判断题</el-button>
+
+          <div class="question-group">
+            <div class="title title--section">
+              <span>判断题</span>
+              <el-button type="text" @click="changeJudgeAll()" plain class="action-link action-link--wide">自动阅卷判断题</el-button>
             </div>
             <div class="divs">
-              <el-card shadow="hover" class="cards"  v-for="(data, index) in questionJudge" :key="index" >
-                <el-row style="text-align: right;color: #bd0a4f">
-                  <el-col :span="12">
-                    <el-button type="text" @click="changeJudge(data,index)" plain style="width: 70%;font-size: 20px">阅卷</el-button>
-                  </el-col>
-                  <el-col style="font-size: 20px" :span="12">
-                    {{data.questionJudge.score}}分
-                  </el-col>
+              <el-card shadow="hover" class="cards" v-for="(data, index) in questionJudge" :key="index">
+                <el-row class="card-head">
+                  <el-col :span="12"><el-button type="text" @click="changeJudge(data,index)" plain class="action-link">阅卷</el-button></el-col>
+                  <el-col :span="12" class="score-badge">{{data.questionJudge.score}}分</el-col>
                 </el-row>
-                <el-row>
-                  <el-col :span="2" >
-                    {{index+1}}、
-                  </el-col>
-                  <el-col :span="22">
-                    <div v-html="data.questionJudge.question" class="w-e-text divs"></div>
-                  </el-col>
+                <el-row class="card-body">
+                  <el-col :span="2" class="serial-no">{{index+1}}、</el-col>
+                  <el-col :span="22"><div v-html="data.questionJudge.question" class="w-e-text divs card-rich"></div></el-col>
                 </el-row>
               </el-card>
             </div>
           </div>
-          <div>
-            <div class="title">
-              填空题
-            </div>
+
+          <div class="question-group">
+            <div class="title title--section"><span>填空题</span></div>
             <div class="divs">
-              <el-card shadow="hover" class="cards"  v-for="(data, index) in questionFill" :key="index" >
-                <el-row style="text-align: right;color: #bd0a4f">
-                  <el-col :span="12">
-                    <el-button type="text" @click="changeFill(data,index)" plain style="width: 70%;font-size: 20px">阅卷</el-button>
-                  </el-col>
-                  <el-col style="font-size: 20px" :span="12">
-                    {{data.questionFill.score}}分
-                  </el-col>
+              <el-card shadow="hover" class="cards" v-for="(data, index) in questionFill" :key="index">
+                <el-row class="card-head">
+                  <el-col :span="12"><el-button type="text" @click="changeFill(data,index)" plain class="action-link">阅卷</el-button></el-col>
+                  <el-col :span="12" class="score-badge">{{data.questionFill.score}}分</el-col>
                 </el-row>
-                <el-row>
-                  <el-col :span="2" >
-                    {{index+1}}、
-                  </el-col>
-                  <el-col :span="22">
-                    <div v-html="data.questionFill.question" class="w-e-text divs"></div>
-                  </el-col>
+                <el-row class="card-body">
+                  <el-col :span="2" class="serial-no">{{index+1}}、</el-col>
+                  <el-col :span="22"><div v-html="data.questionFill.question" class="w-e-text divs card-rich"></div></el-col>
                 </el-row>
               </el-card>
             </div>
           </div>
-          <div>
-            <div class="title">
-              简答题
-            </div>
+
+          <div class="question-group">
+            <div class="title title--section"><span>简答题</span></div>
             <div class="divs">
-              <el-card shadow="hover" class="cards"  v-for="(data, index) in questionShortAns" :key="index" >
-                <el-row style="text-align: right;color: #bd0a4f">
-                  <el-col :span="12">
-                    <el-button type="text" @click="changeShortAns(data,index)" plain style="width: 70%;font-size: 20px">阅卷</el-button>
-                  </el-col>
-                  <el-col style="font-size: 20px" :span="12">
-                    {{data.questionShortAns.score}}分
-                  </el-col>
+              <el-card shadow="hover" class="cards" v-for="(data, index) in questionShortAns" :key="index">
+                <el-row class="card-head">
+                  <el-col :span="12"><el-button type="text" @click="changeShortAns(data,index)" plain class="action-link">阅卷</el-button></el-col>
+                  <el-col :span="12" class="score-badge">{{data.questionShortAns.score}}分</el-col>
                 </el-row>
-                <el-row>
-                  <el-col :span="2" >
-                    {{index+1}}、
-                  </el-col>
-                  <el-col :span="22">
-                    <div v-html="data.questionShortAns.question" class="w-e-text divs"></div>
-                  </el-col>
+                <el-row class="card-body">
+                  <el-col :span="2" class="serial-no">{{index+1}}、</el-col>
+                  <el-col :span="22"><div v-html="data.questionShortAns.question" class="w-e-text divs card-rich"></div></el-col>
                 </el-row>
               </el-card>
             </div>
           </div>
-          <div>
-            <div class="title">
-              代码题
-            </div>
+
+          <div class="question-group">
+            <div class="title title--section"><span>代码题</span></div>
             <div class="divs">
-              <el-card shadow="hover" class="cards"  v-for="(data, index) in questionCode" :key="index" >
-                <el-row style="text-align: right;color: #bd0a4f">
-                  <el-col :span="12">
-                    <el-button type="text" @click="changeCode(data,index)" plain style="width: 70%;font-size: 20px">阅卷</el-button>
-                  </el-col>
-                  <el-col style="font-size: 20px" :span="12">
-                    {{data.questionCode.score}}分
-                  </el-col>
+              <el-card shadow="hover" class="cards" v-for="(data, index) in questionCode" :key="index">
+                <el-row class="card-head">
+                  <el-col :span="12"><el-button type="text" @click="changeCode(data,index)" plain class="action-link">阅卷</el-button></el-col>
+                  <el-col :span="12" class="score-badge">{{data.questionCode.score}}分</el-col>
                 </el-row>
-                <el-row>
-                  <el-col :span="2" >
-                    {{index+1}}、
-                  </el-col>
-                  <el-col :span="22">
-                    <div v-html="data.questionCode.question" class="w-e-text divs"></div>
-                  </el-col>
+                <el-row class="card-body">
+                  <el-col :span="2" class="serial-no">{{index+1}}、</el-col>
+                  <el-col :span="22"><div v-html="data.questionCode.question" class="w-e-text divs card-rich"></div></el-col>
                 </el-row>
               </el-card>
             </div>
           </div>
         </div>
       </el-col>
+
       <el-col :span="16">
-        <div v-if="questionType!==0" style="height: 6vh;padding-top: 2vh;text-align: center;font-size: 26px">
-          未批阅数量：{{this.markNum}}
+        <div v-if="questionType!==0" class="status-banner status-banner--alert">
+          未批阅数量：<span class="status-banner__value">{{this.markNum}}</span>
         </div>
-        <div v-if="questionType===0" style="height: 6vh;padding-top: 2vh;text-align: center;font-size: 26px">
+        <div v-if="questionType===0" class="status-banner">
           认真是一种态度，负责是一种责任
         </div>
+
         <div v-if="questionType===1" class="questions">
           <div class="questionSignal" v-for="(data, index) in questionListMulti" :key="index">
-            <el-row>
-              <div class="title">选择题 第{{questionTypeId+1}}题 第{{index+1}}位同学</div>
+            <el-row><div class="title title--signal">选择题 第{{questionTypeId+1}}题 第{{index+1}}位同学</div></el-row>
+            <el-row class="answer-row">
+              <el-col :span="12" class="answer-col"><div class="answer-label">标准答案</div><div v-html="data.questionMulti.rightAnswer" class="w-e-text answer-box"></div></el-col>
+              <el-col :span="12" class="answer-col"><div class="answer-label">学生答案</div><div v-html="data.answer" class="w-e-text answer-box"></div></el-col>
             </el-row>
-            <el-row style="margin-top: 2vh;margin-bottom: 2vh;font-size: 26px;text-align: center;">
-              <el-col :span="12">
-                标准答案：
-                <div style="width: 90%;background: #dde3f3;margin-left: 5%" v-html="data.questionMulti.rightAnswer" class="w-e-text"></div>
-              </el-col>
-              <el-col :span="12">
-                学生答案：
-                <div style="width: 90%;background: #dde3f3;margin-left: 5%" v-html="data.answer" class="w-e-text"></div>
-              </el-col>
-            </el-row>
-            <el-row style="margin: 2vh 2% 2vh 2%;background: #fcfbef;font-size: 26px">
-              答案详解：
-              <div style="width: 90%;margin-left: 5%" v-html="data.questionMulti.analysis" class="w-e-text"></div>
-            </el-row>
-            <el-row>
-              <el-col :span="18">
-                <template>
-                  <div style="text-align: center">
-                    <!-- 动态生成单选框 -->
-                    <el-radio
-                        v-for="i in data.questionMulti.score + 1"
-                        :key="i - 1"
-                        v-model="data.markExams"
-                        style="text-align: center; margin-top: 2vh; width: 20%; "
-                        :label="(i - 1).toString()"
-                    >
-                      <a style="font-size: 32px;">{{ i - 1 }} 分</a>
-                    </el-radio>
-                  </div>
-                </template>
-              </el-col>
-              <el-col :span="6">
-                <el-button type="text" @click="submitMulti(data,index)" plain style="width: 70%;font-size: 20px">提交</el-button>
-              </el-col>
+            <el-row class="analysis-panel"><div class="analysis-label">答案详解</div><div v-html="data.questionMulti.analysis" class="w-e-text analysis-content"></div></el-row>
+            <el-row class="grading-footer">
+              <el-col :span="18" class="grading-footer__score"><div class="score-options"><el-radio v-for="i in data.questionMulti.score + 1" :key="i - 1" v-model="data.markExams" class="score-radio" :label="(i - 1).toString()"><span class="score-radio__text">{{ i - 1 }} 分</span></el-radio></div></el-col>
+              <el-col :span="6" class="grading-footer__submit"><el-button type="text" @click="submitMulti(data,index)" plain class="submit-link">提交</el-button></el-col>
             </el-row>
           </div>
         </div>
+
         <div v-if="questionType===2" class="questions">
           <div class="questionSignal" v-for="(data, index) in questionListJudge" :key="index">
-            <el-row>
-              <div class="title">判断题 第{{questionTypeId+1}}题 第{{index+1}}位同学</div>
+            <el-row><div class="title title--signal">判断题 第{{questionTypeId+1}}题 第{{index+1}}位同学</div></el-row>
+            <el-row class="answer-row">
+              <el-col :span="12" class="answer-col"><div class="answer-label">标准答案</div><div v-html="data.questionJudge.answer" class="w-e-text answer-box"></div></el-col>
+              <el-col :span="12" class="answer-col"><div class="answer-label">学生答案</div><div v-html="data.answer" class="w-e-text answer-box"></div></el-col>
             </el-row>
-            <el-row style="margin-top: 2vh;margin-bottom: 2vh;font-size: 26px;text-align: center;">
-              <el-col :span="12">
-                标准答案：
-                <div style="width: 90%;background: #dde3f3;margin-left: 5%" v-html="data.questionJudge.answer" class="w-e-text"></div>
-              </el-col>
-              <el-col :span="12">
-                学生答案：
-                <div style="width: 90%;background: #dde3f3;margin-left: 5%" v-html="data.answer" class="w-e-text"></div>
-              </el-col>
-            </el-row>
-            <el-row style="margin: 2vh 2% 2vh 2%;background: #fcfbef;font-size: 26px">
-              答案详解：
-              <div style="width: 90%;margin-left: 5%" v-html="data.questionJudge.analysis" class="w-e-text"></div>
-            </el-row>
-            <el-row>
-              <el-col :span="18">
-                <template>
-                  <div style="text-align: center">
-                    <!-- 动态生成单选框 -->
-                    <el-radio
-                        v-for="i in data.questionJudge.score + 1"
-                        :key="i - 1"
-                        v-model="data.markExams"
-                        style="text-align: center; margin-top: 2vh; width: 20%; "
-                        :label="(i - 1).toString()"
-                    >
-                      <a style="font-size: 32px;">{{ i - 1 }} 分</a>
-                    </el-radio>
-                  </div>
-                </template>
-              </el-col>
-              <el-col :span="6">
-                <el-button type="text" @click="submitJudge(data,index)" plain style="width: 70%;font-size: 20px">提交</el-button>
-              </el-col>
+            <el-row class="analysis-panel"><div class="analysis-label">答案详解</div><div v-html="data.questionJudge.analysis" class="w-e-text analysis-content"></div></el-row>
+            <el-row class="grading-footer">
+              <el-col :span="18" class="grading-footer__score"><div class="score-options"><el-radio v-for="i in data.questionJudge.score + 1" :key="i - 1" v-model="data.markExams" class="score-radio" :label="(i - 1).toString()"><span class="score-radio__text">{{ i - 1 }} 分</span></el-radio></div></el-col>
+              <el-col :span="6" class="grading-footer__submit"><el-button type="text" @click="submitJudge(data,index)" plain class="submit-link">提交</el-button></el-col>
             </el-row>
           </div>
         </div>
+
         <div v-if="questionType===3" class="questions">
           <div class="questionSignal" v-for="(data, index) in questionListFill" :key="index">
-            <el-row>
-              <div class="title">填空题 第{{questionTypeId+1}}题 第{{index+1}}位同学</div>
+            <el-row><div class="title title--signal">填空题 第{{questionTypeId+1}}题 第{{index+1}}位同学</div></el-row>
+            <el-row class="answer-row">
+              <el-col :span="12" class="answer-col"><div class="answer-label">标准答案</div><div v-html="data.questionFill.answer" class="w-e-text answer-box"></div></el-col>
+              <el-col :span="12" class="answer-col"><div class="answer-label">学生答案</div><div v-html="data.answer" class="w-e-text answer-box"></div></el-col>
             </el-row>
-            <el-row style="margin-top: 2vh;margin-bottom: 2vh;font-size: 26px;text-align: center;">
-              <el-col :span="12">
-                标准答案：
-                <div style="width: 90%;background: #dde3f3;margin-left: 5%" v-html="data.questionFill.answer" class="w-e-text"></div>
-              </el-col>
-              <el-col :span="12">
-                学生答案：
-                <div style="width: 90%;background: #dde3f3;margin-left: 5%" v-html="data.answer" class="w-e-text"></div>
-              </el-col>
-            </el-row>
-            <el-row style="margin: 2vh 2% 2vh 2%;background: #fcfbef;font-size: 26px">
-              答案详解：
-              <div style="width: 90%;margin-left: 5%" v-html="data.questionFill.analysis" class="w-e-text"></div>
-            </el-row>
-            <el-row>
-              <el-col :span="18">
-                <template>
-                  <div style="text-align: center">
-                    <!-- 动态生成单选框 -->
-                    <el-radio
-                        v-for="i in data.questionFill.score + 1"
-                        :key="i - 1"
-                        v-model="data.markExams"
-                        style="text-align: center; margin-top: 2vh; width: 20%; "
-                        :label="(i - 1).toString()"
-                    >
-                      <a style="font-size: 32px;">{{ i - 1 }} 分</a>
-                    </el-radio>
-                  </div>
-                </template>
-              </el-col>
-              <el-col :span="6">
-                <el-button type="text" @click="submitFill(data,index)" plain style="width: 70%;font-size: 20px">提交</el-button>
-              </el-col>
+            <el-row class="analysis-panel"><div class="analysis-label">答案详解</div><div v-html="data.questionFill.analysis" class="w-e-text analysis-content"></div></el-row>
+            <el-row class="grading-footer">
+              <el-col :span="18" class="grading-footer__score"><div class="score-options"><el-radio v-for="i in data.questionFill.score + 1" :key="i - 1" v-model="data.markExams" class="score-radio" :label="(i - 1).toString()"><span class="score-radio__text">{{ i - 1 }} 分</span></el-radio></div></el-col>
+              <el-col :span="6" class="grading-footer__submit"><el-button type="text" @click="submitFill(data,index)" plain class="submit-link">提交</el-button></el-col>
             </el-row>
           </div>
         </div>
+
         <div v-if="questionType===4" class="questions">
           <div class="questionSignal" v-for="(data, index) in questionListShortAns" :key="index">
-            <el-row>
-              <div class="title">填空题 第{{questionTypeId+1}}题 第{{index+1}}位同学</div>
+            <el-row><div class="title title--signal">简答题 第{{questionTypeId+1}}题 第{{index+1}}位同学</div></el-row>
+            <el-row class="answer-row">
+              <el-col :span="12" class="answer-col"><div class="answer-label">标准答案</div><div v-html="data.questionShortAns.answer" class="w-e-text answer-box"></div></el-col>
+              <el-col :span="12" class="answer-col"><div class="answer-label">学生答案</div><div v-html="data.answer" class="w-e-text answer-box"></div></el-col>
             </el-row>
-            <el-row style="margin-top: 2vh;margin-bottom: 2vh;font-size: 26px;text-align: center;">
-              <el-col :span="12">
-                标准答案：
-                <div style="width: 90%;background: #dde3f3;margin-left: 5%" v-html="data.questionShortAns.answer" class="w-e-text"></div>
-              </el-col>
-              <el-col :span="12">
-                学生答案：
-                <div style="width: 90%;background: #dde3f3;margin-left: 5%" v-html="data.answer" class="w-e-text"></div>
-              </el-col>
-            </el-row>
-            <el-row style="margin: 2vh 2% 2vh 2%;background: #fcfbef;font-size: 26px">
-              答案详解：
-              <div style="width: 90%;margin-left: 5%" v-html="data.questionShortAns.analysis" class="w-e-text"></div>
-            </el-row>
-            <el-row>
-              <el-col :span="18">
-                <template>
-                  <div style="text-align: center">
-                    <!-- 动态生成单选框 -->
-                    <el-radio
-                        v-for="i in data.questionShortAns.score + 1"
-                        :key="i - 1"
-                        v-model="data.markExams"
-                        style="text-align: center; margin-top: 2vh; width: 20%; "
-                        :label="(i - 1).toString()"
-                    >
-                      <a style="font-size: 32px;">{{ i - 1 }} 分</a>
-                    </el-radio>
-                  </div>
-                </template>
-              </el-col>
-              <el-col :span="6">
-                <el-button type="text" @click="submitShortAns(data,index)" plain style="width: 70%;font-size: 20px">提交</el-button>
-              </el-col>
+            <el-row class="analysis-panel"><div class="analysis-label">答案详解</div><div v-html="data.questionShortAns.analysis" class="w-e-text analysis-content"></div></el-row>
+            <el-row class="grading-footer">
+              <el-col :span="18" class="grading-footer__score"><div class="score-options"><el-radio v-for="i in data.questionShortAns.score + 1" :key="i - 1" v-model="data.markExams" class="score-radio" :label="(i - 1).toString()"><span class="score-radio__text">{{ i - 1 }} 分</span></el-radio></div></el-col>
+              <el-col :span="6" class="grading-footer__submit"><el-button type="text" @click="submitShortAns(data,index)" plain class="submit-link">提交</el-button></el-col>
             </el-row>
           </div>
         </div>
+
         <div v-if="questionType===5" class="questions">
           <div class="questionSignal" v-for="(data, index) in questionListCode" :key="index">
-            <el-row>
-              <div class="title">填空题 第{{questionTypeId+1}}题 第{{index+1}}位同学</div>
+            <el-row><div class="title title--signal">代码题 第{{questionTypeId+1}}题 第{{index+1}}位同学</div></el-row>
+            <el-row class="answer-row answer-row--code">
+              <el-col :span="12" class="answer-col"><div class="answer-label">标准答案</div><monaco-editor v-model="data.questionCode.answer" language="c" :options="{ readOnly: true, fontSize: '18px' }" class="code-editor"></monaco-editor></el-col>
+              <el-col :span="12" class="answer-col"><div class="answer-label">学生答案</div><monaco-editor v-model="data.answer" language="c" :options="{ readOnly: true, fontSize: '18px' }" class="code-editor"></monaco-editor></el-col>
             </el-row>
-            <el-row style="margin-top: 2vh;margin-bottom: 2vh;font-size: 26px;text-align: center;">
-              <el-col :span="12">
-                标准答案：
-                <monaco-editor
-                    v-model="data.questionCode.answer"
-                    language="c"
-                    :options="{ readOnly: true, fontSize: '18px' }"
-                    style="margin-top:2vh;height: 30vh;text-align: left"
-                ></monaco-editor>
-              </el-col>
-              <el-col :span="12">
-                学生答案：
-                <monaco-editor
-                    v-model="data.answer"
-                    language="c"
-                    :options="{ readOnly: true, fontSize: '18px' }"
-                    style="margin-top:2vh;height: 30vh;text-align: left"
-                ></monaco-editor>
-              </el-col>
-            </el-row>
-            <el-row style="margin: 2vh 2% 2vh 2%;background: #fcfbef;font-size: 26px">
-              答案详解：
-              <div style="width: 90%;margin-left: 5%" v-html="data.questionCode.analysis" class="w-e-text"></div>
-            </el-row>
-            <el-row>
-              <el-col :span="18">
-                <template>
-                  <div style="text-align: center">
-                    <!-- 动态生成单选框 -->
-                    <el-radio
-                        v-for="i in data.questionCode.score + 1"
-                        :key="i - 1"
-                        v-model="data.markExams"
-                        style="text-align: center; margin-top: 2vh; width: 20%; "
-                        :label="(i - 1).toString()"
-                    >
-                      <a style="font-size: 32px;">{{ i - 1 }} 分</a>
-                    </el-radio>
-                  </div>
-                </template>
-              </el-col>
-              <el-col :span="6">
-                <el-button type="text" @click="submitCode(data,index)" plain style="width: 70%;font-size: 20px">提交</el-button>
-              </el-col>
+            <el-row class="analysis-panel"><div class="analysis-label">答案详解</div><div v-html="data.questionCode.analysis" class="w-e-text analysis-content"></div></el-row>
+            <el-row class="grading-footer">
+              <el-col :span="18" class="grading-footer__score"><div class="score-options"><el-radio v-for="i in data.questionCode.score + 1" :key="i - 1" v-model="data.markExams" class="score-radio" :label="(i - 1).toString()"><span class="score-radio__text">{{ i - 1 }} 分</span></el-radio></div></el-col>
+              <el-col :span="6" class="grading-footer__submit"><el-button type="text" @click="submitCode(data,index)" plain class="submit-link">提交</el-button></el-col>
             </el-row>
           </div>
         </div>
-        <div v-if="questionType===0" class="questions">
-          <div style="margin-top: 36vh;text-align: center;font-size: 8vh;font-family: 'STXingkai', '华文行楷', cursive;">
-            请选择题目进行阅卷
-          </div>
-        </div>
+
+        <div v-if="questionType===0" class="questions"><div class="empty-state">请选择题目进行阅卷</div></div>
       </el-col>
     </el-row>
-    <el-row v-if="visit===0">
-      <div class="questions">
-        <div style="margin-top: 36vh;text-align: center;font-size: 8vh;font-family: 'STXingkai', '华文行楷', cursive;">
-          批卷工作已经结束
-        </div>
-      </div>
-    </el-row>
-    <el-row v-if="visit===-1">
-      <div class="questions">
-        <div style="margin-top: 36vh;text-align: center;font-size: 8vh;font-family: 'STXingkai', '华文行楷', cursive;">
-          批卷工作还未开始
-        </div>
-      </div>
-    </el-row>
+
+    <el-row v-if="visit===0"><div class="questions"><div class="empty-state">批卷工作已经结束</div></div></el-row>
+    <el-row v-if="visit===-1"><div class="questions"><div class="empty-state">批卷工作还未开始</div></div></el-row>
   </div>
 </template>
 
 <script>
 import request from "@/utils/request";
 import MonacoEditor from "monaco-editor-vue";
+
 export default {
   components: {
     MonacoEditor,
@@ -444,9 +232,7 @@ export default {
     this.load()
     this.findExam()
   },
-  mounted() {
-
-  },
+  mounted() {},
   methods: {
     timeJudge(){
       if(this.beginBefore(this.examManager)){
@@ -486,13 +272,11 @@ export default {
         }
       })
     },
-    // 判断在开始时间之前
     beginBefore(row) {
       const beginTime = new Date(row.beginTime);
       const now = new Date();
       return now <= beginTime;
     },
-    // 判断在结束时间之后
     endAfter(row){
       const endTime = new Date(row.endTime);
       const now = new Date();
@@ -648,11 +432,8 @@ export default {
       })
     },
     setNum(questionList){
-      // 初始化未打分总次数
       let unmarkedCount = 0;
-      // 遍历问题列表
       questionList.forEach(question => {
-        // 检查 markExams 是否为 null 或 undefined，如果是则表示未打分
         if (question.markExams === null || question.markExams === undefined|| question.markExams === "") {
           unmarkedCount++;
         }
@@ -661,12 +442,7 @@ export default {
     },
     submitMulti(data,index){
       let params;
-      params={
-        id:data.id,
-        markExams:data.markExams,
-        teacherId:this.user.id,
-        examId:this.receivedData.id
-      }
+      params={ id:data.id, markExams:data.markExams, teacherId:this.user.id, examId:this.receivedData.id }
       request.put("exam/examAnswer/updateByScore",params).then(res=>{
         if (res.code === '200') {
           this.$message.success("成功阅卷")
@@ -676,15 +452,9 @@ export default {
         }
       })
     },
-
     submitJudge(data,index){
       let params;
-      params={
-        id:data.id,
-        markExams:data.markExams,
-        teacherId:this.user.id,
-        examId:this.receivedData.id
-      }
+      params={ id:data.id, markExams:data.markExams, teacherId:this.user.id, examId:this.receivedData.id }
       request.put("exam/examAnswer/updateByScore",params).then(res=>{
         if (res.code === '200') {
           this.$message.success("成功阅卷")
@@ -696,12 +466,7 @@ export default {
     },
     submitFill(data,index){
       let params;
-      params={
-        id:data.id,
-        markExams:data.markExams,
-        teacherId:this.user.id,
-        examId:this.receivedData.id
-      }
+      params={ id:data.id, markExams:data.markExams, teacherId:this.user.id, examId:this.receivedData.id }
       request.put("exam/examAnswer/updateByScore",params).then(res=>{
         if (res.code === '200') {
           this.$message.success("成功阅卷")
@@ -713,12 +478,7 @@ export default {
     },
     submitShortAns(data,index){
       let params;
-      params={
-        id:data.id,
-        markExams:data.markExams,
-        teacherId:this.user.id,
-        examId:this.receivedData.id
-      }
+      params={ id:data.id, markExams:data.markExams, teacherId:this.user.id, examId:this.receivedData.id }
       request.put("exam/examAnswer/updateByScore",params).then(res=>{
         if (res.code === '200') {
           this.$message.success("成功阅卷")
@@ -730,12 +490,7 @@ export default {
     },
     submitCode(data,index){
       let params;
-      params={
-        id:data.id,
-        markExams:data.markExams,
-        teacherId:this.user.id,
-        examId:this.receivedData.id
-      }
+      params={ id:data.id, markExams:data.markExams, teacherId:this.user.id, examId:this.receivedData.id }
       request.put("exam/examAnswer/updateByScore",params).then(res=>{
         if (res.code === '200') {
           this.$message.success("成功阅卷")
@@ -749,58 +504,48 @@ export default {
 }
 </script>
 
-
 <style scoped>
-.cards {
-  white-space: unset;
-  display: inline-block;
-  width: 90%;
-  margin: 1vh 1% 0 1%;
-  height: 20vh;
-  border-radius: 10px;
-  background-color: #f1fdfd;
-  overflow-y: scroll;
-}
-
-.cards::-webkit-scrollbar {
-  width: 0;
-}
-
-.title {
-  font-family: 'STXingkai', '华文行楷', cursive;
-  font-size: 32px;
-  margin: 0 1% 0 1%;
-  padding-top: 1vh;
-}
-
-.divs {
-  font-size: 18px;
-}
-.mains{
-  margin-top: 1vh;
-  height: 85vh;
-  padding-left: 5%;
-  background: #e2dee3;
-  overflow-y: scroll;
-}
-.mains::-webkit-scrollbar {
-  width: 0;
-}
-.questions{
-  white-space: unset;
-  display: inline-block;
-  width: 98%;
-  margin: 1vh 1% 0 1%;
-  height: 79vh;
-  border-radius: 10px;
-  background-color: #adf5f5;
-  overflow-y: scroll;
-}
-.questions::-webkit-scrollbar {
-  width: 0;
-}
-.questionSignal{
-  margin: 2vh 2% 2vh 2%;
-  background: #e8d6ef;
-}
+.grading-page { color: #1f2937; }
+.question-group + .question-group { margin-top: 6px; }
+.cards { display: inline-block; width: 90%; margin: 12px 1% 0; min-height: 188px; max-height: 272px; border-radius: 18px; border: 1px solid rgba(218, 226, 237, 0.92); background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%); box-shadow: 0 14px 32px rgba(148, 163, 184, 0.14); overflow-y: auto; }
+.cards :deep(.el-card__body) { padding: 16px 18px 18px; }
+.cards::-webkit-scrollbar, .mains::-webkit-scrollbar, .questions::-webkit-scrollbar { width: 7px; }
+.cards::-webkit-scrollbar-thumb, .mains::-webkit-scrollbar-thumb, .questions::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.58); border-radius: 999px; }
+.title { font-family: 'STXingkai', '华文行楷', cursive; color: #123047; }
+.title--section { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 0 1%; padding: 8px 4px 0; font-size: 28px; }
+.title--signal { font-size: 28px; margin-bottom: 16px; }
+.divs { font-size: 15px; line-height: 1.7; }
+.mains { margin-top: 10px; height: 85vh; padding: 10px 0 16px 5%; border-radius: 24px; background: linear-gradient(180deg, rgba(246, 248, 252, 0.96) 0%, rgba(235, 241, 247, 0.98) 100%), radial-gradient(circle at top left, rgba(157, 230, 219, 0.28), transparent 42%); border: 1px solid rgba(222, 230, 239, 0.92); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7); overflow-y: auto; }
+.questions { display: inline-block; width: 98%; margin: 10px 1% 0; height: calc(85vh - 82px); border-radius: 24px; border: 1px solid rgba(221, 229, 239, 0.92); background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(245, 249, 252, 0.96) 100%), radial-gradient(circle at top right, rgba(165, 243, 252, 0.2), transparent 36%); box-shadow: 0 18px 44px rgba(148, 163, 184, 0.16); overflow-y: auto; }
+.questionSignal { margin: 18px 2%; padding: 24px; border-radius: 24px; border: 1px solid rgba(221, 229, 239, 0.92); background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.96) 100%), linear-gradient(135deg, rgba(219, 234, 254, 0.16), transparent 36%); box-shadow: 0 16px 34px rgba(148, 163, 184, 0.12); }
+.card-head { display: flex; align-items: center; margin-bottom: 12px; color: #e11d48; }
+.card-body { color: #334155; }
+.card-rich { line-height: 1.75; }
+.serial-no { font-weight: 700; color: #0f766e; }
+.action-link { width: 70%; padding: 8px 0; border-radius: 999px; background: rgba(15, 118, 110, 0.08); color: #0f766e; font-size: 16px; font-weight: 700; text-align: center; }
+.action-link--wide { width: auto; min-width: 176px; padding: 10px 18px; font-size: 15px; }
+.action-link:hover, .submit-link:hover { background: rgba(15, 118, 110, 0.14); color: #0b5d57; }
+.score-badge { display: flex; justify-content: flex-end; align-items: center; font-size: 16px; font-weight: 700; color: #e11d48; }
+.status-banner { display: flex; align-items: center; justify-content: center; min-height: 72px; margin: 4px 1% 10px; padding: 14px 20px; border-radius: 18px; border: 1px solid rgba(221, 229, 239, 0.9); background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%); color: #334155; font-size: 22px; font-weight: 700; letter-spacing: 1px; }
+.status-banner--alert { color: #b91c1c; background: linear-gradient(180deg, #fff7f7 0%, #fff1f2 100%); }
+.status-banner__value { margin-left: 8px; font-size: 28px; }
+.answer-row { margin: 16px 0 18px; }
+.answer-col { text-align: center; }
+.answer-label, .analysis-label { margin-bottom: 10px; font-size: 18px; font-weight: 700; color: #1e3a5f; }
+.answer-box { width: 90%; min-height: 120px; margin-left: 5%; padding: 16px 18px; border-radius: 18px; border: 1px solid rgba(208, 220, 233, 0.92); background: linear-gradient(180deg, #f8fbff 0%, #edf5fb 100%); text-align: left; color: #334155; box-sizing: border-box; }
+.analysis-panel { display: block; margin: 0 2% 18px; padding: 18px 20px; border-radius: 18px; border: 1px solid rgba(232, 220, 164, 0.86); background: linear-gradient(180deg, #fffdf5 0%, #fff9e8 100%); }
+.analysis-content { color: #4b5563; line-height: 1.8; }
+.grading-footer, .grading-footer__score, .grading-footer__submit { display: flex; align-items: center; }
+.grading-footer__submit { justify-content: center; }
+.score-options { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; width: 100%; }
+.score-radio { width: auto; margin-right: 0; padding: 10px 16px; border: 1px solid rgba(203, 213, 225, 0.96); border-radius: 16px; background: #ffffff; transition: all 0.2s ease; }
+.score-radio:hover { border-color: rgba(15, 118, 110, 0.5); background: rgba(240, 253, 250, 0.9); }
+.score-radio__text { font-size: 20px; font-weight: 700; color: #334155; }
+.submit-link { width: 70%; padding: 10px 0; border-radius: 999px; background: linear-gradient(135deg, rgba(15, 118, 110, 0.14), rgba(20, 184, 166, 0.18)); color: #0f766e; font-size: 18px; font-weight: 700; text-align: center; }
+.answer-row--code .answer-col { text-align: left; }
+.code-editor { display: block; height: 30vh; margin-top: 8px; overflow: hidden; border: 1px solid rgba(208, 220, 233, 0.92); border-radius: 18px; }
+.empty-state { display: flex; align-items: center; justify-content: center; height: 100%; padding: 40px; text-align: center; font-size: 52px; color: #17405d; letter-spacing: 3px; font-family: 'STXingkai', '华文行楷', cursive; }
+.grading-page :deep(.el-radio__input.is-checked .el-radio__inner) { border-color: #0f766e; background: #0f766e; }
+.grading-page :deep(.el-radio__label) { padding-left: 8px; }
+.grading-page :deep(.w-e-text p), .grading-page :deep(.w-e-text div) { margin: 0; }
 </style>

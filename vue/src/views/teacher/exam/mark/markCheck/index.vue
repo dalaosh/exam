@@ -1,6 +1,6 @@
 ﻿<template xmlns="">
   <div class="main">
-    <div>
+    <div class="overview-grid">
       <el-row>
         <el-col :span="4">
           <div class="cards">
@@ -142,19 +142,19 @@
         </el-col>
       </el-row>
     </div>
-    <div style="height: 6vh;margin-top: 1vh;margin-left: 1%">
+    <div class="command-bar" style="height: 6vh;margin-top: 1vh;margin-left: 1%">
       <el-button style="width: 12%;font-size: 18px" type="primary" @click="batchSetRightSign">全部验签</el-button>
       <el-button style="width: 12%;font-size: 18px" type="primary" @click="newLoad">刷新</el-button>
       <el-button style="width: 12%;font-size: 18px" type="primary" @click="submitIsMarks">完成确认</el-button>
       <el-button style="width: 12%;font-size: 18px" type="primary" @click="markStatistic">进入成绩统计</el-button>
       <a style="margin: 2vh 0 0 2%;font-size: 20px;padding-left: 4%">{{examManagers.isMarked==='是'?'完成审批':'未完成审批'}}</a>
     </div>
-    <el-tabs type="border-card" style="margin-left: 1%;width: 98%;padding: 0">
+    <el-tabs class="mark-check-tabs" type="border-card" style="margin-left: 1%;width: 98%;padding: 0">
       <el-tab-pane label="选择题">
         <div class="questions">
           <el-row>
             <el-col :span="6">
-              <div style="background: #f4f8fd">
+              <div class="filter-panel">
                 <el-button style="margin-bottom: 1vh;margin-top: 1vh"  class="buttonSize" type="primary"  @click="changeMultiAll()">自动批阅选择题</el-button>
                 <el-button style="margin-bottom: 1vh" class="buttonSize" type="primary" @click="findAll('multi')">全部</el-button>
                 <el-button style="margin-bottom: 1vh" class="buttonSize" type="primary" @click="findIsMark('multi')">已批</el-button>
@@ -219,7 +219,7 @@
         <div class="questions">
           <el-row>
             <el-col :span="6">
-              <div style="background: #f4f8fd">
+              <div class="filter-panel">
                 <el-button class="buttonSize" type="primary" @click="findAll('fill')">全部</el-button>
                 <el-button class="buttonSize" type="primary" @click="findIsMark('fill')">已批</el-button>
                 <el-button class="buttonSize" type="primary" @click="findNoMark('fill')">未批</el-button>
@@ -259,7 +259,7 @@
         <div class="questions">
           <el-row>
             <el-col :span="6">
-              <div style="background: #f4f8fd">
+              <div class="filter-panel">
                 <el-button style="margin-bottom: 1vh;margin-top: 1vh"  class="buttonSize" type="primary"  @click="changeJudgeAll()">自动批阅判断题</el-button>
                 <el-button style="margin-bottom: 1vh" class="buttonSize" type="primary" @click="findAll('judge')">全部</el-button>
                 <el-button style="margin-bottom: 1vh" class="buttonSize" type="primary" @click="findIsMark('judge')">已批</el-button>
@@ -300,7 +300,7 @@
         <div class="questions">
           <el-row>
             <el-col :span="6">
-              <div style="background: #f4f8fd">
+              <div class="filter-panel">
                 <el-button class="buttonSize" type="primary" @click="findAll('shortAns')">全部</el-button>
                 <el-button class="buttonSize" type="primary" @click="findIsMark('shortAns')">已批</el-button>
                 <el-button class="buttonSize" type="primary" @click="findNoMark('shortAns')">未批</el-button>
@@ -342,7 +342,7 @@
         <div class="questions">
           <el-row>
             <el-col :span="6">
-              <div style="background: #f4f8fd">
+              <div class="filter-panel">
                 <el-button class="buttonSize" type="primary" @click="findAll('code')">全部</el-button>
                 <el-button class="buttonSize" type="primary" @click="findIsMark('code')">已批</el-button>
                 <el-button class="buttonSize" type="primary" @click="findNoMark('code')">未批</el-button>
@@ -1231,60 +1231,323 @@ export default {
 
 <style scoped>
 .main{
-  padding-left: 3px;
-  padding-right: 3px;
+  padding: 4px 6px 0;
+  color: #1f2937;
 }
+
+.overview-grid {
+  margin-bottom: 8px;
+}
+
 .cards{
-  margin: 1vh 5% 1vh 5%;
-  padding: 1vh 2% 1vh 2%;
-  height: 17vh;
+  margin: 10px 5% 12px;
+  padding: 16px 16px 14px;
+  min-height: 156px;
   width: 90%;
-  background: rgba(241, 253, 253, 0.77);
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  /* 过渡效果，使阴影变化更平滑 */
-  transition: box-shadow 0.3s ease;
+  border-radius: 18px;
+  border: 1px solid rgba(218, 226, 237, 0.92);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(243, 250, 253, 0.95) 100%),
+    radial-gradient(circle at top left, rgba(125, 211, 252, 0.12), transparent 42%);
+  box-shadow: 0 14px 30px rgba(148, 163, 184, 0.16);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+
+.cards:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 18px 38px rgba(148, 163, 184, 0.2);
+}
+
 .title{
-  font-size: 24px;
-  padding-bottom: 1vh;
+  font-size: 22px;
+  font-weight: 700;
+  color: #123047;
   text-align: center;
 }
+
+.cards .title {
+  padding-bottom: 12px;
+}
+
 .questions{
-  height: 52vh;
+  height: 54vh;
 }
+
 .buttonSize{
-  margin: 3vh 15% 2vh 15%;
-  width: 70%;
-  font-size: 18px;
+  margin: 0 !important;
+  width: 100% !important;
+  min-height: 44px;
+  font-size: 16px !important;
+  font-weight: 700;
+  border-radius: 14px;
 }
+
+.command-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  min-height: auto !important;
+  margin: 12px 1% 14px !important;
+  padding: 0;
+}
+
+.command-bar .el-button {
+  width: auto !important;
+  min-width: 132px;
+  height: 42px;
+  margin: 0 !important;
+  padding: 0 18px;
+  border-radius: 12px;
+  font-size: 15px !important;
+  font-weight: 700;
+  box-shadow: 0 10px 20px rgba(15, 118, 110, 0.12);
+}
+
+.command-bar a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 42px;
+  margin: 0 0 0 8px !important;
+  padding: 0 16px !important;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.04);
+  color: #334155;
+  font-size: 17px !important;
+  font-weight: 700;
+}
+
+.mark-check-tabs {
+  margin-left: 1% !important;
+  width: 98% !important;
+}
+
+.mark-check-tabs:deep(.el-tabs__header) {
+  margin: 0;
+  border-bottom: 1px solid #e6ecf3;
+  background: linear-gradient(180deg, #fbfdff 0%, #f6f8fb 100%);
+}
+
+.mark-check-tabs:deep(.el-tabs__nav-wrap) {
+  padding: 0 16px;
+}
+
+.mark-check-tabs:deep(.el-tabs__item) {
+  height: 52px;
+  line-height: 52px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.mark-check-tabs:deep(.el-tabs__item.is-active) {
+  color: #0f766e;
+}
+
+.mark-check-tabs:deep(.el-tabs__content) {
+  padding: 14px 16px 18px;
+  background: #f8fafc;
+}
+
+.mark-check-tabs:deep(.el-tabs--border-card) {
+  border: 1px solid rgba(223, 229, 237, 0.96);
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 14px 34px rgba(148, 163, 184, 0.14);
+}
+
+.mark-check-tabs:deep(.el-tab-pane > .questions > .el-row > .el-col:first-child > div) {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(223, 229, 237, 0.96);
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.filter-panel {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(223, 229, 237, 0.96);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(247, 250, 252, 0.96) 100%),
+    radial-gradient(circle at top left, rgba(191, 219, 254, 0.16), transparent 38%);
+  box-shadow: 0 12px 28px rgba(148, 163, 184, 0.12);
+}
+
+.mark-check-tabs:deep(.el-tab-pane > .questions > .el-row > .el-col:first-child .el-button) {
+  margin: 0 !important;
+}
+
 .rightMain{
-  margin: 0 2% 0 2%;
-  padding: 1vh 2% 1vh 2%;
-  height: 51vh;
-  width: 96%;
-  background: rgba(241, 253, 253, 0.77);
-  overflow-y: scroll;
+  margin: 0 0 0 16px;
+  padding: 18px;
+  height: 52vh;
+  width: calc(100% - 16px);
+  border-radius: 22px;
+  border: 1px solid rgba(223, 229, 237, 0.96);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(243, 250, 253, 0.96) 100%),
+    radial-gradient(circle at top right, rgba(165, 243, 252, 0.14), transparent 34%);
+  overflow-y: auto;
+  box-sizing: border-box;
 }
-.rightMain::-webkit-scrollbar{
-  width:0;
-}
-.cardMain{
-  margin: 1vh 5% 2vh 5%;
-  padding: 1vh 2% 1vh 2%;
-  width: 90%;
-  border-radius: 10px;
-}
-.drawer{
-  margin: 2% 2vh 2% 2vh;
-  padding: 2% 2vh 2% 2vh;
-  width: 96%;
-  height: 84vh;
-  background: #e0b0f5;
-  overflow-y: scroll;
-}
+
+.rightMain::-webkit-scrollbar,
 .drawer::-webkit-scrollbar {
-  width: 0;
+  width: 7px;
+}
+
+.rightMain::-webkit-scrollbar-thumb,
+.drawer::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.58);
+  border-radius: 999px;
+}
+
+.cardMain{
+  margin: 0 0 16px;
+  padding: 16px 18px;
+  width: 100%;
+  border-radius: 18px;
+  border: 1px solid rgba(218, 226, 237, 0.92);
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  box-shadow: 0 12px 28px rgba(148, 163, 184, 0.12);
+  box-sizing: border-box;
+}
+
+.cardMain:last-child {
+  margin-bottom: 0;
+}
+
+.drawer{
+  margin: 12px 16px 16px;
+  padding: 16px;
+  width: auto;
+  height: calc(100vh - 110px);
+  border-radius: 22px;
+  border: 1px solid rgba(223, 229, 237, 0.96);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.96) 100%),
+    linear-gradient(135deg, rgba(219, 234, 254, 0.16), transparent 36%);
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.main :deep(.el-button--primary) {
+  background: linear-gradient(135deg, #0f766e, #0d9488);
+  border-color: #0f766e;
+}
+
+.main :deep(.el-button--primary:hover),
+.main :deep(.el-button--primary:focus) {
+  background: linear-gradient(135deg, #0b5d57, #0f766e);
+  border-color: #0b5d57;
+}
+
+.main :deep(.cards .el-row) {
+  margin-top: 12px;
+  color: #475569;
+}
+
+.main :deep(.cards strong) {
+  color: #0f172a;
+  font-size: 15px;
+}
+
+.main :deep(.cards .el-col[style*='text-align: center']) {
+  color: #334155;
+  font-weight: 600;
+}
+
+.main :deep(.cards .el-col[style*='text-align: center'] div:first-child) {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.main :deep(.cards .el-col[style*='text-align: center'] div:last-child) {
+  margin-top: 4px;
+  font-size: 26px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.main :deep(.cards .el-row + .el-row) {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(226, 232, 240, 0.92);
+}
+
+.main :deep(.cardMain .el-button--text) {
+  padding: 8px 14px !important;
+  border-radius: 999px;
+  background: rgba(15, 118, 110, 0.08);
+  color: #0f766e !important;
+  font-size: 15px !important;
+  font-weight: 700;
+}
+
+.main :deep(.cardMain .el-button--text.is-disabled) {
+  background: rgba(34, 197, 94, 0.12);
+  color: #15803d !important;
+}
+
+.main :deep(.cardMain .el-button--text + .el-button--text) {
+  margin-left: 12px !important;
+}
+
+.main :deep(.cardMain > div[style*='text-align: right']) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 58px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(225, 29, 72, 0.08);
+  color: #e11d48 !important;
+  font-size: 15px !important;
+  font-weight: 800;
+  margin-left: auto;
+}
+
+.main :deep(.cardMain .el-row:last-child) {
+  margin-top: 14px !important;
+  padding-top: 14px;
+  border-top: 1px solid rgba(226, 232, 240, 0.92);
+}
+
+.main :deep(.demo-drawer) {
+  background: #f4f7fb;
+}
+
+.main :deep(.demo-drawer .el-drawer__header) {
+  margin-bottom: 0;
+  padding: 18px 22px 0;
+  color: #0f172a;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.main :deep(.demo-drawer .el-drawer__body) {
+  padding: 0;
+}
+
+.main :deep(.w-e-text) {
+  line-height: 1.75;
+  color: #334155;
+}
+
+@media (max-width: 1200px) {
+  .command-bar .el-button {
+    min-width: 116px;
+  }
+
+  .rightMain {
+    margin-left: 12px;
+    width: calc(100% - 12px);
+  }
 }
 </style>
 
