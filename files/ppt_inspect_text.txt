@@ -1,0 +1,78 @@
+=== slide1.xml ===
+城市交通运营态势智能化感知与决策辅助平台 | 行 | 畅 | 智 | 检 | 中国大学生计算机设计大赛 | 物联网应用 | | | 城市管理
+
+=== slide2.xml ===
+目 | 录 | 01 | 02 | 03 | 04 | 06 | 项目概述 | 项目 | 背景 | 技术路线 | 主要 | 功能 | 前景展望 | 05 | 创新特色
+
+=== slide3.xml ===
+项目背景 | 技术路线 | 主要功能 | 创新特色 | 前景 | 展望 | 项目 | 概述 | 随着城市化加速，居民出行需求不断增长，传统交通管理模式亟待突破，需要构建高效 | 精准的智能交通系统。 | 核心算法应用 | 平台利用 | YOLO | 算法实现四项 | 关键功能，提升交通感知与 | 辅助决策能力，为智能交通管理奠定基础。 | 关键功能 | 实现 | 技术亮点与 | 创新 | 平台的四大核心功能：远距离路况和停车位监控、车辆与车牌精准识别、行人及环境感知跟踪、路面裂缝检测，覆盖交通关键领域。 | 平台通过算法 | 多引擎、立体感知、双向决策闭环及端边云协同四维创新，构建全链条智能治理体系，突破传统交通单点智能局限。 | 成果与影响 | 通过增强交通管理的智能化水平，为相关人员提供高效的 | 辅助 | 决策工具，提升了城市交通安全与运行效率 | 。 | 背景 | 与 | 挑战
+
+=== slide4.xml ===
+项目概述 | 技术路线 | 主要功能 | 创新特色 | 前景 | 展望 | 项目 | 背景 | | | 政策推动智能交通，促进绿色可持续发展 | 中华人民共和国中央人民政府发布文件： | ” | 人潮 | “ | 模式开启 | ” | 五一 | “ | 各地多举措保人流车流畅通 | 中华人民共和国中央人民政府发布文件： | 加快建设交通强国，推动交通运输领域新型基础设施建设 | 中华人民共和国交通运输部发布文件：道路安全监管深化部门协同共治 | 道路安全监管 | 采取举措 | 保证人流车流畅通 | 官方政策支持
+
+=== slide5.xml ===
+城市化加速 | 难应对拥堵和事故 | 传统 | 交通管理 | 效率降、隐患 | 升 | 拥堵与 | 事故 | 乘 | 风 | 破 | 浪 | | | 交通发展催生智能交通 | 项目概述 | 技术路线 | 主要功能 | 创新特色 | 前景 | 展望 | 项目 | 背景
+
+=== slide6.xml ===
+项目概述 | 技术路线 | 主要功能 | 创新特色 | 前景 | 展望 | 项目 | 背景 | | | 行业痛点、 | 难点 | 的互联互通不足 | 道路规划滞后 | 缺乏长远考虑 | 传统交通管理效率低难以应对复杂需求 | 响应应急能力不足 | 突发事件处理效率 | 低 | 人口密集，车流量大 | 停车难问题突出 | 优化城市交通流动 | 精确数据支持政策 | 辅助决策 | 应急响应能力强 | 提升应急响应效率 | 环境与安全双重 | 效益 | 助力交通 | 可持续发展 | 。
+
+=== slide7.xml ===
+项目概述 | 项目背景 | 主要功能 | 创新特色 | 前景 | 展望 | 技术路线
+
+=== slide8.xml ===
+停车场数据集 | 路面裂缝 | 数据集 | 多目标检测与追踪数据集 | 交通标志识 | 数据集 | 数据集分布图 | 本数据集含 | 1 | 680 | 张仿真模拟图片数据分布合理 | 共 | 1862 | 张图片 | 改变其大小 | 用技术增强图像 | 共含 | 5542 | 张图像，分训练、验证、测试集助力模型训练 | 数据集含 | 3114 | 张图像，经处理保障模型训练与评估 | 数据集分布图意义重大， | 含多种信息 | ，对模型训练、 | 性能提升 | 有积极意义。 | 项目概述 | 项目背景 | 技术路线 | 创新特色 | 前景 | 展望 | 主要 | 功能 | 数据集采集与 | 预处理
+
+=== slide9.xml ===
+YOLO算法 | ByteTrack算法 | LPRNet算法 | 初始化 | 目标检测 | 检测结果分类 | 轨迹预测 | 更新剩余检测和轨迹 | 第二次数据关联 | 清理未匹配轨迹 | 初始化新轨迹 | 返回结果 | 模型 | 配置 | 损失函数 | 选择 | 优化 | 项目背景 | 技术路线 | 创新特色 | 前景 | 展望 | 主要 | 功能 | YOLOv8、ByteTrack、LPRNet实现高效目标识别与跟踪 | 数据预 | 处理 | 前向传播 | 计算损失
+
+=== slide10.xml ===
+Precision-Recall Curve - | ② | F1-Confidence Curve- | ① | ： | 60 Limit | ： | No Entry | ： | all | classes | 0.97 at 0.675 | ： | person | ： | bicycle | ： | car | ： | motorcycle | ： | License Plate 0.995 | ： | cars 0.872 | ： | motorcyle 0.995 | ： | truck 0.811 | : | all classes | 0.918 mAP@0.5 | F1-Confidence Curve- | ① | Precision-Recall Curve - | ② | ： | space-empty | ： | space-occupied | ： | all classes | 0.99 at 0.656 | ： | crack 0.977 | ： | all classes | 0.977 mAP@ 0.5 | ① | ：在不同置信度阈值下的F1分数表现。F1分数：精确度和召回率的调和平均数 | ② | ：在不同置信度阈值下精确度的表现。 | 项目概述 | 项目背景 | 技术路线 | 创新特色 | 前景 | 展望 | 主要 | 功能
+
+=== slide11.xml ===
+损失函数图像体现模型在数据集表现。 | 各类损失值随训练进程逐渐降低。 | 初期验证集损失波动因模型不稳定。 | 后期损失稳定表明模型泛化能力提升。 | 停车场损失函数 | 行人与 | 车辆损失函数 | 路面裂缝损失函数 | 交通标识 | 损失函数 | 项目概述 | 项目背景 | 技术路线 | 创新特色 | 前景 | 展望 | 主要 | 功能
+
+=== slide12.xml ===
+项目概述 | 项目背景 | 技术路线 | 创新特色 | 前景 | 展望 | 主要 | 功能 | 该模块对交通标志（类型与位置）、交通灯（状态与位置）及停车位（编号、位置与占用状态）进行精准检测与定位，支持图片、视频及实时摄像头数据的逐帧分析，并通过可视化标注与实时反馈（如交通管理决策、自动驾驶导航）提升应用价值；检测结果可导出为结构化 | CSV | 数据（含目标类型、坐标及状态），支持多模型灵活切换与场景适配，便于进一步分析与处理，例如统计交通标志分布、评估停车场使用效率等。 | 一 | 、交通基础设施环境感知（交通标志、交通灯、停车位检测）
+
+=== slide13.xml ===
+项目概述 | 项目背景 | 技术路线 | 创新特色 | 前景 | 展望 | 主要 | 功能 | 该模块通过精准识别车辆牌照号码、颜色和类型，为交通执法、停车场管理和智能交通系统提供车辆身份识别数据支持。支持图片 | / | 视频文件及实时摄像数据输入，可自动定位并标注车牌号码、颜色及类型信息，视频处理时逐帧分析并记录时空数据。平台提供多检测模型切换功能，支持将识别结果（含车牌信息、检测时间及位置）导出为结构为 | CSV | 文件，便于进一步分析与处理，例如统计车辆流量、查询违规车辆等。 | 二、 | 车辆识别感知（车辆牌照检测）
+
+=== slide14.xml ===
+项目概述 | 项目背景 | 技术路线 | 创新特色 | 前景 | 展望 | 主要 | 功能 | 该模块基于多目标检测技术，实现对行人和车辆的实时检测、跟踪及轨迹分析，支持图片、视频及摄像头流数据处理，通过动态标注目标类别、位置坐标及方向信息，并生成可下载的 | CSV | 结构化数据（含时间、坐标等字段）。系统提供多模型切换功能，可无缝接入智能交通系统，便于进一步分析与处理，例如优化交通信号灯时长、评估行人安全风险等。 | 三 | 、动态目标跟踪感知（行人及车辆跟踪）
+
+=== slide15.xml ===
+项目概述 | 项目背景 | 技术路线 | 创新特色 | 前景 | 展望 | 主要 | 功能 | 该模块基于道路图像 | / | 视频及实时监控数据，利用可切换的检测模型实现路面裂缝精准识别，通过逐帧分析实时标注裂缝的严重程度，将检测结果及相关信息以 | CSV | 文件格式保存至本地， | CSV | 文件中包含裂缝的位置坐标、长度、宽度、严重程度分级、裂缝类型、检测时间等详细数据，便于进一步分析与处理，例如制定维修计划、评估道路病害发展等。 | 四、 | 道路损坏情况感知（路面裂缝检测）
+
+=== slide16.xml ===
+项目背景 | 技术路线 | 创新特色 | 前景 | 展望 | 主要 | 功能 | 该项目组基于 | Flask | 框架构建了具备多维度数据实时管理与可视化功能的管理平台，通过嵌入 | AI | 深度学习模型对历史数据进行智能分析，强化数据处理与决策支持能力。面向自动驾驶领域，提供车载硬件部署方案实现环境数据实时采集与动态感知服务，同时支持云端数据深度分析以优化多维感知算法，形成 | &quot; | 端 | - | 云 | &quot; | 协同的闭环服务体系。该方案通过精准环境感知、智能决策优化及个性化交通解决方案，显著提升了自动驾驶系统的安全性和服务实用性，为行业提供全链路技术支撑。 | Flask+AI | 驱动的自动驾驶多维感知数据中台及智能决策
+
+=== slide17.xml ===
+项目背景 | 技术路线 | 创新特色 | 前景 | 展望 | 主要 | 功能
+
+=== slide18.xml ===
+项目概述 | 项目背景 | 技术路线 | 创新特色 | 前景 | 展望 | 主要 | 功能 | 微信小程序界面
+
+=== slide19.xml ===
+项目概述 | 项目背景 | 技术路线 | 创新特色 | 前景 | 展望 | 主要 | 功能 | 实验室系统的运行情况
+
+=== slide20.xml ===
+对标车主直售 | 实时感知路况 | 减少路段巡游 | 智能化提醒功能 | 与车企部门合作 | 对标交管部门 | 集成到汽车生产流程 | 数据共享与分析 | 个性化系统选择 | 强化交通安全管理 | 提升执法效率与准确性 | 提供决策辅助 | 面向对象 | | | 优化交通要素感知与管理助力可持续发展 | 项目概述 | 项目背景 | 技术路线 | 主要功能 | 前景 | 展望 | 创新特色
+
+=== slide21.xml ===
+一 | 、 | “ | 人 | - | 车 | - | 路 | - | 环境 | ” | 多维集成感知 | 平台四维创新：算法层融合多技术，感知层构建立体网络，决策层实现双向反馈，架构层采用协同模式。通过时空耦合整合要素，突破单点智能局限，构建智能闭环，提供交通治理解决方案。 | 项目概述 | 项目背景 | 技术路线 | 主要功能 | 前景 | 展望 | 创新特色
+
+=== slide22.xml ===
+、 | “ | 车 | - | 路 | - | 云 | ” | 实时数据交互与反馈 | 项目概述 | 项目背景 | 技术路线 | 主要功能 | 前景 | 展望 | 创新特色 | 云端服务器实时接收前端感知设备采集并同步上传的交通信息与数据。通过动态分析，系统精准匹配用户的当前位置与需求，将相关的交通态势信息整理后推送到用户终端界面，确保用户能够快速获取实时、准确的交通状况反馈。
+
+=== slide23.xml ===
+实时 | 多维 | 感知 | 安全性 | 高精度 | 辅助 | 决策 | 三 | 、基于感知数据的交通态势推演 | 项目概述 | 项目背景 | 技术路线 | 主要功能 | 前景 | 展望 | 创新特色 | 本平台嵌入AI技术，通过实时解析监控视频的多模态交通数据，构建时空特征分析模型，重点评估交通高峰期行人/车流密度、道路结构损伤等核心参数。系统可生成多维动态模拟方案，为交管部门提供调控区域交通流组织模式的决策支持。
+
+=== slide24.xml ===
+项目概述 | 项目背景 | 技术路线 | 主要功能 | 创新特色 | 前景展望 | <a:tab pos="1609725" algn="l"/></a:tabLst><a:defRPr kumimoji="0" sz="1600" b="0" i="0" u="none" strike="noStrike" cap="none" spc="150" normalizeH="0" baseline="0"><a:solidFill><a:schemeClr val="tx1"><a:lumMod val="65000"/><a:lumOff val="35000"/></a:schemeClr></a:solidFill><a:uFillTx/><a:latin typeface="Arial" panose="020B0604020202020204" pitchFamily="34" charset="0"/><a:ea typeface="微软雅黑" panose="020B0503020204020204" charset="-122"/></a:defRPr></a:lvl2pPr><a:lvl3pPr marL="1143000" marR="0" lvl="2" indent="-228600" fontAlgn="auto"><a:lnSpc><a:spcPct val="120000"/></a:lnSpc><a:spcBef><a:spcPts val="0"/></a:spcBef><a:spcAft><a:spcPts val="600"/></a:spcAft><a:buFont typeface="Arial" panose="020B0604020202020204" pitchFamily="34" charset="0"/><a:buChar char="●"/><a:defRPr kumimoji="0" sz="1600" b="0" i="0" u="none" strike="noStrike" cap="none" spc="150" normalizeH="0" baseline="0"><a:solidFill><a:schemeClr val="tx1"><a:lumMod val="65000"/><a:lumOff val="35000"/></a:schemeClr></a:solidFill><a:uFillTx/><a:latin typeface="Arial" panose="020B0604020202020204" pitchFamily="34" charset="0"/><a:ea typeface="微软雅黑" panose="020B0503020204020204" charset="-122"/></a:defRPr></a:lvl3pPr><a:lvl4pPr marL="1600200" marR="0" lvl="3" indent="-228600" fontAlgn="auto"><a:lnSpc><a:spcPct val="120000"/></a:lnSpc><a:spcBef><a:spcPts val="0"/></a:spcBef><a:spcAft><a:spcPts val="300"/></a:spcAft><a:buFont typeface="Wingdings" panose="05000000000000000000" charset="0"/><a:buChar char=""/><a:defRPr kumimoji="0" sz="1400" b="0" i="0" u="none" strike="noStrike" cap="none" spc="150" normalizeH="0" baseline="0"><a:solidFill><a:schemeClr val="tx1"><a:lumMod val="65000"/><a:lumOff val="35000"/></a:schemeClr></a:solidFill><a:uFillTx/><a:latin typeface="Arial" panose="020B0604020202020204" pitchFamily="34" charset="0"/><a:ea typeface="微软雅黑" panose="020B0503020204020204" charset="-122"/></a:defRPr></a:lvl4pPr><a:lvl5pPr marL="2057400" marR="0" lvl="4" indent="-228600" fontAlgn="auto"><a:lnSpc><a:spcPct val="120000"/></a:lnSpc><a:spcBef><a:spcPts val="0"/></a:spcBef><a:spcAft><a:spcPts val="300"/></a:spcAft><a:buFont typeface="Arial" panose="020B0604020202020204" pitchFamily="34" charset="0"/><a:buChar char="•"/><a:defRPr kumimoji="0" sz="1400" b="0" i="0" u="none" strike="noStrike" cap="none" spc="150" normalizeH="0" baseline="0"><a:solidFill><a:schemeClr val="tx1"><a:lumMod val="65000"/><a:lumOff val="35000"/></a:schemeClr></a:solidFill><a:uFillTx/><a:latin typeface="Arial" panose="020B0604020202020204" pitchFamily="34" charset="0"/><a:ea typeface="微软雅黑" panose="020B0503020204020204" charset="-122"/></a:defRPr></a:lvl5pPr><a:lvl6pPr indent="0"><a:lnSpc><a:spcPct val="90000"/></a:lnSpc><a:spcBef><a:spcPts val="500"/></a:spcBef><a:buFont typeface="Arial" panose="020B0604020202020204" pitchFamily="34" charset="0"/><a:buNone/></a:lvl6pPr><a:lvl7pPr marL="2971800" indent="-228600"><a:lnSpc><a:spcPct val="90000"/></a:lnSpc><a:spcBef><a:spcPts val="500"/></a:spcBef><a:buFont typeface="Arial" panose="020B0604020202020204" pitchFamily="34" charset="0"/><a:buChar char="•"/></a:lvl7pPr><a:lvl8pPr marL="3429000" indent="-228600"><a:lnSpc><a:spcPct val="90000"/></a:lnSpc><a:spcBef><a:spcPts val="500"/></a:spcBef><a:buFont typeface="Arial" panose="020B0604020202020204" pitchFamily="34" charset="0"/><a:buChar char="•"/></a:lvl8pPr><a:lvl9pPr marL="3886200" indent="-228600"><a:lnSpc><a:spcPct val="90000"/></a:lnSpc><a:spcBef><a:spcPts val="500"/></a:spcBef><a:buFont typeface="Arial" panose="020B0604020202020204" pitchFamily="34" charset="0"/><a:buChar char="•"/></a:lvl9pPr></a:lstStyle><a:p><a:pPr algn="just"><a:spcBef><a:spcPct val="0"/></a:spcBef><a:spcAft><a:spcPct val="0"/></a:spcAft></a:pPr><a:r><a:rPr lang="zh-CN" altLang="en-US" sz="1800" noProof="0" dirty="0"><a:ln><a:noFill/></a:ln><a:solidFill><a:schemeClr val="tx1"/></a:solidFill><a:effectLst/><a:uLnTx/><a:latin typeface="微软雅黑" panose="020B0503020204020204" charset="-122"/><a:ea typeface="微软雅黑" panose="020B0503020204020204" charset="-122"/><a:sym typeface="汉仪旗黑-50S" panose="00020600040101010101" pitchFamily="18" charset="-122"/></a:rPr><a:t>国家发展战略层面：具备与现有交通系统无缝集成的能力，并具备广泛的扩展性。提升道路感知与安全，推动智能交通的全面升级。在科技创新战略下，推动智慧交通发展，促进相关产业进步，服务国家战略目标。
+
+=== slide25.xml ===
+年 | . | 西北 | 项目背景 | 技术路线 | 主要功能 | 创新特色 | 前景展望
+
+=== slide26.xml ===
+智联西部，精准检测 | —— | 发挥智能交通效能，助推交通强国建设！ | 畅行无阻，共享高质量 | 出行！ | 中国大学生计算机设计大赛
+

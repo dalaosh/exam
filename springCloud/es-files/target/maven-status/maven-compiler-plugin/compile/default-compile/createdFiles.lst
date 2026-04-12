@@ -1,0 +1,9 @@
+com\mc\esfiles\controller\CourseFileController.class
+com\mc\esfiles\controller\AvatarFileController.class
+com\mc\esfiles\EsFilesApplication.class
+com\mc\esfiles\controller\IdPhotoController.class
+com\mc\esfiles\controller\WangEditorFileController.class
+com\mc\esfiles\controller\MarkdownFileController.class
+com\mc\esfiles\controller\RealFaceController.class
+com\mc\esfiles\controller\MdFileController.class
+com\mc\esfiles\controller\TestFaceController.class

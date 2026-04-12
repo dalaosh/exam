@@ -1,0 +1,3 @@
+com\mc\esgateway\config\GlobalFilterConfig.class
+com\mc\esgateway\config\MyCorsConfig.class
+com\mc\esgateway\EsGatewayApplication.class

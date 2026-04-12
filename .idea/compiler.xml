@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="es-exam" />
+        <module name="es-trustSeal" />
+        <module name="es-gateway" />
+        <module name="es-info" />
+        <module name="es-common" />
+        <module name="es-files" />
+        <module name="es-websocket" />
+        <module name="es-mail" />
+        <module name="es-user" />
+        <module name="es-statistic" />
+      </profile>
+    </annotationProcessing>
+  </component>
+</project>

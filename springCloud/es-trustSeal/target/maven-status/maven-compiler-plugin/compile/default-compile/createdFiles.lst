@@ -1,0 +1,17 @@
+com\mc\estrustSeal\controller\AddressController.class
+com\mc\estrustSeal\EsTrustSealApplication.class
+com\mc\estrustSeal\mapper\StudentFaceMapper.class
+com\mc\estrustSeal\service\AddressService.class
+com\mc\estrustSeal\service\impl\StudentFaceServiceImpl$CompareFaceTask.class
+com\mc\estrustSeal\service\impl\StudentFaceServiceImpl.class
+com\mc\estrustSeal\service\StudentFaceService.class
+com\mc\estrustSeal\factory\FaceEngineFactory.class
+com\mc\estrustSeal\service\UniversityCollegeMajorService.class
+com\mc\estrustSeal\controller\StudentFaceController.class
+com\mc\estrustSeal\mapper\UniversityCollegeMajorMapper.class
+com\mc\estrustSeal\service\impl\UniversityCollegeMajorServiceImpl.class
+com\mc\estrustSeal\exception\CustomException.class
+com\mc\estrustSeal\mapper\AddressMapper.class
+com\mc\estrustSeal\exception\GlobalExceptionHandler.class
+com\mc\estrustSeal\controller\UniversityCollegeMajorController.class
+com\mc\estrustSeal\service\impl\AddressServiceImpl.class

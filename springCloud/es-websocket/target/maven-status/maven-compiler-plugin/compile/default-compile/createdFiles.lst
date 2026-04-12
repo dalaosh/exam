@@ -1,0 +1,7 @@
+com\mc\eswebsocket\EsWebSocketApplication.class
+com\mc\eswebsocket\controller\statisticsController$NamedThreadFactory.class
+com\mc\eswebsocket\controller\WebSocketTest.class
+com\mc\eswebsocket\config\WebSocketConfig.class
+com\mc\eswebsocket\feignClient\StatisticFeignClient.class
+com\mc\eswebsocket\controller\statisticsController$FeignHolder.class
+com\mc\eswebsocket\controller\statisticsController.class
