@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="student-shell">
     <el-container class="student-shell__layout">
       <el-aside class="student-shell__aside student-shell__aside--cyber">
@@ -116,17 +116,6 @@
         </el-header>
 
         <div class="student-shell__content">
-          <div class="student-shell__breadcrumb-card">
-            <div class="student-shell__breadcrumb-main">
-              <span class="student-shell__breadcrumb-label">当前位置</span>
-              <el-breadcrumb separator="/">
-                <el-breadcrumb-item v-if="$route.meta.name !== '首页'" :to="{ path: '/student/home' }">首页</el-breadcrumb-item>
-                <el-breadcrumb-item>{{ currentPageName }}</el-breadcrumb-item>
-              </el-breadcrumb>
-            </div>
-            <span class="student-shell__breadcrumb-note">当前模块：{{ currentPageName }}</span>
-          </div>
-
           <el-main class="student-shell__main">
             <router-view />
           </el-main>
@@ -143,11 +132,6 @@ export default {
       nowTime: "",
       user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {},
     };
-  },
-  computed: {
-    currentPageName() {
-      return this.$route.meta.name || "学习中心";
-    }
   },
   mounted() {
     this.getTime();
@@ -223,3 +207,4 @@ export default {
 @keyframes student-brand-breathe { 0%, 100% { box-shadow: 0 0 0 1px rgba(95, 255, 176, 0.08), 0 0 16px rgba(95, 255, 176, 0.16), inset 0 0 14px rgba(95, 255, 176, 0.06);} 50% { box-shadow: 0 0 0 1px rgba(95, 255, 176, 0.14), 0 0 28px rgba(95, 255, 176, 0.24), inset 0 0 20px rgba(95, 255, 176, 0.1);} }
 @keyframes student-cyber-scan { 0% { transform: translate3d(-4%, -2%, 0);} 50% { transform: translate3d(3%, 2%, 0);} 100% { transform: translate3d(-4%, -2%, 0);} }
 </style>
+

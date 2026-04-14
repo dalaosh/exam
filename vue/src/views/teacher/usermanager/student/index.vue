@@ -4,7 +4,7 @@
       <div>
         <h2 class="teacher-page-head__title">学生管理</h2>
         <p class="teacher-page-head__desc">
-          统一查看学生账号、联系方式和密钥摘要，保持查询、选择和导出行为不变。
+          统一查看学生账号、联系方式和密钥摘要，保留查询、选择和导出操作。
         </p>
       </div>
       <div class="teacher-page-head__meta">
@@ -13,31 +13,24 @@
     </section>
 
     <section class="teacher-panel teacher-question-list-page__toolbar">
-      <el-form :inline="true" :model="params" class="teacher-toolbar__form teacher-question-list-page__filters">
-        <el-form-item label="账号">
-          <el-input v-model="params.account" clearable placeholder="请输入账号"></el-input>
-        </el-form-item>
-        <el-form-item label="姓名">
-          <el-input v-model="params.name" clearable placeholder="请输入姓名"></el-input>
-        </el-form-item>
-        <el-form-item label="性别">
-          <el-input v-model="params.sex" clearable placeholder="请输入性别"></el-input>
-        </el-form-item>
-        <el-form-item label="电话">
-          <el-input v-model="params.phone" clearable placeholder="请输入电话"></el-input>
-        </el-form-item>
-        <el-form-item label="电子邮箱">
-          <el-input v-model="params.email" clearable placeholder="请输入电子邮箱"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="findBySearch">查询</el-button>
-        </el-form-item>
-      </el-form>
+      <div class="teacher-question-list-page__toolbar-row">
+        <el-form :model="params" class="teacher-toolbar__form teacher-question-list-page__filters">
+          <el-form-item label="账号">
+            <el-input v-model="params.account" clearable placeholder="请输入账号" />
+          </el-form-item>
+          <el-form-item label="姓名">
+            <el-input v-model="params.name" clearable placeholder="请输入姓名" />
+          </el-form-item>
+          <el-form-item class="teacher-question-list-page__submit">
+            <el-button type="primary" @click="findBySearch">查询</el-button>
+          </el-form-item>
+        </el-form>
 
-      <div class="teacher-question-list-page__actions">
-        <el-button type="primary" plain @click="selectAll">全选</el-button>
-        <el-button type="warning" plain @click="DeselectAll">清空选择</el-button>
-        <el-button type="success" plain @click="exp()">批量导出</el-button>
+        <div class="teacher-question-list-page__actions">
+          <el-button type="primary" plain @click="selectAll">全选</el-button>
+          <el-button type="warning" plain @click="DeselectAll">清空选择</el-button>
+          <el-button type="success" plain @click="exp()">批量导出</el-button>
+        </div>
       </div>
     </section>
 
@@ -45,7 +38,7 @@
       <div class="teacher-panel__head">
         <div>
           <h3 class="teacher-panel__title">学生列表</h3>
-          <p class="teacher-panel__desc">统一表格层级和文本展示，便于教师快速浏览学生信息。</p>
+          <p class="teacher-panel__desc">统一表格层级和信息展示，便于教师快速浏览学生资料。</p>
         </div>
       </div>
 
@@ -130,16 +123,16 @@
     <el-dialog title="请填写信息" :visible.sync="dialogFormVisible" width="560px" custom-class="teacher-dialog">
       <el-form ref="formRef" :model="form" :rules="rules" class="teacher-dialog__form" label-width="88px">
         <el-form-item label="姓名" prop="name">
-          <el-input v-model="form.name"></el-input>
+          <el-input v-model="form.name" />
         </el-form-item>
         <el-form-item label="性别" prop="sex">
-          <el-input v-model="form.sex" autocomplete="off"></el-input>
+          <el-input v-model="form.sex" autocomplete="off" />
         </el-form-item>
         <el-form-item label="电子邮箱" prop="email">
-          <el-input v-model="form.email" autocomplete="off"></el-input>
+          <el-input v-model="form.email" autocomplete="off" />
         </el-form-item>
         <el-form-item label="电话" prop="phone">
-          <el-input v-model="form.phone" autocomplete="off"></el-input>
+          <el-input v-model="form.phone" autocomplete="off" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="teacher-dialog__footer">
@@ -161,7 +154,7 @@ export default {
         name: [{ required: true, message: "请输入姓名", trigger: "blur" }],
         sex: [{ required: true, message: "请输入性别", trigger: "blur" }],
         email: [{ required: true, message: "请输入电子邮箱", trigger: "blur" }],
-        phone: [{ required: true, message: "请输入电话", trigger: "blur" }]
+        phone: [{ required: true, message: "请输入电话", trigger: "blur" }],
       },
       form: {},
       tableData: [],
@@ -171,7 +164,7 @@ export default {
       ids: [],
       multipleSelection: "",
       params: {},
-      dialogFormVisible: false
+      dialogFormVisible: false,
     };
   },
   created() {
@@ -196,11 +189,11 @@ export default {
     load() {
       this.params = {
         pageNum: this.pageNum,
-        pageSize: this.pageSize
+        pageSize: this.pageSize,
       };
       request
         .get("/user/student/selectPage", {
-          params: this.params
+          params: this.params,
         })
         .then((res) => {
           if (res.code === "200") {
@@ -214,7 +207,7 @@ export default {
     findBySearch() {
       request
         .get("/user/student/selectPage", {
-          params: this.params
+          params: this.params,
         })
         .then((res) => {
           if (res.code === "200") {
@@ -239,7 +232,7 @@ export default {
       request({
         url: this.form.id ? "/user/student/update" : "/user/student/add",
         method: this.form.id ? "PUT" : "POST",
-        data: this.form
+        data: this.form,
       }).then((res) => {
         if (res.code === "200") {
           this.$message.success("保存成功");
@@ -260,7 +253,80 @@ export default {
     },
     exp() {
       location.href = "http://localhost:9998/user/student/export";
-    }
-  }
+    },
+  },
 };
 </script>
+
+<style scoped lang="scss">
+.teacher-question-list-page__toolbar-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px 24px;
+}
+
+.teacher-question-list-page__filters {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(220px, 280px)) auto;
+  gap: 16px 18px;
+  align-items: end;
+  margin: 0;
+}
+
+.teacher-question-list-page__filters :deep(.el-form-item) {
+  margin: 0;
+}
+
+.teacher-question-list-page__filters :deep(.el-form-item__label) {
+  padding-right: 12px;
+  color: #173b6c;
+  font-weight: 700;
+}
+
+.teacher-question-list-page__filters :deep(.el-input__inner) {
+  min-width: 220px;
+}
+
+.teacher-question-list-page__submit {
+  align-self: end;
+}
+
+.teacher-question-list-page__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-left: auto;
+}
+
+.teacher-question-list-page__actions .el-button {
+  margin-left: 0;
+}
+
+@media (max-width: 1200px) {
+  .teacher-question-list-page__filters {
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .teacher-question-list-page__toolbar-row {
+    align-items: stretch;
+  }
+
+  .teacher-question-list-page__filters {
+    width: 100%;
+    grid-template-columns: 1fr;
+  }
+
+  .teacher-question-list-page__filters :deep(.el-input__inner) {
+    min-width: 0;
+  }
+
+  .teacher-question-list-page__actions {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+</style>
