@@ -6,7 +6,7 @@
           <div class="question-group">
             <div class="title title--section">
               <span>选择题</span>
-              <el-button type="text" @click="changeMultiAll()" plain class="action-link action-link--wide">自动阅卷选择题</el-button>
+              <el-button type="text" @click="startFakeAgentMark('multi')" plain class="action-link action-link--wide">自动阅卷选择题</el-button>
             </div>
             <div>
               <el-card shadow="hover" class="cards" v-for="(data, index) in questionMulti" :key="index">
@@ -37,7 +37,7 @@
           <div class="question-group">
             <div class="title title--section">
               <span>判断题</span>
-              <el-button type="text" @click="changeJudgeAll()" plain class="action-link action-link--wide">自动阅卷判断题</el-button>
+              <el-button type="text" @click="startFakeAgentMark('judge')" plain class="action-link action-link--wide">自动阅卷判断题</el-button>
             </div>
             <div class="divs">
               <el-card shadow="hover" class="cards" v-for="(data, index) in questionJudge" :key="index">
@@ -175,8 +175,8 @@
           <div class="questionSignal" v-for="(data, index) in questionListCode" :key="index">
             <el-row><div class="title title--signal">代码题 第{{questionTypeId+1}}题 第{{index+1}}位同学</div></el-row>
             <el-row class="answer-row answer-row--code">
-              <el-col :span="12" class="answer-col"><div class="answer-label">标准答案</div><monaco-editor v-model="data.questionCode.answer" language="c" :options="{ readOnly: true, fontSize: '18px' }" class="code-editor"></monaco-editor></el-col>
-              <el-col :span="12" class="answer-col"><div class="answer-label">学生答案</div><monaco-editor v-model="data.answer" language="c" :options="{ readOnly: true, fontSize: '18px' }" class="code-editor"></monaco-editor></el-col>
+              <el-col :span="12" class="answer-col"><div class="answer-label">标准答案</div><monaco-editor v-model="data.questionCode.answer" language="c" height="30vh" :options="codePreviewOptions" class="code-editor"></monaco-editor></el-col>
+              <el-col :span="12" class="answer-col"><div class="answer-label">学生答案</div><monaco-editor v-model="data.answer" language="c" height="30vh" :options="codePreviewOptions" class="code-editor"></monaco-editor></el-col>
             </el-row>
             <el-row class="analysis-panel"><div class="analysis-label">答案详解</div><div v-html="data.questionCode.analysis" class="w-e-text analysis-content"></div></el-row>
             <el-row class="grading-footer">
@@ -192,6 +192,29 @@
 
     <el-row v-if="visit===0"><div class="questions"><div class="empty-state">批卷工作已经结束</div></div></el-row>
     <el-row v-if="visit===-1"><div class="questions"><div class="empty-state">批卷工作还未开始</div></div></el-row>
+    <el-dialog
+      :visible.sync="agentVisible"
+      width="420px"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      custom-class="agent-progress-dialog">
+      <div class="agent-progress">
+        <div class="agent-progress__eyebrow">智能批阅 Agent</div>
+        <h3 class="agent-progress__title">{{ agentTitle }}</h3>
+        <p class="agent-progress__desc">{{ agentStage }}</p>
+        <el-progress
+          :percentage="agentPercent"
+          :stroke-width="16"
+          :show-text="false"
+          color="#0f766e">
+        </el-progress>
+        <div class="agent-progress__meta">
+          <span>当前进度</span>
+          <strong>{{ agentPercent }}%</strong>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -202,6 +225,19 @@ import MonacoEditor from "monaco-editor-vue";
 export default {
   components: {
     MonacoEditor,
+  },
+  computed: {
+    codePreviewOptions() {
+      return {
+        readOnly: true,
+        fontSize: 18,
+        automaticLayout: true,
+        minimap: {
+          enabled: false,
+        },
+        scrollBeyondLastLine: false,
+      };
+    },
   },
   data(){
     return{
@@ -224,7 +260,12 @@ export default {
       score:"",
       markNum:0,
       visit:-1,
-      examManager:""
+      examManager:"",
+      agentVisible:false,
+      agentPercent:0,
+      agentStage:"",
+      agentTitle:"",
+      agentTimer:null
     }
   },
   created() {
@@ -233,7 +274,65 @@ export default {
     this.findExam()
   },
   mounted() {},
+  beforeDestroy() {
+    this.stopFakeAgentMark()
+  },
   methods: {
+    startFakeAgentMark(questionType) {
+      if (this.agentVisible) {
+        return
+      }
+      const configMap = {
+        multi: {
+          title: "Agent 正在批阅选择题",
+          action: () => this.changeMultiAll()
+        },
+        judge: {
+          title: "Agent 正在批阅判断题",
+          action: () => this.changeJudgeAll()
+        }
+      }
+      const config = configMap[questionType]
+      if (!config) {
+        return
+      }
+      const stages = [
+        "正在解析题目结构与标准答案...",
+        "正在抽取待批阅题目并建立任务队列...",
+        "正在模拟智能体分批阅卷...",
+        "正在整理批阅结果并准备回写...",
+        "即将完成，正在同步最终状态..."
+      ]
+      this.stopFakeAgentMark()
+      this.agentVisible = true
+      this.agentPercent = 0
+      this.agentTitle = config.title
+      this.agentStage = stages[0]
+      let stageIndex = 0
+      this.agentTimer = setInterval(() => {
+        const step = Math.floor(Math.random() * 8) + 6
+        this.agentPercent = Math.min(this.agentPercent + step, 100)
+        const nextStage = Math.min(Math.floor(this.agentPercent / 22), stages.length - 1)
+        if (nextStage !== stageIndex) {
+          stageIndex = nextStage
+          this.agentStage = stages[stageIndex]
+        }
+        if (this.agentPercent >= 100) {
+          this.stopFakeAgentMark()
+          this.agentStage = "智能体批阅完成，正在刷新结果..."
+          setTimeout(() => {
+            this.agentVisible = false
+            config.action()
+          }, 500)
+        }
+      }, 260)
+    },
+    stopFakeAgentMark() {
+      if (this.agentTimer) {
+        clearInterval(this.agentTimer)
+        this.agentTimer = null
+      }
+    },
     timeJudge(){
       if(this.beginBefore(this.examManager)){
         this.visit=-1
@@ -530,22 +629,126 @@ export default {
 .status-banner--alert { color: #b91c1c; background: linear-gradient(180deg, #fff7f7 0%, #fff1f2 100%); }
 .status-banner__value { margin-left: 8px; font-size: 28px; }
 .answer-row { margin: 16px 0 18px; }
-.answer-col { text-align: center; }
+.answer-col { text-align: left; }
 .answer-label, .analysis-label { margin-bottom: 10px; font-size: 18px; font-weight: 700; color: #1e3a5f; }
-.answer-box { width: 90%; min-height: 120px; margin-left: 5%; padding: 16px 18px; border-radius: 18px; border: 1px solid rgba(208, 220, 233, 0.92); background: linear-gradient(180deg, #f8fbff 0%, #edf5fb 100%); text-align: left; color: #334155; box-sizing: border-box; }
+.answer-box { width: 100%; min-height: 120px; padding: 16px 18px; border-radius: 18px; border: 1px solid rgba(208, 220, 233, 0.92); background: linear-gradient(180deg, #f8fbff 0%, #edf5fb 100%); text-align: left; color: #334155; box-sizing: border-box; overflow-wrap: anywhere; word-break: break-word; }
+.answer-box :deep(p) { margin: 0 0 10px; line-height: 1.8; }
+.answer-box :deep(p:last-child) { margin-bottom: 0; }
+.answer-box :deep(ul),
+.answer-box :deep(ol) { margin: 0; padding-left: 1.4em; }
+.answer-box :deep(ul ul),
+.answer-box :deep(ol ol),
+.answer-box :deep(ul ol),
+.answer-box :deep(ol ul) { margin-top: 8px; padding-left: 1.2em; }
+.answer-box :deep(li) { margin: 0 0 8px; line-height: 1.8; }
+.answer-box :deep(li:last-child) { margin-bottom: 0; }
+.answer-box :deep(li > p) { display: inline; margin: 0; }
 .analysis-panel { display: block; margin: 0 2% 18px; padding: 18px 20px; border-radius: 18px; border: 1px solid rgba(232, 220, 164, 0.86); background: linear-gradient(180deg, #fffdf5 0%, #fff9e8 100%); }
 .analysis-content { color: #4b5563; line-height: 1.8; }
-.grading-footer, .grading-footer__score, .grading-footer__submit { display: flex; align-items: center; }
-.grading-footer__submit { justify-content: center; }
-.score-options { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; width: 100%; }
-.score-radio { width: auto; margin-right: 0; padding: 10px 16px; border: 1px solid rgba(203, 213, 225, 0.96); border-radius: 16px; background: #ffffff; transition: all 0.2s ease; }
+.grading-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 18px;
+}
+.grading-footer > .el-col {
+  width: 100%;
+  max-width: 100%;
+  flex: 0 0 100%;
+}
+.grading-footer__score,
+.grading-footer__submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+.score-options {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 12px;
+  width: 100%;
+}
+.score-radio {
+  flex: 1 1 0;
+  min-width: 0;
+  margin-right: 0;
+  padding: 10px 0;
+  border: 1px solid rgba(203, 213, 225, 0.96);
+  border-radius: 16px;
+  background: #ffffff;
+  text-align: center;
+  transition: all 0.2s ease;
+}
 .score-radio:hover { border-color: rgba(15, 118, 110, 0.5); background: rgba(240, 253, 250, 0.9); }
 .score-radio__text { font-size: 20px; font-weight: 700; color: #334155; }
-.submit-link { width: 70%; padding: 10px 0; border-radius: 999px; background: linear-gradient(135deg, rgba(15, 118, 110, 0.14), rgba(20, 184, 166, 0.18)); color: #0f766e; font-size: 18px; font-weight: 700; text-align: center; }
+.score-radio :deep(.el-radio__label) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 8px;
+}
+.submit-link {
+  width: auto;
+  min-width: 180px;
+  padding: 10px 42px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(15, 118, 110, 0.14), rgba(20, 184, 166, 0.18));
+  color: #0f766e;
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+}
 .answer-row--code .answer-col { text-align: left; }
 .code-editor { display: block; height: 30vh; margin-top: 8px; overflow: hidden; border: 1px solid rgba(208, 220, 233, 0.92); border-radius: 18px; }
 .empty-state { display: flex; align-items: center; justify-content: center; height: 100%; padding: 40px; text-align: center; font-size: 52px; color: #17405d; letter-spacing: 3px; font-family: 'STXingkai', '华文行楷', cursive; }
 .grading-page :deep(.el-radio__input.is-checked .el-radio__inner) { border-color: #0f766e; background: #0f766e; }
 .grading-page :deep(.el-radio__label) { padding-left: 8px; }
 .grading-page :deep(.w-e-text p), .grading-page :deep(.w-e-text div) { margin: 0; }
+.grading-page :deep(.agent-progress-dialog) { border-radius: 22px; overflow: hidden; }
+.grading-page :deep(.agent-progress-dialog .el-dialog__header) { display: none; }
+.grading-page :deep(.agent-progress-dialog .el-dialog__body) { padding: 0; }
+.agent-progress {
+  padding: 26px 24px 22px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(246, 250, 252, 0.96) 100%),
+    radial-gradient(circle at top right, rgba(45, 212, 191, 0.18), transparent 38%);
+}
+.agent-progress__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: rgba(15, 118, 110, 0.1);
+  color: #0f766e;
+  font-size: 13px;
+  font-weight: 700;
+}
+.agent-progress__title {
+  margin: 16px 0 8px;
+  font-size: 24px;
+  line-height: 1.35;
+  color: #0f172a;
+}
+.agent-progress__desc {
+  margin: 0 0 18px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #475569;
+}
+.agent-progress__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+  color: #475569;
+  font-size: 14px;
+}
+.agent-progress__meta strong {
+  color: #0f766e;
+  font-size: 18px;
+}
 </style>

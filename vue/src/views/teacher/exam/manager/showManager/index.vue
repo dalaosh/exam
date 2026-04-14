@@ -4,43 +4,30 @@
       <div>
         <div class="workspace-title">考试管理工作台</div>
       </div>
-      <div class="workspace-copy">统一查看考试详情、题目配置与自动组卷内容。</div>
+      <div class="workspace-copy">
+        统一查看考试详情、自动组卷、手动组卷和多Agent智能组卷流程。
+      </div>
     </div>
 
-    <el-tabs class="workspace-tabs" type="border-card">
-      <el-tab-pane label="考试详情">
+    <el-tabs v-model="activeTab" class="workspace-tabs" type="border-card">
+      <el-tab-pane label="考试详情" name="overview">
         <div class="tab-panel">
           <show :param="receivedData.id"></show>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="自动组卷">
+      <el-tab-pane label="自动组卷" name="auto">
         <div class="tab-panel">
           <AIExam :param="receivedData.id" :courseId="receivedData.courseId"></AIExam>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="选择题">
+      <el-tab-pane label="手动组卷" name="manual">
         <div class="tab-panel">
-          <multi :examId="receivedData.id" :courseId="receivedData.courseId"></multi>
+          <manual-paper :exam-id="receivedData.id" :course-id="receivedData.courseId"></manual-paper>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="判断题">
+      <el-tab-pane label="多Agent智能组卷" name="multi-agent">
         <div class="tab-panel">
-          <judge :examId="receivedData.id" :courseId="receivedData.courseId"></judge>
-        </div>
-      </el-tab-pane>
-      <el-tab-pane label="填空题">
-        <div class="tab-panel">
-          <fill :examId="receivedData.id" :courseId="receivedData.courseId"></fill>
-        </div>
-      </el-tab-pane>
-      <el-tab-pane label="简答题">
-        <div class="tab-panel">
-          <shortAns :examId="receivedData.id" :courseId="receivedData.courseId"></shortAns>
-        </div>
-      </el-tab-pane>
-      <el-tab-pane label="代码题">
-        <div class="tab-panel">
-          <codes :examId="receivedData.id" :courseId="receivedData.courseId"></codes>
+          <multi-agent-paper :exam-id="receivedData.id" :course-id="receivedData.courseId"></multi-agent-paper>
         </div>
       </el-tab-pane>
     </el-tabs>
@@ -48,35 +35,28 @@
 </template>
 
 <script>
-import codes from "@/views/teacher/exam/manager/showManager/code"
-import fill from "@/views/teacher/exam/manager/showManager/fill"
-import judge from "@/views/teacher/exam/manager/showManager/judge"
-import multi from "@/views/teacher/exam/manager/showManager/multi"
-import show from "@/views/teacher/exam/manager/showManager/show"
-import shortAns from "@/views/teacher/exam/manager/showManager/shortAns"
-import AIExam from "@/views/teacher/exam/manager/showManager/AIExam/index.vue"
+import AIExam from "@/views/teacher/exam/manager/showManager/AIExam/index.vue";
+import ManualPaper from "@/views/teacher/exam/manager/showManager/manualPaper.vue";
+import MultiAgentPaper from "@/views/teacher/exam/manager/showManager/multiAgentPaper.vue";
+import show from "@/views/teacher/exam/manager/showManager/show";
 
 export default {
   components: {
-    codes,
-    fill,
-    judge,
-    multi,
+    AIExam,
+    ManualPaper,
+    MultiAgentPaper,
     show,
-    shortAns,
-    AIExam
   },
   data() {
     return {
-      user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {},
-      form: {},
-      receivedData: ""
-    }
+      activeTab: "overview",
+      receivedData: "",
+    };
   },
   created() {
-    this.receivedData = this.$route.params
-  }
-}
+    this.receivedData = this.$route.params;
+  },
+};
 </script>
 
 <style scoped>
