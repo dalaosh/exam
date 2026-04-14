@@ -3,7 +3,9 @@
     <section class="teacher-page-head">
       <div>
         <h2 class="teacher-page-head__title">创建课程</h2>
-        <p class="teacher-page-head__desc">统一课程封面、时间范围、课程编号和课程简介的编辑布局，减少无效留白并保持教师后台风格一致。</p>
+        <p class="teacher-page-head__desc">
+          统一课程封面、时间信息、课程编号和课程简介的编辑布局，减少遮挡并保持教师后台风格一致。
+        </p>
       </div>
     </section>
 
@@ -11,7 +13,9 @@
       <aside class="teacher-panel teacher-editor-sidebar teacher-course-create-page__sidebar">
         <div>
           <h3 class="teacher-panel__title">操作员信息</h3>
-          <p class="teacher-course-create-page__sidebar-note">课程创建后会自动绑定当前教师账号，右侧只需填写课程资料本身。</p>
+          <p class="teacher-course-create-page__sidebar-note">
+            课程创建后会自动绑定当前教师账号，右侧只需填写课程资料本身。
+          </p>
         </div>
 
         <div class="teacher-editor-meta">
@@ -29,8 +33,8 @@
         <div class="teacher-course-create-page__helper">
           <div class="teacher-course-create-page__helper-head">填写提示</div>
           <ul class="teacher-course-create-page__helper-list">
-            <li>先上传课程封面，再补齐课程名称和时间范围。</li>
-            <li>课程编号通过按钮自动生成，避免手动录入错误。</li>
+            <li>先上传课程封面，再补齐课程名称和起止时间。</li>
+            <li>课程编号可通过按钮自动生成，避免手动录入错误。</li>
             <li>课程简介建议写清学习目标、进度安排和课堂要求。</li>
           </ul>
         </div>
@@ -48,7 +52,7 @@
                 :show-file-list="false"
                 :on-success="handleAvatarSuccess"
               >
-                <img class="teacher-editor-upload__preview" v-if="imageUrl" :src="imageUrl" alt="">
+                <img v-if="imageUrl" class="teacher-editor-upload__preview" :src="imageUrl" alt="" />
                 <div v-else class="teacher-empty teacher-course-create-page__empty">
                   <i class="el-icon-plus"></i>
                 </div>
@@ -58,26 +62,43 @@
             <div class="teacher-editor-form-grid teacher-course-create-page__form-grid">
               <div class="teacher-editor-form-item">
                 <span class="teacher-editor-form-item__label">课程名称</span>
-                <el-input placeholder="请输入课程名称" v-model="form.name"></el-input>
+                <el-input v-model="form.name" placeholder="请输入课程名称"></el-input>
               </div>
+
               <div class="teacher-editor-form-item">
                 <span class="teacher-editor-form-item__label">课程编号</span>
                 <div class="teacher-toolbar__actions">
-                  <el-input placeholder="请点击按钮生成课程编号" disabled v-model="form.number"></el-input>
+                  <el-input v-model="form.number" disabled placeholder="请点击按钮生成课程编号"></el-input>
                   <el-button type="primary" plain @click="random">点击生成</el-button>
                 </div>
               </div>
+
               <div class="teacher-editor-form-item" style="grid-column: 1 / -1;">
                 <span class="teacher-editor-form-item__label">日期范围</span>
-                <el-date-picker
-                  @change="times"
-                  v-model="value1"
-                  type="datetimerange"
-                  range-separator="至"
-                  start-placeholder="开始日期"
-                  end-placeholder="结束日期"
-                >
-                </el-date-picker>
+                <div class="teacher-course-create-page__date-grid">
+                  <div class="teacher-course-create-page__date-item">
+                    <span class="teacher-course-create-page__date-caption">开始时间</span>
+                    <el-date-picker
+                      v-model="form.beginTime"
+                      type="datetime"
+                      format="yyyy-MM-dd HH:mm:ss"
+                      value-format="yyyy-MM-dd HH:mm:ss"
+                      placeholder="请选择开始时间"
+                    >
+                    </el-date-picker>
+                  </div>
+                  <div class="teacher-course-create-page__date-item">
+                    <span class="teacher-course-create-page__date-caption">结束时间</span>
+                    <el-date-picker
+                      v-model="form.endTime"
+                      type="datetime"
+                      format="yyyy-MM-dd HH:mm:ss"
+                      value-format="yyyy-MM-dd HH:mm:ss"
+                      placeholder="请选择结束时间"
+                    >
+                    </el-date-picker>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -90,7 +111,7 @@
               </div>
               <div class="teacher-course-create-page__editor-meta">建议控制在 3 至 5 段，便于学生快速浏览。</div>
             </div>
-            <div class="w-e-text-container teacher-course-create-page__editor" id="editor" style="width: 100%; height: 380px"></div>
+            <div id="editor" class="w-e-text-container teacher-course-create-page__editor" style="width: 100%; height: 380px"></div>
           </div>
 
           <div class="teacher-editor-actions teacher-editor-actions--end">
@@ -126,10 +147,11 @@ export default {
     return {
       user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {},
       form: {
-        number: ""
+        number: "",
+        beginTime: "",
+        endTime: ""
       },
       tableData: [],
-      value1: [],
       imageUrl: ""
     };
   },
@@ -140,20 +162,6 @@ export default {
     load() {
       editor = "";
       initWangEditor("");
-    },
-    times() {
-      this.form.beginTime = this.time(this.value1[0]);
-      this.form.endTime = this.time(this.value1[1]);
-    },
-    time(dataTime) {
-      const date = new Date(dataTime);
-      const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const day = String(date.getDate()).padStart(2, "0");
-      const hours = String(date.getHours()).padStart(2, "0");
-      const minutes = String(date.getMinutes()).padStart(2, "0");
-      const seconds = String(date.getSeconds()).padStart(2, "0");
-      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     },
     handleAvatarSuccess(res) {
       this.imageUrl = res.data;
@@ -175,9 +183,10 @@ export default {
         if (res.code === "200") {
           this.$message.success("添加成功");
           this.form = {
-            number: ""
+            number: "",
+            beginTime: "",
+            endTime: ""
           };
-          this.value1 = [];
           this.imageUrl = "";
           editor = "";
           initWangEditor("");
@@ -274,6 +283,24 @@ export default {
   align-content: start;
 }
 
+.teacher-course-create-page__date-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.teacher-course-create-page__date-item {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.teacher-course-create-page__date-caption {
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+}
+
 .teacher-course-create-page__editor-card {
   display: flex;
   flex: 1;
@@ -321,6 +348,16 @@ export default {
 @media (max-width: 1280px) {
   .teacher-course-create-page__helper {
     margin-top: 0;
+  }
+
+  .teacher-course-create-page__date-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .teacher-course-create-page__date-grid {
+    grid-template-columns: 1fr;
   }
 }
 </style>

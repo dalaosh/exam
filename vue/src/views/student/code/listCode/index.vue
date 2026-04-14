@@ -1,5 +1,5 @@
 <template>
-  <div class="student-page">
+  <div class="student-page student-list-page">
     <section class="student-page-head">
       <div>
         <h2 class="student-page-head__title">代码信息</h2>
@@ -10,9 +10,9 @@
       </div>
     </section>
 
-    <section class="student-panel student-panel--toolbar">
-      <div class="student-toolbar">
-        <el-form :inline="true" :model="params" class="student-toolbar__form">
+    <section class="student-panel student-panel--toolbar student-list-page__toolbar">
+      <div class="student-toolbar student-list-page__toolbar-inner">
+        <el-form :inline="true" :model="params" class="student-toolbar__form student-list-page__filters">
           <el-form-item label="问题">
             <el-input v-model="params.title" clearable placeholder="请输入问题"></el-input>
           </el-form-item>
@@ -31,7 +31,7 @@
           </el-form-item>
         </el-form>
 
-        <div class="student-toolbar__actions">
+        <div class="student-toolbar__actions student-list-page__actions">
           <el-button type="primary" plain @click="selectAll">全选</el-button>
           <el-button type="warning" plain @click="DeselectAll">清空选择</el-button>
           <el-button type="danger" plain @click="deleteBatch">批量删除</el-button>
@@ -41,8 +41,8 @@
       </div>
     </section>
 
-    <section class="student-panel student-panel--table">
-      <div class="student-panel__head">
+    <section class="student-panel student-panel--table student-list-page__table-panel">
+      <div class="student-panel__head student-list-page__table-head">
         <div>
           <h3 class="student-panel__title">代码列表</h3>
           <p class="student-panel__desc">表格视觉与按钮层级统一，长文本题目采用只读文本域保持可读性。</p>
@@ -51,7 +51,7 @@
 
       <el-table
         ref="table"
-        class="student-table"
+        class="student-table student-list-page__table"
         :data="tableData"
         tooltip-effect="dark"
         border
