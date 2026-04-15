@@ -54,7 +54,10 @@
           </div>
 
           <div class="question-group">
-            <div class="title title--section"><span>填空题</span></div>
+            <div class="title title--section">
+              <span>填空题</span>
+              <el-button type="text" @click="startFakeAgentMark('fill')" plain class="action-link action-link--wide">Agent智能批卷</el-button>
+            </div>
             <div class="divs">
               <el-card shadow="hover" class="cards" v-for="(data, index) in questionFill" :key="index">
                 <el-row class="card-head">
@@ -70,7 +73,10 @@
           </div>
 
           <div class="question-group">
-            <div class="title title--section"><span>简答题</span></div>
+            <div class="title title--section">
+              <span>简答题</span>
+              <el-button type="text" @click="startFakeAgentMark('shortAns')" plain class="action-link action-link--wide">Agent智能批卷</el-button>
+            </div>
             <div class="divs">
               <el-card shadow="hover" class="cards" v-for="(data, index) in questionShortAns" :key="index">
                 <el-row class="card-head">
@@ -86,7 +92,10 @@
           </div>
 
           <div class="question-group">
-            <div class="title title--section"><span>代码题</span></div>
+            <div class="title title--section">
+              <span>代码题</span>
+              <el-button type="text" @click="startFakeAgentMark('code')" plain class="action-link action-link--wide">Agent智能批卷</el-button>
+            </div>
             <div class="divs">
               <el-card shadow="hover" class="cards" v-for="(data, index) in questionCode" :key="index">
                 <el-row class="card-head">
@@ -151,7 +160,10 @@
             <el-row class="analysis-panel"><div class="analysis-label">答案详解</div><div v-html="data.questionFill.analysis" class="w-e-text analysis-content"></div></el-row>
             <el-row class="grading-footer">
               <el-col :span="18" class="grading-footer__score"><div class="score-options"><el-radio v-for="i in data.questionFill.score + 1" :key="i - 1" v-model="data.markExams" class="score-radio" :label="(i - 1).toString()"><span class="score-radio__text">{{ i - 1 }} 分</span></el-radio></div></el-col>
-              <el-col :span="6" class="grading-footer__submit"><el-button type="text" @click="submitFill(data,index)" plain class="submit-link">提交</el-button></el-col>
+              <el-col :span="6" class="grading-footer__submit">
+                <span v-if="hasAgentSuggestion(data.id)" class="agent-score-tip">Agent建议给分：{{ getAgentSuggestion(data.id) }}分</span>
+                <el-button type="text" @click="submitFill(data,index)" plain class="submit-link">提交</el-button>
+              </el-col>
             </el-row>
           </div>
         </div>
@@ -166,7 +178,10 @@
             <el-row class="analysis-panel"><div class="analysis-label">答案详解</div><div v-html="data.questionShortAns.analysis" class="w-e-text analysis-content"></div></el-row>
             <el-row class="grading-footer">
               <el-col :span="18" class="grading-footer__score"><div class="score-options"><el-radio v-for="i in data.questionShortAns.score + 1" :key="i - 1" v-model="data.markExams" class="score-radio" :label="(i - 1).toString()"><span class="score-radio__text">{{ i - 1 }} 分</span></el-radio></div></el-col>
-              <el-col :span="6" class="grading-footer__submit"><el-button type="text" @click="submitShortAns(data,index)" plain class="submit-link">提交</el-button></el-col>
+              <el-col :span="6" class="grading-footer__submit">
+                <span v-if="hasAgentSuggestion(data.id)" class="agent-score-tip">Agent建议给分：{{ getAgentSuggestion(data.id) }}分</span>
+                <el-button type="text" @click="submitShortAns(data,index)" plain class="submit-link">提交</el-button>
+              </el-col>
             </el-row>
           </div>
         </div>
@@ -181,7 +196,10 @@
             <el-row class="analysis-panel"><div class="analysis-label">答案详解</div><div v-html="data.questionCode.analysis" class="w-e-text analysis-content"></div></el-row>
             <el-row class="grading-footer">
               <el-col :span="18" class="grading-footer__score"><div class="score-options"><el-radio v-for="i in data.questionCode.score + 1" :key="i - 1" v-model="data.markExams" class="score-radio" :label="(i - 1).toString()"><span class="score-radio__text">{{ i - 1 }} 分</span></el-radio></div></el-col>
-              <el-col :span="6" class="grading-footer__submit"><el-button type="text" @click="submitCode(data,index)" plain class="submit-link">提交</el-button></el-col>
+              <el-col :span="6" class="grading-footer__submit">
+                <span v-if="hasAgentSuggestion(data.id)" class="agent-score-tip">Agent建议给分：{{ getAgentSuggestion(data.id) }}分</span>
+                <el-button type="text" @click="submitCode(data,index)" plain class="submit-link">提交</el-button>
+              </el-col>
             </el-row>
           </div>
         </div>
@@ -261,6 +279,8 @@ export default {
       markNum:0,
       visit:-1,
       examManager:"",
+      agentSuggestions:{},
+      agentSuggestionEnabledTypes:{},
       agentVisible:false,
       agentPercent:0,
       agentStage:"",
@@ -290,6 +310,18 @@ export default {
         judge: {
           title: "Agent 正在批阅判断题",
           action: () => this.changeJudgeAll()
+        },
+        fill: {
+          title: "Agent 正在批阅填空题",
+          action: () => this.enableFakeAgentSuggestions("fill")
+        },
+        shortAns: {
+          title: "Agent 正在批阅简答题",
+          action: () => this.enableFakeAgentSuggestions("shortAns")
+        },
+        code: {
+          title: "Agent 正在批阅代码题",
+          action: () => this.enableFakeAgentSuggestions("code")
         }
       }
       const config = configMap[questionType]
@@ -322,7 +354,9 @@ export default {
           this.agentStage = "智能体批阅完成，正在刷新结果..."
           setTimeout(() => {
             this.agentVisible = false
-            config.action()
+            if (config.action) {
+              config.action()
+            }
           }, 500)
         }
       }, 260)
@@ -332,6 +366,46 @@ export default {
         clearInterval(this.agentTimer)
         this.agentTimer = null
       }
+    },
+    enableFakeAgentSuggestions(questionType) {
+      this.$set(this.agentSuggestionEnabledTypes, questionType, true)
+      const currentListMap = {
+        fill: this.questionListFill,
+        shortAns: this.questionListShortAns,
+        code: this.questionListCode
+      }
+      this.ensureFakeAgentSuggestions(questionType, currentListMap[questionType], true)
+    },
+    ensureFakeAgentSuggestions(questionType, list, forceRefresh = false) {
+      const listMap = {
+        fill: this.questionListFill,
+        shortAns: this.questionListShortAns,
+        code: this.questionListCode
+      }
+      const scoreGetterMap = {
+        fill: (item) => item.questionFill && item.questionFill.score,
+        shortAns: (item) => item.questionShortAns && item.questionShortAns.score,
+        code: (item) => item.questionCode && item.questionCode.score
+      }
+      const targetList = list || listMap[questionType] || []
+      const getScore = scoreGetterMap[questionType]
+      targetList.forEach((item) => {
+        if (!forceRefresh && this.hasAgentSuggestion(item.id)) {
+          return
+        }
+        const maxScore = Number(getScore ? getScore(item) : 0) || 0
+        const suggestion = Math.floor(Math.random() * (maxScore + 1))
+        this.$set(this.agentSuggestions, item.id, suggestion)
+      })
+    },
+    isAgentSuggestionEnabled(questionType) {
+      return !!this.agentSuggestionEnabledTypes[questionType]
+    },
+    hasAgentSuggestion(answerId) {
+      return Object.prototype.hasOwnProperty.call(this.agentSuggestions, answerId)
+    },
+    getAgentSuggestion(answerId) {
+      return this.agentSuggestions[answerId]
     },
     timeJudge(){
       if(this.beginBefore(this.examManager)){
@@ -485,6 +559,9 @@ export default {
           this.questionType=3;
           this.questionTypeId=index
           this.markNum=this.setNum(this.questionListFill)
+          if (this.isAgentSuggestionEnabled("fill")) {
+            this.ensureFakeAgentSuggestions("fill", this.questionListFill)
+          }
         } else {
           this.$message.error(res.msg)
         }
@@ -505,6 +582,9 @@ export default {
           this.questionType=4;
           this.questionTypeId=index
           this.markNum=this.setNum(this.questionListShortAns)
+          if (this.isAgentSuggestionEnabled("shortAns")) {
+            this.ensureFakeAgentSuggestions("shortAns", this.questionListShortAns)
+          }
         } else {
           this.$message.error(res.msg)
         }
@@ -525,6 +605,9 @@ export default {
           this.questionType=5;
           this.questionTypeId=index
           this.markNum=this.setNum(this.questionListCode)
+          if (this.isAgentSuggestionEnabled("code")) {
+            this.ensureFakeAgentSuggestions("code", this.questionListCode)
+          }
         } else {
           this.$message.error(res.msg)
         }
@@ -663,6 +746,10 @@ export default {
   justify-content: center;
   width: 100%;
 }
+.grading-footer__submit {
+  gap: 16px;
+  flex-wrap: wrap;
+}
 .score-options {
   display: flex;
   flex-wrap: nowrap;
@@ -700,6 +787,18 @@ export default {
   font-size: 18px;
   font-weight: 700;
   text-align: center;
+}
+.agent-score-tip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 42px;
+  padding: 0 16px;
+  border-radius: 999px;
+  background: rgba(15, 118, 110, 0.08);
+  color: #0f766e;
+  font-size: 15px;
+  font-weight: 700;
+  white-space: nowrap;
 }
 .answer-row--code .answer-col { text-align: left; }
 .code-editor { display: block; height: 30vh; margin-top: 8px; overflow: hidden; border: 1px solid rgba(208, 220, 233, 0.92); border-radius: 18px; }
