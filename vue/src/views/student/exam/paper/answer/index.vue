@@ -281,6 +281,7 @@
         </el-col>
       </el-row>
     </div>
+    <ExamMonitorFloat />
   </div>
 </template>
 
@@ -288,6 +289,7 @@
 import MonacoEditor from "monaco-editor-vue";
 import request from "@/utils/request";
 import E from "wangeditor";
+import ExamMonitorFloat from "@/components/exam/ExamMonitorFloat.vue";
 let editorA = null
 function initWangEditorA(content){ setTimeout(() => {
   if(!editorA){
@@ -308,6 +310,7 @@ function destroyWangEditorA() {
 }
 export default {
   components: {
+    ExamMonitorFloat,
     MonacoEditor,
   },
   data() {
