@@ -3,9 +3,6 @@
     <section class="teacher-page-head">
       <div>
         <h2 class="teacher-page-head__title">创建课程</h2>
-        <p class="teacher-page-head__desc">
-          统一课程封面、时间信息、课程编号和课程简介的编辑布局，减少遮挡并保持教师后台风格一致。
-        </p>
       </div>
     </section>
 
@@ -107,9 +104,7 @@
             <div class="teacher-panel__head">
               <div>
                 <h3 class="teacher-panel__title">课程简介</h3>
-                <p class="teacher-panel__desc">使用富文本介绍课程安排、目标、考核方式和学习要求。</p>
               </div>
-              <div class="teacher-course-create-page__editor-meta">建议控制在 3 至 5 段，便于学生快速浏览。</div>
             </div>
             <div id="editor" class="w-e-text-container teacher-course-create-page__editor" style="width: 100%; height: 380px"></div>
           </div>

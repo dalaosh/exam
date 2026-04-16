@@ -3,7 +3,6 @@
     <section class="teacher-page-head">
       <div>
         <h2 class="teacher-page-head__title">创建编程题</h2>
-        <p class="teacher-page-head__desc">统一题面、解析、参考代码和运行结果布局，避免代码题编辑页容器失衡。</p>
       </div>
     </section>
 
@@ -44,7 +43,6 @@
         <div class="teacher-panel__head">
           <div>
             <h3 class="teacher-panel__title">问题</h3>
-            <p class="teacher-panel__desc">使用富文本编辑编程题题面。</p>
           </div>
         </div>
         <div class="w-e-text-container" id="editorA" style="width: 100%; height: 320px; z-index: 1"></div>
@@ -54,7 +52,6 @@
         <div class="teacher-panel__head">
           <div>
             <h3 class="teacher-panel__title">解析</h3>
-            <p class="teacher-panel__desc">说明题目意图、评分点和解题思路。</p>
           </div>
         </div>
         <div class="w-e-text-container" id="editorB" style="width: 100%; height: 320px"></div>
@@ -65,7 +62,6 @@
       <div class="teacher-panel__head">
         <div>
           <h3 class="teacher-panel__title">参考代码</h3>
-          <p class="teacher-panel__desc">左侧编辑代码，右侧查看运行结果。</p>
         </div>
       </div>
 

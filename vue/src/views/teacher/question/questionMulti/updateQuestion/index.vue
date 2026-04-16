@@ -3,7 +3,6 @@
     <section class="teacher-page-head">
       <div>
         <h2 class="teacher-page-head__title">修改选择题</h2>
-        <p class="teacher-page-head__desc">统一题干、选项、答案和解析的编辑容器，避免多块表单和富文本区域相互挤压。</p>
       </div>
     </section>
 
@@ -43,7 +42,6 @@
           <div class="teacher-panel__head">
             <div>
               <h3 class="teacher-panel__title">问题</h3>
-              <p class="teacher-panel__desc">保持原有题干加载逻辑，仅统一阅读和编辑空间。</p>
             </div>
           </div>
           <div class="w-e-text-container" id="editorA" style="width: 100%; height: 320px"></div>
@@ -53,7 +51,6 @@
           <div class="teacher-panel__head">
             <div>
               <h3 class="teacher-panel__title">解析</h3>
-              <p class="teacher-panel__desc">说明答案依据和考查重点。</p>
             </div>
           </div>
           <div class="w-e-text-container" id="editorB" style="width: 100%; height: 320px"></div>
@@ -65,7 +62,6 @@
           <div class="teacher-panel__head">
             <div>
               <h3 class="teacher-panel__title">选项配置</h3>
-              <p class="teacher-panel__desc">四个选项统一保持固定节奏和安全留白。</p>
             </div>
           </div>
           <div class="teacher-question-editor__stack">
@@ -92,7 +88,6 @@
           <div class="teacher-panel__head">
             <div>
               <h3 class="teacher-panel__title">题型与答案</h3>
-              <p class="teacher-panel__desc">保留原有多选答案回填和变更逻辑，只修布局。</p>
             </div>
           </div>
           <div class="teacher-question-editor__stack">

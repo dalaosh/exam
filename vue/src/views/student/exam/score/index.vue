@@ -3,7 +3,6 @@
     <section class="student-page-head">
       <div>
         <h2 class="student-page-head__title">成绩榜单</h2>
-        <p class="student-page-head__desc">集中查看考试基础信息和成绩排名，保持原有榜单展示逻辑不变。</p>
       </div>
     </section>
 
@@ -12,7 +11,6 @@
         <div class="student-panel__head">
           <div>
             <h3 class="student-panel__title">考试信息</h3>
-            <p class="student-panel__desc">课程、考试类型、人数与题目数量统一汇总展示。</p>
           </div>
         </div>
 
@@ -51,7 +49,6 @@
         <div class="student-panel__head">
           <div>
             <h3 class="student-panel__title">金榜题名</h3>
-            <p class="student-panel__desc">按分数展示榜单，前三名保留图标标识。</p>
           </div>
         </div>
 

@@ -3,14 +3,12 @@
     <section class="student-page-head">
       <div>
         <h2 class="student-page-head__title">个人中心</h2>
-        <p class="student-page-head__desc">统一查看基础资料、头像上传、安全摘要和个人信息编辑，保留原有交互方式。</p>
       </div>
     </section>
 
     <section class="student-profile-grid">
       <article class="student-panel student-profile-card">
         <h3 class="student-section-title">头像资料</h3>
-        <p class="student-section-note">上传新头像后立即提交，头像更新逻辑保持不变。</p>
         <div class="student-upload-card">
           <img class="student-profile-preview" :src="myInform.photo || user.photo" alt="">
           <el-upload
@@ -28,7 +26,6 @@
 
       <article class="student-panel student-profile-card">
         <h3 class="student-section-title">基本信息</h3>
-        <p class="student-section-note">左侧展示只读信息，右侧保留编辑模式切换。</p>
         <el-descriptions :column="1" border>
           <el-descriptions-item label="账号 ID">
             <el-tag class="student-tag">{{ myInform.id }}</el-tag>
@@ -79,7 +76,6 @@
 
       <article class="student-panel student-profile-card">
         <h3 class="student-section-title">安全摘要</h3>
-        <p class="student-section-note">密码密文和摘要只读展示，方便核验但不改变原有后端数据结构。</p>
 
         <div style="margin-bottom: 18px;">
           <div class="student-section-title" style="font-size: 14px; margin-bottom: 10px;">加密的密码</div>
@@ -120,7 +116,6 @@
             信息编辑说明
           </div>
           <div class="student-help-card__list">
-            <span>点击“编辑”进入修改模式，保持原有字段和提交逻辑不变。</span>
             <span>点击“确定”后提交最新资料，点击“取消”恢复当前信息。</span>
           </div>
         </div>

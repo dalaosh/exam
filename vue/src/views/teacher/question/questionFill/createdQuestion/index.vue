@@ -3,7 +3,6 @@
     <section class="teacher-page-head">
       <div>
         <h2 class="teacher-page-head__title">创建填空题</h2>
-        <p class="teacher-page-head__desc">统一题面、答案和解析布局，让题库创建页的容器比例与间距更稳定。</p>
       </div>
     </section>
 
@@ -45,7 +44,6 @@
           <div class="teacher-panel__head">
             <div>
               <h3 class="teacher-panel__title">问题</h3>
-              <p class="teacher-panel__desc">使用富文本编辑填空题题面。</p>
             </div>
           </div>
           <div class="w-e-text-container" id="editorA" style="width: 100%; height: 320px; z-index: 1"></div>
@@ -55,7 +53,6 @@
           <div class="teacher-panel__head">
             <div>
               <h3 class="teacher-panel__title">答案</h3>
-              <p class="teacher-panel__desc">填写标准答案，保持与题面同一阅读密度。</p>
             </div>
           </div>
           <el-input
@@ -72,7 +69,6 @@
           <div class="teacher-panel__head">
             <div>
               <h3 class="teacher-panel__title">解析</h3>
-              <p class="teacher-panel__desc">说明题目考察点与填空依据。</p>
             </div>
           </div>
           <div class="w-e-text-container" id="editorB" style="width: 100%; height: 320px"></div>

@@ -3,7 +3,6 @@
     <section class="student-page-head">
       <div>
         <h2 class="student-page-head__title">密钥查看</h2>
-        <p class="student-page-head__desc">集中查看个人密钥与考试密钥，保持只读展示和统一后台样式。</p>
       </div>
       <div class="student-page-head__meta">
         <el-tag class="student-tag" type="info">只读信息</el-tag>
@@ -12,7 +11,6 @@
 
     <section class="student-panel student-panel--padded">
       <h3 class="student-section-title">个人密钥</h3>
-      <p class="student-section-note">用于当前学生账户的身份识别与签名校验。</p>
       <div class="student-key-grid">
         <div class="student-help-card student-key-card">
           <div class="student-help-card__title">
@@ -48,7 +46,6 @@
 
     <section class="student-panel student-panel--padded">
       <h3 class="student-section-title">考试密钥</h3>
-      <p class="student-section-note">用于考试过程中的加解密与数据校验。</p>
       <div class="student-key-grid">
         <div class="student-help-card student-key-card">
           <div class="student-help-card__title">

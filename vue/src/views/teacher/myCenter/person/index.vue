@@ -3,7 +3,6 @@
     <section class="teacher-page-head">
       <div>
         <h2 class="teacher-page-head__title">个人中心</h2>
-        <p class="teacher-page-head__desc">集中查看教师账号资料、头像与安全摘要，并在同一工作区内完成信息修改。</p>
       </div>
       <div class="teacher-page-head__meta">
         <el-tag class="teacher-tag" :type="setting ? 'info' : 'warning'">{{ setting ? '只读模式' : '编辑模式' }}</el-tag>

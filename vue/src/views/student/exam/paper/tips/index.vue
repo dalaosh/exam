@@ -5,7 +5,6 @@
         <el-button type="text" class="exam-entry-hero__back" @click="end">返回考试列表</el-button>
         <div class="exam-entry-hero__eyebrow">考试认证</div>
         <h1 class="exam-entry-hero__title">{{ form.course && form.course.name ? form.course.name : "考试" }}</h1>
-        <p class="exam-entry-hero__desc">完成拍照认证后即可进入答题页面，右侧保留考试须知和开考状态。</p>
       </div>
 
       <div class="exam-entry-hero__meta">
@@ -49,7 +48,6 @@
           <div class="exam-panel__head">
             <div>
               <h2 class="exam-panel__title">考前认证</h2>
-              <p class="exam-panel__desc">先开启摄像头拍照，再执行人脸认证。</p>
             </div>
           </div>
 
@@ -95,7 +93,6 @@
           <div class="exam-panel__head">
             <div>
               <h2 class="exam-panel__title">考生资料</h2>
-              <p class="exam-panel__desc">认证结果和考生基本信息会显示在这里。</p>
             </div>
           </div>
 
@@ -147,7 +144,6 @@
           <div class="exam-panel__head">
             <div>
               <h2 class="exam-panel__title">考试须知</h2>
-              <p class="exam-panel__desc">进入答题前，请确认已阅读以下内容。</p>
             </div>
           </div>
 
@@ -160,7 +156,6 @@
           <div class="exam-panel__head exam-panel__head--compact">
             <div>
               <h2 class="exam-panel__title">进入考试</h2>
-              <p class="exam-panel__desc">只有在开考时间内并完成认证后才能进入。</p>
             </div>
           </div>
 

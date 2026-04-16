@@ -3,7 +3,6 @@
     <section class="student-page-head">
       <div>
         <h2 class="student-page-head__title">笔记信息</h2>
-        <p class="student-page-head__desc">统一管理学习笔记，保留原有查询、查看、编辑、下载与批量删除操作。</p>
       </div>
       <div class="student-page-head__meta">
         <el-tag class="student-tag" type="info">共 {{ total }} 条笔记</el-tag>
@@ -35,7 +34,6 @@
       <div class="student-panel__head student-list-page__table-head">
         <div>
           <h3 class="student-panel__title">笔记列表</h3>
-          <p class="student-panel__desc">优化表格可读性和操作区层级，便于快速查看路径与内容文件。</p>
         </div>
       </div>
 

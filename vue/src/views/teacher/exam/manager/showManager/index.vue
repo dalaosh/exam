@@ -4,9 +4,6 @@
       <div>
         <div class="workspace-title">考试管理工作台</div>
       </div>
-      <div class="workspace-copy">
-        统一查看考试详情、自动组卷、手动组卷和多Agent智能组卷流程。
-      </div>
     </div>
 
     <el-tabs v-model="activeTab" class="workspace-tabs" type="border-card">

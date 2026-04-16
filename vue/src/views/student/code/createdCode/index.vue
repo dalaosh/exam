@@ -1,9 +1,8 @@
 <template>
-  <div class="student-page">
+  <div class="student-page student-code-practice-page">
     <section class="student-page-head">
       <div>
         <h2 class="student-page-head__title">代码实操</h2>
-        <p class="student-page-head__desc">将题目、语言、编辑器和运行结果整合到同一工作台中。</p>
       </div>
       <div class="student-page-head__meta">
         <el-tag class="student-tag" type="info">在线运行</el-tag>
@@ -14,7 +13,6 @@
       <div class="student-code-stack">
         <article class="student-panel student-code-panel">
           <h3 class="student-code-panel__title">题目内容</h3>
-          <p class="student-code-panel__desc">输入本次代码实操题目，保存时沿用当前字段与提交结构。</p>
           <el-input
             v-model="table.title"
             type="textarea"
@@ -82,7 +80,7 @@
                 v-model="code"
                 :language="editorLanguage"
                 :options="editorOptions"
-                style="height: 520px"
+                class="student-code-practice-editor"
               />
             </div>
           </div>
@@ -94,7 +92,6 @@
           <div class="student-code-result-head">
             <div>
               <h3 class="student-code-panel__title" style="margin-bottom: 6px;">运行结果</h3>
-              <p class="student-code-panel__desc" style="margin: 0;">右侧结果区实时展示当前代码运行输出，便于提交前检查。</p>
             </div>
             <span class="student-code-result-status" :class="resultStatusClass">{{ resultStatusText }}</span>
           </div>
@@ -103,7 +100,7 @@
               v-model="result"
               type="textarea"
               :disabled="true"
-              :autosize="{ minRows: 22, maxRows: 22 }"
+              :autosize="{ minRows: 10, maxRows: 10 }"
               placeholder="运行结果"
             />
           </div>
@@ -248,3 +245,173 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.student-code-practice-page {
+  height: calc(100vh - 128px);
+  min-height: 0;
+  gap: 10px;
+  overflow: hidden;
+}
+
+.student-code-practice-page .student-page-head {
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.student-code-practice-page .student-page-head__title {
+  font-size: 20px;
+}
+
+.student-code-practice-page .student-page-head__desc {
+  margin-top: 2px;
+  line-height: 1.35;
+}
+
+.student-code-practice-page .student-code-grid {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(300px, 0.85fr);
+  gap: 12px;
+  overflow: hidden;
+}
+
+.student-code-practice-page .student-code-stack {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: hidden;
+}
+
+.student-code-practice-page .student-code-panel {
+  padding: 14px 16px;
+}
+
+.student-code-practice-page .student-code-panel__title {
+  margin-bottom: 8px;
+}
+
+.student-code-practice-page .student-code-panel__desc {
+  margin: -2px 0 10px;
+  line-height: 1.45;
+}
+
+.student-code-practice-page .student-code-stack:first-child .student-code-panel:first-child {
+  flex: 0 0 auto;
+}
+
+.student-code-practice-page .student-code-stack:first-child .student-code-panel:last-child,
+.student-code-practice-page .student-code-stack:last-child .student-code-panel:first-child {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.student-code-practice-page .student-code-stack:last-child .student-code-panel:last-child {
+  flex: 0 0 auto;
+}
+
+.student-code-practice-page .student-code-toolbar {
+  flex: 0 0 auto;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.student-code-practice-page .student-code-toolbar__group {
+  gap: 10px;
+}
+
+.student-code-practice-page .student-code-toolbar__select {
+  width: 190px;
+}
+
+.student-code-practice-page .student-code-slider {
+  min-width: 190px;
+}
+
+.student-code-practice-page .student-code-editor {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.student-code-practice-page .student-code-editor__chrome {
+  flex: 0 0 auto;
+  padding: 8px 12px;
+}
+
+.student-code-practice-page .student-code-editor__tab {
+  padding: 5px 10px;
+}
+
+.student-code-practice-page .student-code-editor__body {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.student-code-practice-editor {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+.student-code-practice-page .student-code-result-head {
+  flex: 0 0 auto;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.student-code-practice-page .student-code-output {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+}
+
+.student-code-practice-page .student-code-meta {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.student-code-practice-page .student-code-meta__item {
+  padding: 10px 12px;
+}
+
+.student-code-practice-page .student-code-action .el-button {
+  min-width: 160px;
+}
+
+.student-code-practice-page :deep(.student-code-output .el-textarea),
+.student-code-practice-page :deep(.student-code-output .el-textarea__inner) {
+  height: 100% !important;
+  min-height: 0 !important;
+}
+
+.student-code-practice-page :deep(.student-code-output .el-textarea__inner) {
+  resize: none;
+  border-radius: 14px;
+  line-height: 1.55;
+}
+
+.student-code-practice-page :deep(.el-textarea__inner) {
+  border-radius: 14px;
+}
+
+@media (max-width: 1280px) {
+  .student-code-practice-page {
+    height: auto;
+    overflow: visible;
+  }
+
+  .student-code-practice-page .student-code-grid {
+    grid-template-columns: 1fr;
+    overflow: visible;
+  }
+}
+</style>

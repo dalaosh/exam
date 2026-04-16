@@ -3,7 +3,6 @@
     <section class="student-page-head">
       <div>
         <h2 class="student-page-head__title">修改代码</h2>
-        <p class="student-page-head__desc">统一展示题目、语言、编辑器和运行结果，保持原有修改提交流程不变。</p>
       </div>
       <div class="student-page-head__meta">
         <el-tag class="student-tag" type="warning">编辑模式</el-tag>
@@ -14,7 +13,6 @@
       <div class="student-code-stack">
         <article class="student-panel student-code-panel">
           <h3 class="student-code-panel__title">题目内容</h3>
-          <p class="student-code-panel__desc">支持直接修改题目描述，便于同步维护代码实操存档。</p>
           <el-input
             v-model="table.title"
             type="textarea"
@@ -93,7 +91,6 @@
           <div class="student-code-result-head">
             <div>
               <h3 class="student-code-panel__title" style="margin-bottom: 6px;">运行结果</h3>
-              <p class="student-code-panel__desc" style="margin: 0;">修改代码后可先运行，再决定是否提交更新。</p>
             </div>
             <span class="student-code-result-status" :class="resultStatusClass">{{ resultStatusText }}</span>
           </div>

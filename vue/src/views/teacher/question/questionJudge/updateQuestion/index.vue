@@ -3,7 +3,6 @@
     <section class="teacher-page-head">
       <div>
         <h2 class="teacher-page-head__title">编辑判断题</h2>
-        <p class="teacher-page-head__desc">统一题面、答案和解析区域的间距与对齐，避免编辑页左右容器挤压。</p>
       </div>
     </section>
 
@@ -45,7 +44,6 @@
           <div class="teacher-panel__head">
             <div>
               <h3 class="teacher-panel__title">问题</h3>
-              <p class="teacher-panel__desc">使用富文本编辑判断题题面。</p>
             </div>
           </div>
           <div class="w-e-text-container" id="editorA" style="width: 100%; height: 320px; z-index: 1"></div>
@@ -55,7 +53,6 @@
           <div class="teacher-panel__head">
             <div>
               <h3 class="teacher-panel__title">答案</h3>
-              <p class="teacher-panel__desc">当前答案：{{ table.answer ? table.answer : "请选择" }}</p>
             </div>
           </div>
           <div class="teacher-question-editor__choice-group">
@@ -70,7 +67,6 @@
           <div class="teacher-panel__head">
             <div>
               <h3 class="teacher-panel__title">解析</h3>
-              <p class="teacher-panel__desc">说明判断依据和知识点。</p>
             </div>
           </div>
           <div class="w-e-text-container" id="editorB" style="width: 100%; height: 320px"></div>

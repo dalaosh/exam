@@ -66,7 +66,6 @@
         </el-row>
 
         <div class="action-card">
-          <div class="action-copy">更新时间、时长、总分和考试说明后提交修改。</div>
           <el-button type="primary" class="primary-action" @click="submit">修改</el-button>
         </div>
       </el-col>

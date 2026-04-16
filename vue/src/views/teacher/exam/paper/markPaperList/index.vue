@@ -4,7 +4,6 @@
       <div>
         <div class="teacher-mark-paper-list-page__eyebrow">Paper Grading</div>
         <h2 class="teacher-mark-paper-list-page__title">批阅试卷列表</h2>
-        <p class="teacher-mark-paper-list-page__desc">集中查看可阅卷考试，统一进入详情、公钥和阅卷工作流。</p>
       </div>
       <div class="teacher-mark-paper-list-page__meta">
         <span class="teacher-mark-paper-list-page__badge">共 {{ tableData.length }} 场待处理考试</span>

@@ -3,7 +3,6 @@
     <section class="student-page-head">
       <div>
         <h2 class="student-page-head__title">密码修改</h2>
-        <p class="student-page-head__desc">通过图形验证码和邮箱验证码完成密码校验，流程与原有逻辑保持一致。</p>
       </div>
       <div class="student-page-head__meta">
         <el-tag class="student-tag" type="warning">分步验证</el-tag>
@@ -13,7 +12,6 @@
     <div class="student-password-layout">
       <section class="student-panel student-profile-card student-password-sidebar">
         <h3 class="student-section-title">修改步骤</h3>
-        <p class="student-section-note">按引导完成校验后即可更新当前学生账号密码。</p>
         <div class="student-password-sidebar__steps">
           <el-steps direction="vertical" :active="active - 1">
             <el-step

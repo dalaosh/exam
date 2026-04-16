@@ -56,7 +56,7 @@
           <div class="question-group">
             <div class="title title--section">
               <span>填空题</span>
-              <el-button type="text" @click="startFakeAgentMark('fill')" plain class="action-link action-link--wide">Agent智能批卷</el-button>
+              <el-button type="text" @click="startFakeAgentMark('fill')" plain class="action-link action-link--wide">Edu-Agent智能批卷</el-button>
             </div>
             <div class="divs">
               <el-card shadow="hover" class="cards" v-for="(data, index) in questionFill" :key="index">
@@ -75,7 +75,7 @@
           <div class="question-group">
             <div class="title title--section">
               <span>简答题</span>
-              <el-button type="text" @click="startFakeAgentMark('shortAns')" plain class="action-link action-link--wide">Agent智能批卷</el-button>
+              <el-button type="text" @click="startFakeAgentMark('shortAns')" plain class="action-link action-link--wide">Edu-Agent智能批卷</el-button>
             </div>
             <div class="divs">
               <el-card shadow="hover" class="cards" v-for="(data, index) in questionShortAns" :key="index">
@@ -94,7 +94,7 @@
           <div class="question-group">
             <div class="title title--section">
               <span>代码题</span>
-              <el-button type="text" @click="startFakeAgentMark('code')" plain class="action-link action-link--wide">Agent智能批卷</el-button>
+              <el-button type="text" @click="startFakeAgentMark('code')" plain class="action-link action-link--wide">Edu-Agent智能批卷</el-button>
             </div>
             <div class="divs">
               <el-card shadow="hover" class="cards" v-for="(data, index) in questionCode" :key="index">

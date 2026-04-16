@@ -3,7 +3,6 @@
     <section class="teacher-page-head">
       <div>
         <h2 class="teacher-page-head__title">密码修改</h2>
-        <p class="teacher-page-head__desc">通过图形验证码和邮箱验证码完成教师账号密码重置，保留原有校验和提交流程。</p>
       </div>
       <div class="teacher-page-head__meta">
         <el-tag class="teacher-tag" type="warning">分步验证</el-tag>

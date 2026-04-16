@@ -1,206 +1,149 @@
 <template>
-  <!-- 原有的模板代码保持不变 -->
-  <div>
-    <div style="height: 10vh; width: 100%;">
-      <el-row style="text-align: center">
-        <el-col :span="8" style="font-size: 32px;margin: 3vh 0 3vh 0">
-          已经分配数：{{examTeacherGradingNum}}
-        </el-col>
-        <el-col :span="8" style="font-size: 32px;margin: 3vh 0 3vh 0">
-          题目总数：{{questionNum}}
-        </el-col>
-        <el-col :span="4" style="font-size: 32px;margin: 3vh 0 3vh 0">
-          <el-button type="primary" @click="examTeacherGradingAdd" plain style="width: 70%;font-size: 28px">分配题目</el-button>
-        </el-col>
-        <el-col :span="4" style="font-size: 32px;margin: 3vh 0 3vh 0">
-          <el-button type="primary" @click="examTeacherGradingDelete" plain style="width: 70%;font-size: 28px">全部删除</el-button>
-        </el-col>
-      </el-row>
-    </div>
-    <div>
-      <div class="title">
-        选择题
+  <div class="distribute-page">
+    <section class="dispatch-hero">
+      <div class="hero-copy">
+        <div class="hero-eyebrow">MARKING DISPATCH</div>
+        <h2>阅卷分配</h2>
       </div>
-      <div>
-        <el-card shadow="hover" class="cards"  v-for="(data, index) in questionMulti" :key="index" >
-          <div style="text-align: right;color: #bd0a4f;font-size: 20px">
-            {{data.questionMulti.score}}分
+
+      <div class="hero-panel">
+        <div class="metric-row">
+          <div class="metric-card">
+            <span>已经分配</span>
+            <strong>{{ examTeacherGradingNum }}</strong>
           </div>
-          <el-row>
-            <el-col :span="2" >
-              {{index+1}}、
-            </el-col>
-            <el-col :span="22">
-              <div v-html="data.questionMulti.question" class="w-e-text divs"></div>
-            </el-col>
-          </el-row>
-        </el-card>
-      </div>
-    </div>
-    <div>
-      <div class="title">
-        判断题
-      </div>
-      <div class="divs">
-        <el-card shadow="hover" class="cards"  v-for="(data, index) in questionJudge" :key="index" >
-          <div style="text-align: right;color: #bd0a4f;font-size: 20px">
-            {{data.questionJudge.score}}分
+          <div class="metric-card">
+            <span>题目总数</span>
+            <strong>{{ questionNum }}</strong>
           </div>
-          <el-row>
-            <el-col :span="2" >
-              {{index+1}}、
-            </el-col>
-            <el-col :span="22">
-              <div v-html="data.questionJudge.question" class="w-e-text divs"></div>
-            </el-col>
-          </el-row>
-        </el-card>
-      </div>
-    </div>
-    <div>
-      <div class="title">
-        填空题
-      </div>
-      <div class="divs">
-        <el-card shadow="hover" class="cards"  v-for="(data, index) in questionFill" :key="index" >
-          <div style="text-align: right;color: #bd0a4f;font-size: 20px">
-            {{data.questionFill.score}}分
+          <div class="metric-card">
+            <span>分配进度</span>
+            <strong>{{ assignPercent }}%</strong>
           </div>
-          <el-row>
-            <el-col :span="2" >
-              {{index+1}}、
-            </el-col>
-            <el-col :span="22">
-              <div v-html="data.questionFill.question" class="w-e-text divs"></div>
-            </el-col>
-          </el-row>
-        </el-card>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" :style="{ width: assignPercent + '%' }"></div>
+        </div>
+        <div class="hero-actions">
+          <el-button type="primary" @click="examTeacherGradingAdd">分配题目</el-button>
+          <el-button type="danger" plain @click="examTeacherGradingDelete">全部删除</el-button>
+        </div>
       </div>
-    </div>
-    <div>
-      <div class="title">
-        简答题
-      </div>
-      <div class="divs">
-        <el-card shadow="hover" class="cards"  v-for="(data, index) in questionShortAns" :key="index" >
-          <div style="text-align: right;color: #bd0a4f;font-size: 20px">
-            {{data.questionShortAns.score}}分
+    </section>
+
+    <section class="question-board">
+      <div
+          v-for="group in questionGroups"
+          :key="group.key"
+          class="question-section"
+      >
+        <div class="question-section__head">
+          <div>
+            <h3>{{ group.title }}</h3>
+            <p>当前共 {{ group.list.length }} 题</p>
           </div>
-          <el-row>
-            <el-col :span="2" >
-              {{index+1}}、
-            </el-col>
-            <el-col :span="22">
-              <div v-html="data.questionShortAns.question" class="w-e-text divs"></div>
-            </el-col>
-          </el-row>
-        </el-card>
+          <span class="section-count">{{ group.list.length }}</span>
+        </div>
+
+        <div v-if="group.list.length" class="question-grid">
+          <article
+              v-for="(data, index) in group.list"
+              :key="group.key + '-' + index"
+              class="question-card"
+          >
+            <div class="question-card__top">
+              <span>第 {{ index + 1 }} 题</span>
+              <strong v-if="data[group.field]">{{ data[group.field].score }} 分</strong>
+            </div>
+            <div
+                v-if="data[group.field]"
+                v-html="data[group.field].question"
+                class="w-e-text question-card__content"
+            ></div>
+          </article>
+        </div>
+
+        <div v-else class="question-empty">
+          暂无{{ group.title }}
+        </div>
       </div>
-    </div>
-    <div>
-      <div class="title">
-        代码题
-      </div>
-      <div class="divs">
-        <el-card shadow="hover" class="cards"  v-for="(data, index) in questionCode" :key="index" >
-          <div style="text-align: right;color: #bd0a4f;font-size: 20px">
-            {{data.questionCode.score}}分
-          </div>
-          <el-row>
-            <el-col :span="2" >
-              {{index+1}}、
-            </el-col>
-            <el-col :span="22">
-              <div v-html="data.questionCode.question" class="w-e-text divs"></div>
-            </el-col>
-          </el-row>
-        </el-card>
-      </div>
-    </div>
-    <!--    侧面抽屉-->
+    </section>
+
     <el-drawer
         title="教师列表"
         :visible.sync="drawer"
-        custom-class="demo-drawer"
+        custom-class="dispatch-drawer"
         direction="rtl"
-        size="60%"
+        size="68%"
         :before-close="handleClose">
-      <div class="main">
-        <!--    搜索框-->
-        <div class="search">
-          <el-row style="margin-top: 2vh;margin-left: 2%">
-            <el-form :inline="true" :model="params" class="demo-form-inline">
-              <el-form-item label="账号:" style="padding-right: 4%">
-                <el-input v-model="params.account" placeholder="账号"></el-input>
-              </el-form-item>
-              <el-form-item label="姓名:" style="padding-right: 4%">
-                <el-input v-model="params.name" placeholder="姓名"></el-input>
-              </el-form-item>
-              <el-form-item label="性别:" style="padding-right: 4%">
-                <el-input v-model="params.sex" placeholder="性别"></el-input>
-              </el-form-item>
-              <el-form-item label="电话:" style="padding-right: 4%">
-                <el-input  clearable v-model="params.phone" placeholder="电话"></el-input>
-              </el-form-item>
-              <el-form-item label="电子邮箱:" style="padding-right: 4%">
-                <el-input  clearable v-model="params.email" placeholder="电子邮箱"></el-input>
-              </el-form-item>
-              <el-form-item>
-                <el-button  clearable type="primary" @click="findTeacherAll">查询</el-button>
-              </el-form-item>
-            </el-form>
-          </el-row>
-          <el-row style="margin-top: 2vh;margin-left: 2%;margin-bottom: 2vh">
-<!--            <el-button type="primary" @click="selectAll" plain style="margin-right: 4%">全选</el-button>-->
-<!--            <el-button type="primary" @click="DeselectAll" plain style="margin-right: 4%">清空选择</el-button>-->
-            <el-row>
-              <el-col :span="4">
-                <div style="text-align: center;font-size: 24px">
-                  考试期限:
-                </div>
-              </el-col>
-              <el-col :span="12">
-                <div class="block">
-                  <el-date-picker
-                      v-model="dataTime"
-                      @change="times"
-                      type="datetimerange"
-                      :picker-options="pickerOptions"
-                      range-separator="至"
-                      start-placeholder="开始日期"
-                      end-placeholder="结束日期"
-                      align="right">
-                  </el-date-picker>
-                </div>
-              </el-col>
-              <el-col :span="8">
-                <el-button type="success" @click="addPlay()" plain style="margin-right: 4%;width: 60%;">分配题目</el-button>
-              </el-col>
-            </el-row>
-          </el-row>
+      <div class="drawer-panel">
+        <div class="drawer-toolbar">
+          <div>
+            <div class="drawer-kicker">选择阅卷教师</div>
+            <h3>本次已选 {{ selectedTeacherCount }} 位教师</h3>
+          </div>
+          <el-button type="success" @click="addPlay()">确认分配</el-button>
         </div>
-        <!--    表单-->
-        <div class="table">
+
+        <div class="drawer-search">
+          <el-form :inline="true" :model="params" class="teacher-search-form">
+            <el-form-item label="账号">
+              <el-input v-model="params.account" clearable placeholder="账号"></el-input>
+            </el-form-item>
+            <el-form-item label="姓名">
+              <el-input v-model="params.name" clearable placeholder="姓名"></el-input>
+            </el-form-item>
+            <el-form-item label="性别">
+              <el-input v-model="params.sex" clearable placeholder="性别"></el-input>
+            </el-form-item>
+            <el-form-item label="电话">
+              <el-input v-model="params.phone" clearable placeholder="电话"></el-input>
+            </el-form-item>
+            <el-form-item label="邮箱">
+              <el-input v-model="params.email" clearable placeholder="电子邮箱"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" plain @click="findTeacherAll">查询</el-button>
+            </el-form-item>
+          </el-form>
+
+          <div class="date-row">
+            <span>考试期限</span>
+            <el-date-picker
+                v-model="dataTime"
+                @change="times"
+                type="datetimerange"
+                :picker-options="pickerOptions"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                align="right">
+            </el-date-picker>
+          </div>
+        </div>
+
+        <div class="teacher-table-wrap">
           <el-table
               ref="table"
+              class="teacher-table"
               :data="teacherList"
               tooltip-effect="dark"
               border
               show-overflow-tooltip
               stripe
               style="width: 100%"
-              height="54vh"
+              height="48vh"
               @selection-change="handleSelectionChange"
               :row-key="getRowKeys"
           >
-            <el-table-column ref="table" type="selection" width="55" align="center" :reserve-selection="true"  fixed>
+            <el-table-column ref="table" type="selection" width="55" align="center" :reserve-selection="true" fixed>
             </el-table-column>
-            <el-table-column prop="id" label="学生id" width="100" align="center"  fixed></el-table-column>
-            <el-table-column  prop="name" label="姓名" width="100" align="center"  fixed></el-table-column>
+            <el-table-column prop="id" label="教师id" width="100" align="center" fixed></el-table-column>
+            <el-table-column prop="name" label="姓名" width="100" align="center" fixed></el-table-column>
             <el-table-column prop="photo" label="照片" width="100" align="center">
               <template v-slot="scope">
                 <el-image
-                    style="width: 40px; height: 40px;border-radius:50%"
+                    class="teacher-avatar"
                     :src="scope.row.photo"
                     :preview-src-list="[scope.row.photo]">
                 </el-image>
@@ -214,7 +157,7 @@
             <el-table-column label="密码" width="250" align="center">
               <template slot-scope="scope">
                 <el-input
-                    style="font-size: 16px"
+                    class="table-textarea"
                     type="textarea"
                     :readonly="true"
                     :autosize="{ minRows: 2, maxRows: 2}"
@@ -226,7 +169,7 @@
             <el-table-column label="密码摘要" width="250" align="center">
               <template slot-scope="scope">
                 <el-input
-                    style="font-size: 16px"
+                    class="table-textarea"
                     type="textarea"
                     :readonly="true"
                     :autosize="{ minRows: 2, maxRows: 2}"
@@ -238,7 +181,7 @@
             <el-table-column label="考试公钥" width="250" align="center">
               <template slot-scope="scope">
                 <el-input
-                    style="font-size: 16px"
+                    class="table-textarea"
                     type="textarea"
                     :readonly="true"
                     :autosize="{ minRows: 2, maxRows: 2}"
@@ -344,6 +287,26 @@ export default {
     this.findQuestion();
   },
   mounted() {},
+  computed: {
+    assignPercent() {
+      if (!this.questionNum) {
+        return 0;
+      }
+      return Math.min(100, Math.round((this.examTeacherGradingNum / this.questionNum) * 100));
+    },
+    questionGroups() {
+      return [
+        { key: 'multi', title: '选择题', list: this.questionMulti, field: 'questionMulti' },
+        { key: 'judge', title: '判断题', list: this.questionJudge, field: 'questionJudge' },
+        { key: 'fill', title: '填空题', list: this.questionFill, field: 'questionFill' },
+        { key: 'shortAns', title: '简答题', list: this.questionShortAns, field: 'questionShortAns' },
+        { key: 'code', title: '代码题', list: this.questionCode, field: 'questionCode' }
+      ];
+    },
+    selectedTeacherCount() {
+      return this.ids.length;
+    }
+  },
   methods: {
     times(){
       this.dataTimes.beginTime=this.time(this.dataTime[0])
@@ -584,28 +547,363 @@ export default {
 </script>
 
 <style scoped>
-.cards {
-  white-space: unset;
-  display: inline-block;
-  width: 48%;
-  margin: 3vh 1% 0 1%;
-  height: 30vh;
-  border-radius: 10px;
-  background-color: #f1fdfd;
-  overflow-y: scroll;
+.distribute-page {
+  min-height: 0;
+  padding: 8px 14px;
+  color: #111827;
+  background: #f4f7fa;
 }
 
-.cards::-webkit-scrollbar {
-  width: 0;
+.dispatch-hero {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.72fr) minmax(460px, 1fr);
+  gap: 14px;
+  padding: 12px;
+  border: 1px solid #dbe4ee;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
 }
 
-.title {
-  font-family: 'STXingkai', '华文行楷', cursive;
-  font-size: 32px;
-  margin: 1vh 1% 0 1%;
+.hero-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.divs {
-  font-size: 24px;
+.hero-eyebrow {
+  margin-bottom: 6px;
+  color: #0f766e;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.hero-copy h2 {
+  margin: 0;
+  color: #111827;
+  font-size: 26px;
+  line-height: 1.2;
+}
+
+.hero-copy p {
+  max-width: 560px;
+  margin: 8px 0 0;
+  color: #64748b;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.hero-panel {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #dbe4ee;
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+.metric-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.metric-card {
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid #dbe4ee;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.metric-card span {
+  display: block;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.metric-card strong {
+  display: block;
+  margin-top: 5px;
+  color: #0f766e;
+  font-size: 26px;
+  line-height: 1;
+}
+
+.progress-track {
+  height: 10px;
+  margin-top: 10px;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #e2e8f0;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 8px;
+  background: #059669;
+  transition: width 0.2s ease;
+}
+
+.hero-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.question-board {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.question-section {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid #dbe4ee;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.question-section__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #ffffff;
+}
+
+.question-section__head h3 {
+  margin: 0;
+  color: #111827;
+  font-size: 17px;
+}
+
+.question-section__head p {
+  margin: 3px 0 0;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.section-count {
+  display: inline-flex;
+  min-width: 34px;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  color: #075985;
+  font-weight: 800;
+  background: #e0f2fe;
+}
+
+.question-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 10px;
+  max-height: 190px;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.question-card {
+  min-width: 0;
+  min-height: 104px;
+  max-height: 156px;
+  padding: 10px;
+  overflow-y: auto;
+  border: 1px solid #dbe4ee;
+  border-radius: 8px;
+  background: #f8fafc;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.question-card:hover {
+  border-color: #34d399;
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
+  transform: translateY(-1px);
+}
+
+.question-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.question-card__top span {
+  color: #475569;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.question-card__top strong {
+  flex: 0 0 auto;
+  color: #be123c;
+  font-size: 14px;
+}
+
+.question-card__content {
+  color: #1f2937;
+  font-size: 16px;
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+.question-empty {
+  padding: 20px 12px;
+  color: #94a3b8;
+  font-size: 15px;
+  text-align: center;
+  background: #f8fafc;
+}
+
+.drawer-panel {
+  display: flex;
+  height: 100%;
+  min-height: 0;
+  flex-direction: column;
+  gap: 14px;
+  padding: 0 20px 20px;
+  background: #f8fafc;
+}
+
+.drawer-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px;
+  border: 1px solid #dbe4ee;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.drawer-kicker {
+  margin-bottom: 4px;
+  color: #0f766e;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.drawer-toolbar h3 {
+  margin: 0;
+  color: #111827;
+  font-size: 20px;
+}
+
+.drawer-search {
+  padding: 14px 14px 12px;
+  border: 1px solid #dbe4ee;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.teacher-search-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 10px;
+}
+
+.teacher-search-form :deep(.el-form-item) {
+  margin-right: 0;
+  margin-bottom: 10px;
+}
+
+.date-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.date-row span {
+  color: #475569;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.teacher-table-wrap {
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid #dbe4ee;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.teacher-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.table-textarea {
+  font-size: 16px;
+}
+
+:deep(.dispatch-drawer .el-drawer__body) {
+  overflow: hidden;
+  background: #f8fafc;
+}
+
+:deep(.dispatch-drawer .el-drawer__header) {
+  margin-bottom: 14px;
+  padding: 20px 20px 0;
+  color: #111827;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+:deep(.el-button) {
+  border-radius: 8px;
+}
+
+:deep(.el-input__inner),
+:deep(.el-textarea__inner) {
+  border-radius: 8px;
+}
+
+@media (max-width: 980px) {
+  .question-board {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1180px) {
+  .dispatch-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-copy p {
+    max-width: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .distribute-page {
+    padding: 12px;
+  }
+
+  .metric-row {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-actions,
+  .drawer-toolbar,
+  .date-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .question-grid {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

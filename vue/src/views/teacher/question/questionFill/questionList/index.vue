@@ -3,7 +3,6 @@
     <section class="teacher-page-head">
       <div>
         <h2 class="teacher-page-head__title">填空题列表</h2>
-        <p class="teacher-page-head__desc">统一筛选区、批量操作区、表格卡片和分页区域的布局节奏。</p>
       </div>
     </section>
 

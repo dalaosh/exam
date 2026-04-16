@@ -3,7 +3,6 @@
     <section class="student-page-head student-page-head--compact">
       <div>
         <h2 class="student-page-head__title">学习概览</h2>
-        <p class="student-page-head__desc">查看课程、考试、答题情况和题型数据。</p>
       </div>
       <div class="student-page-head__meta student-page-head__meta--plain">
         <span class="student-page-head__meta-text">学习统计</span>
@@ -38,7 +37,6 @@
         <div class="student-panel__head">
           <div>
             <h3 class="student-panel__title">题目分析雷达图</h3>
-            <p class="student-panel__desc">对比题库总量、已答数量和正确数量。</p>
           </div>
         </div>
         <div ref="radarChart" class="student-chart student-chart--radar"></div>
@@ -48,7 +46,6 @@
         <div class="student-panel__head">
           <div>
             <h3 class="student-panel__title">题型分析</h3>
-            <p class="student-panel__desc">查看不同题型的总题量与正确量。</p>
           </div>
         </div>
         <div ref="barLineChart" class="student-chart"></div>

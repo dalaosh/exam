@@ -3,7 +3,6 @@
     <section class="teacher-page-head teacher-page-head--compact">
       <div>
         <h2 class="teacher-page-head__title">教学概览</h2>
-        <p class="teacher-page-head__desc">汇总课程、考试、学生和题库数据，便于快速查看当前教学情况。</p>
       </div>
       <div class="teacher-page-head__meta teacher-page-head__meta--plain">
         <span class="teacher-page-head__meta-text">数据统计</span>
@@ -38,7 +37,6 @@
         <div class="teacher-panel__head">
           <div>
             <h3 class="teacher-panel__title">题型分布统计</h3>
-            <p class="teacher-panel__desc">查看当前题库中各题型占比。</p>
           </div>
         </div>
         <div ref="pieChart" class="teacher-chart"></div>
@@ -48,7 +46,6 @@
         <div class="teacher-panel__head">
           <div>
             <h3 class="teacher-panel__title">题型难度分析</h3>
-            <p class="teacher-panel__desc">查看不同题型的难度分布与总题量。</p>
           </div>
         </div>
         <div ref="barLineChart" class="teacher-chart"></div>

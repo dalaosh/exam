@@ -3,7 +3,6 @@
     <section class="student-page-head">
       <div>
         <h2 class="student-page-head__title">考试列表</h2>
-        <p class="student-page-head__desc">按课程和考试类型筛选试卷，统一查看详情、环公钥、答案和成绩榜单。</p>
       </div>
       <div class="student-page-head__meta">
         <el-tag class="student-tag" type="info">共 {{ total }} 场考试</el-tag>
@@ -37,7 +36,6 @@
       <div class="student-panel__head">
         <div>
           <h3 class="student-panel__title">考试资源</h3>
-          <p class="student-panel__desc">保持原有操作顺序，优化卡片层级、留白和动作区统一性。</p>
         </div>
       </div>
 

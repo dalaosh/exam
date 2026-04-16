@@ -3,7 +3,6 @@
     <section class="teacher-page-head">
       <div>
         <h2 class="teacher-page-head__title">课程信息</h2>
-        <p class="teacher-page-head__desc">统一查看课程基础信息、课程介绍与学生管理入口，保持原有查询、删除和跳转逻辑不变。</p>
       </div>
       <div class="teacher-page-head__meta">
         <el-tag class="teacher-tag" type="info">共 {{ total }} 门课程</el-tag>
@@ -36,7 +35,6 @@
       <div class="teacher-panel__head">
         <div>
           <h3 class="teacher-panel__title">课程列表</h3>
-          <p class="teacher-panel__desc">突出课程名称、编号、时间范围与关键操作，提升课程管理页可读性。</p>
         </div>
       </div>
 

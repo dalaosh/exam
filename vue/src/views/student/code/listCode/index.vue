@@ -3,7 +3,6 @@
     <section class="student-page-head">
       <div>
         <h2 class="student-page-head__title">代码信息</h2>
-        <p class="student-page-head__desc">统一查看代码实操题目、语言类型与时间信息，保持原有查看、编辑与删除流程。</p>
       </div>
       <div class="student-page-head__meta">
         <el-tag class="student-tag" type="info">共 {{ total }} 条记录</el-tag>
@@ -45,7 +44,6 @@
       <div class="student-panel__head student-list-page__table-head">
         <div>
           <h3 class="student-panel__title">代码列表</h3>
-          <p class="student-panel__desc">表格视觉与按钮层级统一，长文本题目采用只读文本域保持可读性。</p>
         </div>
       </div>
 

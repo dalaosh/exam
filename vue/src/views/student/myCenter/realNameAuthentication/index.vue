@@ -3,7 +3,6 @@
     <section class="student-page-head">
       <div>
         <h2 class="student-page-head__title">实名认证</h2>
-        <p class="student-page-head__desc">统一资料、地址、学校、照片和上传区域的布局，不改变现有认证提交流程。</p>
       </div>
       <div class="student-page-head__meta">
         <el-tag class="student-tag" type="info">{{ setOrShow==='show' ? '已提交信息' : '待补全信息' }}</el-tag>

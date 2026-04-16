@@ -3,9 +3,6 @@
     <section class="teacher-page-head">
       <div>
         <h2 class="teacher-page-head__title">学生管理</h2>
-        <p class="teacher-page-head__desc">
-          统一查看学生账号、联系方式和密钥摘要，保留查询、选择和导出操作。
-        </p>
       </div>
       <div class="teacher-page-head__meta">
         <el-tag class="teacher-tag" type="info">共 {{ total }} 条记录</el-tag>
@@ -38,7 +35,6 @@
       <div class="teacher-panel__head">
         <div>
           <h3 class="teacher-panel__title">学生列表</h3>
-          <p class="teacher-panel__desc">统一表格层级和信息展示，便于教师快速浏览学生资料。</p>
         </div>
       </div>
 

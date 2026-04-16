@@ -36,7 +36,6 @@
         <div class="auto-paper-panel__head">
           <div>
             <h3 class="auto-paper-panel__title">组卷参数</h3>
-            <p class="auto-paper-panel__desc">设置题型数量与难度分布，提交后按当前参数生成试卷。</p>
           </div>
         </div>
 
@@ -101,7 +100,6 @@
         <div class="auto-paper-panel__head">
           <div>
             <h3 class="auto-paper-panel__title">题型数量分布</h3>
-            <p class="auto-paper-panel__desc">右侧图表会随着题型数量和难度选择实时更新。</p>
           </div>
         </div>
         <div ref="chartWrap" class="auto-paper-chart__wrap">

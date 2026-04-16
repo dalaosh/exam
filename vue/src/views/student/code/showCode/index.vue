@@ -3,7 +3,6 @@
     <section class="student-page-head">
       <div>
         <h2 class="student-page-head__title">代码详情</h2>
-        <p class="student-page-head__desc">以只读方式展示题目、代码、运行结果和存档信息。</p>
       </div>
       <div class="student-page-head__meta">
         <el-tag class="student-tag" type="info">只读查看</el-tag>
@@ -14,7 +13,6 @@
       <div class="student-code-stack">
         <article class="student-panel student-code-panel">
           <h3 class="student-code-panel__title">题目内容</h3>
-          <p class="student-code-panel__desc">当前题目内容仅展示，不支持编辑。</p>
           <el-input
             v-model="table.title"
             type="textarea"
@@ -82,7 +80,6 @@
           <div class="student-code-result-head">
             <div>
               <h3 class="student-code-panel__title" style="margin-bottom: 6px;">运行结果</h3>
-              <p class="student-code-panel__desc" style="margin: 0;">展示本次代码运行输出，便于回顾存档结果。</p>
             </div>
             <span class="student-code-result-status" :class="resultStatusClass">{{ resultStatusText }}</span>
           </div>

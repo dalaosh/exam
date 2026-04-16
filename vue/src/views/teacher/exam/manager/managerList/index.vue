@@ -3,7 +3,6 @@
     <section class="teacher-page-head teacher-paper-list__head">
       <div>
         <h2 class="teacher-page-head__title">试卷信息管理</h2>
-        <p class="teacher-page-head__desc">集中管理试卷查询、发布、分配、手动认证与题目维护，保持原有业务链路和按钮行为不变。</p>
       </div>
       <div class="teacher-page-head__meta teacher-paper-list__meta">
         <el-tag class="teacher-tag" type="info">共 {{ total }} 份试卷</el-tag>
@@ -49,7 +48,6 @@
       <div class="teacher-panel__head teacher-paper-list__panel-head">
         <div>
           <h3 class="teacher-panel__title">试卷列表</h3>
-          <p class="teacher-panel__desc">统一展示课程、考试时间、总分和操作列，降低复杂操作的视觉噪音。</p>
         </div>
       </div>
 

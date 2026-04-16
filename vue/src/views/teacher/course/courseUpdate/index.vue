@@ -3,7 +3,6 @@
     <section class="teacher-page-head">
       <div>
         <h2 class="teacher-page-head__title">课程修改</h2>
-        <p class="teacher-page-head__desc">保留原有课程数据与保存逻辑，只统一封面、课程信息和简介编辑区域的布局规则。</p>
       </div>
     </section>
 
@@ -65,7 +64,6 @@
             <div class="teacher-panel__head">
               <div>
                 <h3 class="teacher-panel__title">课程简介</h3>
-                <p class="teacher-panel__desc">保留原有富文本编辑与保存方式。</p>
               </div>
             </div>
             <div class="w-e-text-container" id="editor" style="width: 100%; height: 380px"></div>

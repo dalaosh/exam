@@ -77,7 +77,6 @@
         </el-row>
 
         <div class="action-card">
-          <div class="action-copy">确认考试信息与考试说明后再提交。</div>
           <el-button type="primary" class="primary-action" @click="submit">提交</el-button>
         </div>
       </el-col>

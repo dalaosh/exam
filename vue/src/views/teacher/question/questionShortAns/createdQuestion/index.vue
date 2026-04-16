@@ -3,7 +3,6 @@
     <section class="teacher-page-head">
       <div>
         <h2 class="teacher-page-head__title">创建简答题</h2>
-        <p class="teacher-page-head__desc">统一问题、答案、解析三块编辑器和底部保存区间距，避免容器互相挤压。</p>
       </div>
     </section>
 
@@ -44,7 +43,6 @@
         <div class="teacher-panel__head">
           <div>
             <h3 class="teacher-panel__title">问题</h3>
-            <p class="teacher-panel__desc">编辑题面内容。</p>
           </div>
         </div>
         <div class="w-e-text-container" id="editorA" style="width: 100%; height: 320px; z-index: 1"></div>
@@ -54,7 +52,6 @@
         <div class="teacher-panel__head">
           <div>
             <h3 class="teacher-panel__title">答案</h3>
-            <p class="teacher-panel__desc">编写标准答案内容。</p>
           </div>
         </div>
         <div class="w-e-text-container" id="editorC" style="width: 100%; height: 320px"></div>
@@ -65,7 +62,6 @@
       <div class="teacher-panel__head">
         <div>
           <h3 class="teacher-panel__title">解析</h3>
-          <p class="teacher-panel__desc">说明评分依据和关键知识点。</p>
         </div>
       </div>
       <div class="w-e-text-container" id="editorB" style="width: 100%; height: 320px"></div>

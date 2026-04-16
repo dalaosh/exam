@@ -3,7 +3,6 @@
     <section class="student-page-head">
       <div>
         <h2 class="student-page-head__title">课程信息</h2>
-        <p class="student-page-head__desc">通过课程编码快速检索课程，同时统一查看已申请课程的审核状态与详细信息。</p>
       </div>
       <div class="student-page-head__meta">
         <el-tag class="student-tag" type="info">已申请 {{ visit > 0 ? visit : 0 }} 门课程</el-tag>
@@ -14,7 +13,6 @@
       <div class="student-search-hero">
         <div class="student-search-hero__pane">
           <h3 class="student-search-hero__title">课程编码查询</h3>
-          <p class="student-search-hero__desc">保持原有查询方式不变，输入课程编码后可查看课程信息并申请加入。</p>
           <div class="student-search-hero__form">
             <el-input
               v-model="number"
@@ -64,7 +62,6 @@
       <div class="student-panel__head">
         <div>
           <h3 class="student-panel__title">我的课程</h3>
-          <p class="student-panel__desc">课程卡片统一展示教师、审核状态和时间区间，保留原有详情入口。</p>
         </div>
       </div>
 

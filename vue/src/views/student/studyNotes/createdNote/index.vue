@@ -3,7 +3,6 @@
     <section class="student-page-head student-page-head--compact">
       <div>
         <h2 class="student-page-head__title">创建笔记</h2>
-        <p class="student-page-head__desc">填写标题并直接开始写正文。</p>
       </div>
       <div class="student-page-head__meta student-page-head__meta--plain">
         <span class="student-page-head__meta-text">Markdown</span>
@@ -37,7 +36,6 @@
         <div class="student-note-editor__editor-head">
           <div>
             <h3 class="student-note-editor__editor-title">正文编辑区</h3>
-            <p class="student-note-editor__editor-desc">支持实时预览。</p>
           </div>
           <div class="student-note-editor__editor-status">
             <span class="student-code-badge student-code-badge--accent">双栏预览</span>
@@ -116,7 +114,6 @@
       class="student-note-editor__dialog"
     >
       <div class="student-note-editor__dialog-body">
-        <p class="student-note-editor__dialog-desc">上传后会自动插入正文末尾。</p>
         <el-upload
           action="http://localhost:9998/files/md/upload"
           :show-file-list="false"
