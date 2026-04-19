@@ -53,6 +53,6 @@ public class EsWebSocketApplication {
                 env.getProperty("spring.application.name"),
                 env.getProperty("server.port"),
                 env.getProperty("server.port"));
-    }
 //nydwuihfmkktecff
+    }
 }
