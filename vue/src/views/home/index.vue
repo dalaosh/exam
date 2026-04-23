@@ -165,7 +165,7 @@ export default {
 
 <style scoped>
 .el-main {
-  height: 92vh;
+  height: calc(100vh - 86px);
   overflow-y: scroll;
 }
 
@@ -179,8 +179,9 @@ export default {
 }
 
 .header {
-  height: 10vh;
-  background: linear-gradient(to bottom right, #3498db, #8e44ad)
+  height: 86px !important;
+  padding: 0;
+  background: transparent;
 }
 
 .showtime {

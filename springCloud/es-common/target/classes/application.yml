@@ -1,7 +1,7 @@
 # 图片存储配置
 image:
   storage:
-    path: F:/ExamSystem/SystemCode/springCloud/files/realFace
+    path: C:/exam-system/files/realFace
   url:
-    base: http://localhost:9998/files/realFace
+    base: http://119.91.253.36:9998/files/realFace
     cache-seconds: 3600
