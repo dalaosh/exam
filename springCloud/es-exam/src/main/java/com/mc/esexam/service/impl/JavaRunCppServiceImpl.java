@@ -9,10 +9,10 @@ import java.io.File;
 @Service
 public class JavaRunCppServiceImpl implements JavaRunCppService {
     private static final String path = resolveCodePath();
-    private static String gcc1 = "D:\\application\\MinGW\\bin\\g++.exe";
-    private static String gcc2 = "D:\\application\\MinGW\\bin\\gcc.exe";
+    private static String gcc1 = "D:\\Applications\\msys2\\mingw64\\bin\\g++.exe";
+    private static String gcc2 = "D:\\Applications\\msys2\\mingw64\\bin\\gcc.exe";
     private static String gcc = "";
-    private static final String factory = "D:\\application\\MinGW\\bin";
+    private static final String factory = "D:\\Applications\\msys2\\mingw64\\bin";
 
     @Override
     public String runCpp(String message, String type) {

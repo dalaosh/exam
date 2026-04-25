@@ -429,10 +429,10 @@ export default {
 }
 
 /* 背景图配置 */
-.admin { background-image: url('@/assets/home/login_button/admin.jpg'); }
-.ca-institution { background-image: url('@/assets/home/login_button/caInstitution.jpg'); }
-.teacher { background-image: url('@/assets/home/login_button/teacher.jpg'); }
-.student { background-image: url('@/assets/home/login_button/student.jpg'); }
+.admin { background-image: url('@/assets/home/login_button/admin-tech.jpg'); }
+.ca-institution { background-image: url('@/assets/home/login_button/caInstitution-tech.jpg'); }
+.teacher { background-image: url('@/assets/home/login_button/teacher-tech.jpg'); }
+.student { background-image: url('@/assets/home/login_button/student-tech.jpg'); }
 
 @media (max-width: 768px) {
   .home-container {

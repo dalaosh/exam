@@ -4,7 +4,7 @@
     <el-drawer
       :visible.sync="drawerVisible"
       direction="rtl"
-      size="30%"
+      size="560px"
       :with-header="false"
       :before-close="handleClose"
     >
@@ -12,8 +12,11 @@
         <!-- 标题区域 -->
         <div class="advisor-header">
           <div class="title">
-            <img src="@/assets/imgs/examAI.png" alt="智慧考试AI助手" class="advisor-avatar">
-            <h3>智慧考试AI助手</h3>
+            <img src="@/assets/imgs/examAI.png" alt="Edu-Agent" class="advisor-avatar">
+            <div class="title-copy">
+              <h3>Edu-Agent</h3>
+              <span>智慧考试助手</span>
+            </div>
           </div>
           <div class="header-actions">
             <el-switch
@@ -46,26 +49,25 @@
               <img src="@/assets/imgs/doctor.png" alt="用户">
             </div>
             <div class="message-content">
-              <!-- 思考内容区域 - 确保在有reasoningContent且不等于content时显示 -->
-              <div v-if="message.sender === 'bot' && message.reasoningContent && message.reasoningContent !== message.content && showReasoning"
-                  class="message-text reasoning markdown-body"
-                  v-html="formatMessage(message.reasoningContent)">
+              <div
+                v-if="message.sender === 'bot' && loading && index === chatMessages.length - 1 && !message.content && !message.reasoningContent"
+                class="typing-indicator"
+              >
+                <div class="expert-loader">
+                  <span class="expert-loader__node"></span>
+                  <span class="expert-loader__node"></span>
+                  <span class="expert-loader__node"></span>
+                </div>
+                <span class="typing-text">多学科专家正在协同分析</span>
               </div>
-              <!-- 主要内容区域 -->
-              <div class="message-text markdown-body" v-html="formatMessage(message.content || '')"></div>
-            </div>
-          </div>
-
-          <!-- 加载中显示 -->
-          <div v-if="loading" class="message bot-message">
-            <div class="avatar">
-              <img src="@/assets/imgs/examAI.png" alt="AI">
-            </div>
-            <div class="message-content">
-              <div class="typing-indicator">
-                <span></span>
-                <span></span>
-                <span></span>
+              <div v-else>
+                <!-- 思考内容区域 - 确保在有reasoningContent且不等于content时显示 -->
+                <div v-if="message.sender === 'bot' && message.reasoningContent && message.reasoningContent !== message.content && showReasoning"
+                    class="message-text reasoning markdown-body"
+                    v-html="formatMessage(message.reasoningContent)">
+                </div>
+                <!-- 主要内容区域 -->
+                <div class="message-text markdown-body" v-html="formatMessage(message.content || '')"></div>
               </div>
             </div>
           </div>
@@ -154,7 +156,7 @@ export default {
       this.drawerVisible = newVal;
       if (newVal && this.chatMessages.length === 0) {
         // 第一次打开时发送欢迎消息
-        this.addBotMessage("您好，我是智慧考试AI助手，可以为您解答考试、课程和平台使用问题。");
+        this.addBotMessage("您好，我是 Edu-Agent，可以为您解答考试、课程和平台使用问题。");
       }
     },
     drawerVisible(newVal) {
@@ -363,12 +365,12 @@ export default {
         this.currentReasoningContent = "";
 
         // 重新添加欢迎消息
-        this.addBotMessage("您好，我是智慧考试AI助手，可以为您解答考试、课程和平台使用问题。");
+        this.addBotMessage("您好，我是 Edu-Agent，可以为您解答考试、课程和平台使用问题。");
 
         // 添加到历史
         this.messages.push({
           role: 'assistant',
-          content: "您好，我是智慧考试AI助手，可以为您解答考试、课程和平台使用问题。"
+          content: "您好，我是 Edu-Agent，可以为您解答考试、课程和平台使用问题。"
         });
       }).catch(() => {});
     },
@@ -389,31 +391,95 @@ export default {
   font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
 }
 
+.medical-advisor :deep(.el-drawer) {
+  background: #f4f8fc;
+  box-shadow: -18px 0 40px rgba(5, 18, 45, 0.28);
+}
+
+.medical-advisor :deep(.el-drawer__body) {
+  overflow: hidden;
+}
+
 .advisor-container {
   display: flex;
   flex-direction: column;
   height: 100%;
-  background-color: #f5f7fa;
+  background:
+    radial-gradient(circle at 18% 8%, rgba(30, 210, 255, 0.16), transparent 30%),
+    linear-gradient(180deg, #eef6ff 0%, #f7fbff 38%, #ffffff 100%);
 }
 
 .advisor-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 20px;
-  background-color: #409EFF;
+  padding: 18px 24px;
+  background:
+    linear-gradient(135deg, rgba(8, 30, 76, 0.98) 0%, rgba(18, 92, 181, 0.98) 58%, rgba(20, 191, 220, 0.95) 100%);
   color: white;
-  border-bottom: 1px solid #dcdfe6;
+  border-bottom: 1px solid rgba(138, 212, 255, 0.35);
+  box-shadow: 0 12px 28px rgba(14, 73, 151, 0.18);
+  position: relative;
+  overflow: hidden;
+}
+
+.advisor-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 34px 34px;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.advisor-header::after {
+  content: "";
+  position: absolute;
+  right: 72px;
+  top: -42px;
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  border: 1px solid rgba(145, 224, 255, 0.22);
+  box-shadow: 0 0 44px rgba(52, 195, 255, 0.22);
+  pointer-events: none;
 }
 
 .advisor-header .title {
   display: flex;
   align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.title-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.title-copy h3 {
+  margin: 0;
+  font-size: 24px;
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.title-copy span {
+  font-size: 12px;
+  line-height: 1.2;
+  color: rgba(220, 245, 255, 0.82);
 }
 
 .header-actions {
   display: flex;
   align-items: center;
+  position: relative;
+  z-index: 1;
 }
 
 .reasoning-switch {
@@ -422,41 +488,64 @@ export default {
 
 .reasoning-switch :deep(.el-switch__label) {
   color: white;
+  font-weight: 500;
 }
 
 .reasoning-switch :deep(.el-switch__core) {
-  border-color: #ffffff;
+  border-color: rgba(218, 241, 255, 0.8);
+  background: rgba(255, 255, 255, 0.16);
 }
 
 .reasoning-switch :deep(.el-switch.is-checked .el-switch__core) {
-  border-color: #ffffff;
-  background-color: #67C23A;
+  border-color: rgba(79, 232, 255, 0.95);
+  background-color: #19c4de;
 }
 
 .advisor-avatar {
-  width: 30px;
-  height: 30px;
+  width: 46px;
+  height: 46px;
   border-radius: 50%;
-  margin-right: 10px;
-  background-color: white;
+  margin-right: 12px;
+  padding: 4px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 0 0 1px rgba(184, 235, 255, 0.55), 0 8px 22px rgba(0, 15, 46, 0.22);
 }
 
 .close-btn {
   color: white;
   font-size: 20px;
+  border-radius: 50%;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.close-btn:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.14);
+  transform: rotate(90deg);
 }
 
 .chat-container {
   flex: 1;
-  padding: 20px;
+  padding: 24px 22px;
   overflow-y: auto;
-  background-color: #ffffff;
+  background:
+    radial-gradient(circle at 96% 16%, rgba(40, 180, 255, 0.12), transparent 22%),
+    linear-gradient(180deg, rgba(245, 250, 255, 0.94), rgba(255, 255, 255, 0.96));
+}
+
+.chat-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-container::-webkit-scrollbar-thumb {
+  background: rgba(31, 118, 196, 0.24);
+  border-radius: 999px;
 }
 
 .message {
   display: flex;
   margin-bottom: 20px;
-  max-width: 85%;
+  max-width: 88%;
 }
 
 .bot-message {
@@ -469,12 +558,15 @@ export default {
 }
 
 .avatar {
-  width: 40px;
-  height: 40px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   overflow: hidden;
   margin: 0 10px;
   flex-shrink: 0;
+  background: #ffffff;
+  border: 1px solid rgba(135, 202, 242, 0.45);
+  box-shadow: 0 8px 20px rgba(20, 70, 120, 0.12);
 }
 
 .avatar img {
@@ -484,21 +576,33 @@ export default {
 }
 
 .message-content {
-  padding: 12px 15px;
+  padding: 13px 16px;
   position: relative;
+  border-radius: 14px;
 }
 
 .bot-message .message-content {
   width: 100%;
-  color: #333;
+  color: #1c2a3a;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(137, 194, 233, 0.28);
+  box-shadow: 0 12px 28px rgba(23, 77, 132, 0.08);
 }
 
 .user-message .message-content {
-  background-color: #ecf5ff;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05);
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05);
-  border-radius: 8px;
-  color: #333;
+  background: linear-gradient(135deg, #1476d4 0%, #18b7d4 100%);
+  box-shadow: 0 10px 24px rgba(19, 123, 202, 0.22);
+  color: #ffffff;
+}
+
+.user-message .message-text h1,
+.user-message .message-text h2,
+.user-message .message-text h3,
+.user-message .message-text h4,
+.user-message .message-text h5,
+.user-message .message-text h6,
+.user-message .message-text a {
+  color: #ffffff;
 }
 
 .message-text {
@@ -673,12 +777,12 @@ export default {
 
 /* 思考内容样式 */
 .message-text.reasoning {
-  color: #666;
+  color: #476072;
   font-style: italic;
-  background-color: #f5f5f5;
+  background: linear-gradient(135deg, rgba(232, 248, 255, 0.96), rgba(244, 250, 255, 0.96));
   padding: 10px;
   border-radius: 6px;
-  border-left: 3px solid #bebfc0;
+  border-left: 3px solid #19c4de;
   margin-bottom: 10px;
   position: relative;
   font-size: 0.95em;
@@ -689,7 +793,7 @@ export default {
   display: block;
   font-weight: bold;
   margin-bottom: 5px;
-  color: #409EFF;
+  color: #1278bd;
   font-size: 0.9em;
 }
 
@@ -702,7 +806,7 @@ export default {
   height: 0;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
-  border-top: 5px solid #f5f5f5;
+  border-top: 5px solid #e8f8ff;
 }
 
 .message-time {
@@ -713,56 +817,155 @@ export default {
 }
 
 .input-container {
-  padding: 15px;
-  background-color: white;
-  border-top: 1px solid #dcdfe6;
+  padding: 16px 20px 18px;
+  background: rgba(255, 255, 255, 0.96);
+  border-top: 1px solid rgba(135, 180, 220, 0.28);
+  box-shadow: 0 -12px 28px rgba(8, 44, 88, 0.06);
+}
+
+.input-container :deep(.el-textarea__inner) {
+  border-radius: 10px;
+  border-color: rgba(88, 146, 198, 0.28);
+  background: #fbfdff;
+  color: #1c2a3a;
+  resize: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-container :deep(.el-textarea__inner:focus) {
+  border-color: #18b7d4;
+  box-shadow: 0 0 0 3px rgba(24, 183, 212, 0.12);
 }
 
 .input-actions {
   display: flex;
   justify-content: space-between;
-  margin-top: 10px;
+  margin-top: 12px;
 }
 
 .input-actions .el-button {
   margin-left: 10px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.input-actions :deep(.el-button--info) {
+  color: #536273;
+  background: #eef3f8;
+  border-color: #dbe6ef;
+}
+
+.input-actions :deep(.el-button--primary) {
+  background: linear-gradient(135deg, #1378d6 0%, #18b7d4 100%);
+  border-color: transparent;
+  box-shadow: 0 8px 18px rgba(19, 120, 214, 0.22);
+}
+
+.input-actions :deep(.el-button--primary.is-disabled) {
+  background: #b9d8f4;
+  box-shadow: none;
+}
+
+@media (max-width: 640px) {
+  .medical-advisor :deep(.el-drawer) {
+    width: 100% !important;
+  }
+
+  .advisor-header {
+    padding: 16px;
+  }
+
+  .title-copy h3 {
+    font-size: 22px;
+  }
+
+  .reasoning-switch {
+    margin-right: 8px;
+  }
+
+  .message {
+    max-width: 94%;
+  }
 }
 
 /* 打字指示器样式 */
 .typing-indicator {
   display: flex;
   align-items: center;
-  padding: 5px 10px;
+  gap: 10px;
+  padding: 2px 0;
+  min-height: 24px;
 }
 
-.typing-indicator span {
-  width: 8px;
-  height: 8px;
-  background-color: #b6b6b6;
+.expert-loader {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 7px;
+  border-radius: 999px;
+  background: rgba(22, 147, 213, 0.08);
+  border: 1px solid rgba(24, 183, 212, 0.16);
+}
+
+.expert-loader__node {
+  width: 7px;
+  height: 7px;
+  background: linear-gradient(135deg, #1378d6, #18b7d4);
   border-radius: 50%;
   display: inline-block;
-  margin: 0 2px;
-  animation: typing 1.4s infinite ease-in-out;
+  box-shadow: 0 0 10px rgba(24, 183, 212, 0.35);
+  animation: expertPulse 1.4s infinite ease-in-out;
 }
 
-.typing-indicator span:nth-child(1) {
+.expert-loader__node:nth-child(1) {
   animation-delay: 0s;
 }
 
-.typing-indicator span:nth-child(2) {
+.expert-loader__node:nth-child(2) {
   animation-delay: 0.2s;
 }
 
-.typing-indicator span:nth-child(3) {
+.expert-loader__node:nth-child(3) {
   animation-delay: 0.4s;
 }
 
-@keyframes typing {
+.typing-text {
+  color: #31516a;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.typing-text::after {
+  content: "...";
+  display: inline-block;
+  width: 18px;
+  text-align: left;
+  animation: typingEllipsis 1.2s steps(4, end) infinite;
+}
+
+@keyframes expertPulse {
   0%, 60%, 100% {
-    transform: translateY(0);
+    opacity: 0.45;
+    transform: translateY(0) scale(0.92);
   }
   30% {
-    transform: translateY(-5px);
+    opacity: 1;
+    transform: translateY(-3px) scale(1);
+  }
+}
+
+@keyframes typingEllipsis {
+  0% {
+    content: "";
+  }
+  25% {
+    content: ".";
+  }
+  50% {
+    content: "..";
+  }
+  75%, 100% {
+    content: "...";
   }
 }
 

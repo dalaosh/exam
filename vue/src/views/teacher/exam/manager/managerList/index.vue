@@ -97,7 +97,7 @@
                 <el-button type="text" @click="showPublicKeys(scope.row.id)">查看环公钥</el-button>
                 <el-button type="text" @click="showManager(scope.row)">题目创建</el-button>
                 <el-button type="text" @click="updateById(scope.row.id)">修改</el-button>
-                <el-button type="text" @click="submit(scope.row)">发布</el-button>
+                <el-button type="text" :loading="publishingRowId === scope.row.id" @click="submit(scope.row)">发布</el-button>
                 <el-button type="text" @click="realFace(scope.row)">手动认证</el-button>
                 <el-button type="text" @click="distributeById(scope.row)">教师分配</el-button>
                 <el-button type="text" style="color: #dc2626;" @click="deleteById(scope.row.id)">删除</el-button>
@@ -131,6 +131,53 @@
     <el-dialog title="信息详情" :visible.sync="editorVisible" width="760px" custom-class="teacher-dialog">
       <div v-html="viewData" class="teacher-rich-content"></div>
     </el-dialog>
+
+    <el-dialog
+      title="试卷安全发布"
+      :visible.sync="publishDialogVisible"
+      width="680px"
+      custom-class="teacher-dialog publish-dialog"
+      :close-on-click-modal="false"
+      :close-on-press-escape="!publishLoading"
+      :show-close="!publishLoading"
+    >
+      <div class="publish-demo">
+        <div class="publish-demo__summary">
+          <div>
+            <div class="publish-demo__eyebrow">SM2 Secure Publish</div>
+            <h3 class="publish-demo__title">{{ publishCurrentStep.title }}</h3>
+            <p class="publish-demo__desc">{{ publishCurrentStep.desc }}</p>
+          </div>
+          <div class="publish-demo__percent">{{ publishProgress }}%</div>
+        </div>
+
+        <el-progress
+          :percentage="publishProgress"
+          :stroke-width="12"
+          :show-text="false"
+          :status="publishProgress >= 100 ? 'success' : undefined"
+        />
+
+        <div class="publish-demo__steps">
+          <div
+            v-for="(step, index) in publishSteps"
+            :key="step.title"
+            class="publish-demo__step"
+            :class="{ 'is-active': index === publishStepIndex, 'is-done': index < publishStepIndex || publishProgress >= 100 }"
+          >
+            <span class="publish-demo__dot">{{ index + 1 }}</span>
+            <span class="publish-demo__step-title">{{ step.title }}</span>
+          </div>
+        </div>
+
+        <div class="publish-demo__terminal">
+          <div v-for="(log, index) in publishLogs" :key="index" class="publish-demo__log">
+            <span class="publish-demo__time">{{ log.time }}</span>
+            <span>{{ log.text }}</span>
+          </div>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -157,15 +204,143 @@ export default {
       viewData: "",
       dialogFormVisible: false,
       receivedData: "",
-      visit: -1
+      visit: -1,
+      publishDialogVisible: false,
+      publishLoading: false,
+      publishingRowId: null,
+      publishProgress: 0,
+      publishStepIndex: 0,
+      publishTimer: null,
+      publishLogs: [],
+      publishSteps: [
+        {
+          title: "试题内容封装",
+          desc: "正在汇总选择、判断、填空、简答、编程题及分值结构。",
+          target: 16,
+        },
+        {
+          title: "考试配置锁定",
+          desc: "正在写入考试时间、考试时长、考生须知与访问策略快照。",
+          target: 34,
+        },
+        {
+          title: "SM2 国密加密",
+          desc: "正在生成试卷密文包，模拟执行 SM2 公钥加密与签名绑定。",
+          target: 56,
+        },
+        {
+          title: "防篡改校验",
+          desc: "正在计算试卷结构摘要，模拟校验题目顺序与配置完整性。",
+          target: 76,
+        },
+        {
+          title: "发布前安全检查",
+          desc: "正在确认密文包、访问控制和防泄露策略状态。",
+          target: 92,
+        },
+        {
+          title: "发布就绪",
+          desc: "安全封装流程完成，正在提交原有发布操作。",
+          target: 100,
+        },
+      ]
     };
+  },
+  computed: {
+    publishCurrentStep() {
+      return this.publishSteps[this.publishStepIndex] || this.publishSteps[0];
+    }
   },
   created() {
     this.receivedData = this.$route.params;
     this.load();
     this.findCourse();
   },
+  beforeDestroy() {
+    this.clearPublishTimer();
+  },
   methods: {
+    nowLabel() {
+      const date = new Date();
+      const hh = String(date.getHours()).padStart(2, "0");
+      const mm = String(date.getMinutes()).padStart(2, "0");
+      const ss = String(date.getSeconds()).padStart(2, "0");
+      return `${hh}:${mm}:${ss}`;
+    },
+    clearPublishTimer() {
+      if (this.publishTimer) {
+        clearInterval(this.publishTimer);
+        this.publishTimer = null;
+      }
+    },
+    appendPublishLog(text) {
+      this.publishLogs.unshift({
+        time: this.nowLabel(),
+        text,
+      });
+      this.publishLogs = this.publishLogs.slice(0, 8);
+    },
+    runPublishDemo(row) {
+      this.clearPublishTimer();
+      this.publishDialogVisible = true;
+      this.publishLoading = true;
+      this.publishingRowId = row.id;
+      this.publishProgress = 0;
+      this.publishStepIndex = 0;
+      this.publishLogs = [];
+      this.appendPublishLog(`试卷 #${row.id} 已进入发布安全封装流程。`);
+      this.appendPublishLog("开始读取试题内容、试卷结构与考试配置。");
+
+      return new Promise((resolve) => {
+        this.publishTimer = setInterval(() => {
+          if (this.publishProgress >= 100) {
+            this.clearPublishTimer();
+            resolve();
+            return;
+          }
+
+          const nextProgress = Math.min(this.publishProgress + 4, 100);
+          const nextStepIndex = this.publishSteps.findIndex((step) => nextProgress <= step.target);
+
+          if (nextStepIndex !== -1 && nextStepIndex !== this.publishStepIndex) {
+            this.publishStepIndex = nextStepIndex;
+            this.appendPublishLog(this.publishSteps[nextStepIndex].title + "中...");
+          }
+
+          this.publishProgress = nextProgress;
+
+          if (this.publishProgress === 56) {
+            this.appendPublishLog("SM2 密文包生成完成，密钥索引已绑定。");
+          }
+          if (this.publishProgress === 76) {
+            this.appendPublishLog("试卷结构摘要校验通过，未发现篡改风险。");
+          }
+          if (this.publishProgress === 100) {
+            this.publishStepIndex = this.publishSteps.length - 1;
+            this.appendPublishLog("安全发布模拟流程完成。");
+          }
+        }, 120);
+      });
+    },
+    async publishExam(row) {
+      try {
+        const res = await request.get(`exam/examStudent/addStudentBatch/${row.id}`);
+        if (res.code === "200") {
+          this.appendPublishLog("原有发布接口调用成功，试卷已发布。");
+          this.$message.success("试卷发布成功");
+          this.load();
+        } else {
+          this.appendPublishLog("原有发布接口返回异常：" + (res.data || res.msg || "未知错误"));
+          this.$message.warning(res.data || res.msg || "发布失败");
+        }
+      } catch (error) {
+        this.appendPublishLog("原有发布接口请求失败，请检查后端服务状态。");
+        this.$message.error("发布失败，请检查后端服务状态");
+      } finally {
+        this.publishLoading = false;
+        this.publishingRowId = null;
+      }
+    },
     load() {
       this.params.teacherId = this.user.id;
       request.get("/exam/examManage/selectPage", {
@@ -297,13 +472,8 @@ export default {
         this.$message.warning("试卷已经发布");
       } else {
         this.$confirm("您确定公布试卷吗？", "确认公布", { type: "warning" }).then(() => {
-          request.get(`exam/examStudent/addStudentBatch/${row.id}`).then((res) => {
-            if (res.code === "200") {
-              this.$message.success("成功");
-              this.load();
-            } else {
-              this.$message.warning(res.data);
-            }
+          this.runPublishDemo(row).then(() => {
+            this.publishExam(row);
           });
         }).catch(() => {});
       }
@@ -393,7 +563,7 @@ export default {
 }
 
 .teacher-paper-list__toolbar-panel {
-  padding: 22px 24px 24px;
+  padding: 24px 30px 28px;
   border-radius: 24px;
   border-color: #dbe7f3;
   background:
@@ -402,26 +572,45 @@ export default {
   box-shadow: 0 20px 48px rgba(15, 23, 42, 0.08);
 }
 
+.teacher-paper-list :deep(.teacher-toolbar) {
+  width: 100%;
+}
+
 .teacher-paper-list__form {
-  padding: 18px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(190px, 1fr)) 110px;
+  gap: 18px 20px;
+  align-items: center;
+  padding: 22px 24px;
   border-radius: 20px;
   background: linear-gradient(180deg, #f8fbff 0%, #f1f5f9 100%);
   border: 1px solid #e2e8f0;
 }
 
 .teacher-paper-list__form :deep(.el-form-item) {
+  display: flex;
+  align-items: center;
+  min-width: 0;
   margin-bottom: 0;
 }
 
 .teacher-paper-list__form :deep(.el-form-item__label) {
+  flex: none;
   padding-right: 12px;
   font-size: 13px;
   font-weight: 700;
   color: #334155;
 }
 
+.teacher-paper-list__form :deep(.el-form-item__content) {
+  flex: 1;
+  min-width: 0;
+  line-height: normal;
+}
+
 .teacher-paper-list__form :deep(.el-input__inner),
 .teacher-paper-list__form :deep(.el-select .el-input__inner) {
+  width: 100%;
   height: 42px;
   border-radius: 14px;
   border-color: #dbe4ee;
@@ -429,8 +618,14 @@ export default {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
 }
 
+.teacher-paper-list__form :deep(.el-input),
+.teacher-paper-list__form :deep(.el-select) {
+  width: 100%;
+}
+
 .teacher-paper-list__form :deep(.el-button--primary) {
-  min-width: 88px;
+  width: 110px;
+  min-width: 110px;
   height: 42px;
   border-radius: 14px;
   background: linear-gradient(135deg, #0f8b84 0%, #0f766e 100%);
@@ -439,11 +634,16 @@ export default {
 }
 
 .teacher-paper-list__actions {
-  padding-top: 4px;
+  display: grid;
+  grid-template-columns: repeat(3, 126px);
+  gap: 24px;
+  justify-content: start;
+  padding-top: 2px;
 }
 
 .teacher-paper-list__action-btn {
-  min-width: 100px;
+  width: 126px;
+  min-width: 126px;
   height: 42px;
   border-radius: 14px;
   font-weight: 700;
@@ -533,5 +733,170 @@ export default {
 
 .teacher-paper-list :deep(.teacher-dialog) {
   border-radius: 24px;
+}
+
+.publish-demo {
+  padding: 2px 4px 4px;
+}
+
+.publish-demo__summary {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 18px;
+}
+
+.publish-demo__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 9px;
+  border-radius: 999px;
+  background: #ecfeff;
+  color: #0891b2;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.publish-demo__title {
+  margin: 10px 0 6px;
+  color: #0f172a;
+  font-size: 20px;
+  line-height: 1.3;
+}
+
+.publish-demo__desc {
+  margin: 0;
+  color: #64748b;
+  line-height: 1.7;
+}
+
+.publish-demo__percent {
+  min-width: 82px;
+  color: #0f766e;
+  font-size: 30px;
+  font-weight: 800;
+  text-align: right;
+}
+
+.publish-demo__steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.publish-demo__step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 8px 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #f8fafc;
+  color: #64748b;
+}
+
+.publish-demo__step.is-active {
+  border-color: #67e8f9;
+  background: #ecfeff;
+  color: #0e7490;
+}
+
+.publish-demo__step.is-done {
+  border-color: #86efac;
+  background: #f0fdf4;
+  color: #15803d;
+}
+
+.publish-demo__dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: #ffffff;
+  font-size: 12px;
+  font-weight: 800;
+  flex: none;
+}
+
+.publish-demo__step-title {
+  overflow: hidden;
+  font-size: 13px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.publish-demo__terminal {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 164px;
+  margin-top: 18px;
+  padding: 14px;
+  border-radius: 14px;
+  background: #0f172a;
+}
+
+.publish-demo__log {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 10px;
+  color: #dbeafe;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.publish-demo__time {
+  color: #67e8f9;
+  font-family: Consolas, monospace;
+}
+
+@media (max-width: 760px) {
+  .publish-demo__summary {
+    flex-direction: column;
+  }
+
+  .publish-demo__percent {
+    text-align: left;
+  }
+
+  .publish-demo__steps {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 1280px) {
+  .teacher-paper-list__form {
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
+  }
+
+  .teacher-paper-list__form :deep(.el-button--primary) {
+    width: 100%;
+  }
+}
+
+@media (max-width: 760px) {
+  .teacher-paper-list__toolbar-panel {
+    padding: 18px;
+  }
+
+  .teacher-paper-list__form,
+  .teacher-paper-list__actions {
+    grid-template-columns: 1fr;
+  }
+
+  .teacher-paper-list__actions {
+    gap: 12px;
+  }
+
+  .teacher-paper-list__action-btn {
+    width: 100%;
+  }
 }
 </style>

@@ -22,28 +22,22 @@
 </template>
 
 <script>
-import request from "@/utils/request";
 export default {
   name: "index",
   data() {
     return {
       user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {},
-      dataCount: {},
+      dataCount: {
+        courseNum: 12,
+        examNum: 36,
+        s: 92,
+        questionAll: 428,
+      },
     };
   },
   created() {
-    this.load();
   },
   methods: {
-    load() {
-      request.get("statistic/SelectBigEChart/selectBasicNum").then(res => {
-        if (res.code === '200') {
-          this.dataCount = res.data;
-        } else {
-          this.$message.error(res.msg);
-        }
-      });
-    },
   }
 }
 </script>

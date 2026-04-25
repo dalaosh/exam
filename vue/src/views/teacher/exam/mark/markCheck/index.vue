@@ -6,8 +6,8 @@
           <div class="hero-kicker">批卷验签</div>
           <h2>先完成批阅与验签，再进入成绩统计</h2>
         </div>
-        <span class="approval-pill" :class="{ done: examManagers.isMarked === '是' }">
-          {{ examManagers.isMarked === '是' ? '已完成确认' : '待完成确认' }}
+        <span class="approval-pill" :class="{ done: isExamConfirmed }">
+          {{ approvalStatusText }}
         </span>
       </div>
 
@@ -500,6 +500,17 @@ export default {
     isCodeQuestion() {
       return this.questionTypeValue === "code";
     },
+    hasPendingReviewOrSign() {
+      return this.totalCount.noMarkCount !== 0 || this.totalCount.noRightSignCount !== 0;
+    },
+    isExamConfirmed() {
+      return this.examManagers.isMarked === "是" && !this.hasPendingReviewOrSign;
+    },
+    approvalStatusText() {
+      if (this.totalCount.noMarkCount !== 0) return "待批阅确认";
+      if (this.totalCount.noRightSignCount !== 0) return "待验签确认";
+      return this.examManagers.isMarked === "是" ? "已完成确认" : "待完成确认";
+    },
   },
   methods: {
     safeCount(key) {
@@ -923,13 +934,17 @@ export default {
       }
     },
     markStatistic() {
-      if (this.examManagers.isMarked === "是") {
+      if (this.isExamConfirmed) {
         this.$router.push({
           name: "teacherMarkStatistics",
           params: {
             id: this.receivedData.id,
           },
         });
+      } else if (this.totalCount.noMarkCount !== 0) {
+        this.$message.warning("还有题目未批阅");
+      } else if (this.totalCount.noRightSignCount !== 0) {
+        this.$message.warning("还有签名未验签");
       } else {
         this.$message.warning("请先进行标记");
       }

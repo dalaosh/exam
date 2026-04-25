@@ -189,6 +189,20 @@ export default {
 
 :deep(.avatar-uploader .el-upload) {
   width: 100%;
+  height: 240px;
+  min-height: 240px;
+  box-sizing: border-box;
   border: none;
+  overflow: hidden;
+}
+
+.teacher-editor-upload__preview {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  object-fit: contain;
+  border-radius: 12px;
+  background: #f8fafc;
 }
 </style>

@@ -326,10 +326,25 @@ export default {
 }
 
 .teacher-course-create-page :deep(.avatar-uploader .el-upload) {
+  width: 100%;
+  height: 240px;
   min-height: 240px;
+  box-sizing: border-box;
   border-radius: 18px;
   border: 1px dashed #b7d8cb;
   background: linear-gradient(180deg, #fbfffd 0%, #f3faf7 100%);
+  overflow: hidden;
+}
+
+.teacher-course-create-page .teacher-editor-upload__preview {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  object-fit: contain;
+  border: 0;
+  border-radius: 0;
+  background: #f8fafc;
 }
 
 .teacher-course-create-page :deep(.w-e-toolbar) {

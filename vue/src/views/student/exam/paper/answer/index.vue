@@ -228,14 +228,28 @@
                 <div class="answer-divider"></div>
                 <div class="code-workspace">
                   <div class="code-editor-shell">
-                    <div class="answer-summary">
-                      <span>代码编辑区</span>
-                      <strong>C 语言运行环境</strong>
+                    <div class="code-language-panel">
+                      <div class="code-language-toolbar">
+                        <div class="code-language-select">
+                          <span>编程语言</span>
+                          <el-select v-model="selectedCodeLanguageValue" size="small" filterable placeholder="请选择语言">
+                            <el-option
+                                v-for="item in codeLanguageOptions"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                          </el-select>
+                        </div>
+                      </div>
+                      <div v-if="!isNativeCodeLanguage" class="code-compat-note">
+                        当前为前端演示模式：运行时将模拟 {{ selectedCodeLanguage.label }} 环境初始化，并复用现有 C/C++ 编译接口。
+                      </div>
                     </div>
                     <div class="code-editor-frame">
                       <monaco-editor
                           v-model="answer"
-                          language="c"
+                          :language="selectedCodeEditorLanguage"
                           :options="codeEditorOptions"
                           class="code-editor"
                       ></monaco-editor>
@@ -247,9 +261,15 @@
                         <span class="code-result-card__label">运行面板</span>
                         <strong class="code-result-card__title">代码执行与输出</strong>
                       </div>
-                      <span class="code-result-card__status">{{ result ? "已更新" : "等待运行" }}</span>
+                      <span class="code-result-card__status">{{ codeRunStatusText }}</span>
                     </div>
-                    <el-button class="code-run" @click="runCpp">运行代码</el-button>
+                    <el-progress
+                        v-if="codeRunLoading && !isNativeCodeLanguage"
+                        :percentage="codeCompatProgress"
+                        :stroke-width="8"
+                        class="code-compat-progress">
+                    </el-progress>
+                    <el-button class="code-run" :loading="codeRunLoading" @click="runCpp">运行代码</el-button>
                     <el-input
                         class="code-result"
                         disabled
@@ -345,6 +365,50 @@ export default {
       multi:['A','B','C','D'],
       multiAnswer:[],
       result:"",
+      selectedCodeLanguageValue: "c",
+      codeRunLoading: false,
+      codeCompatProgress: 0,
+      codeCompatTimer: null,
+      codeLanguageOptions: [
+        { value: "c", label: "C", shortLabel: "C", editorLanguage: "c", backendType: "c", native: true },
+        { value: "cpp", label: "C++", shortLabel: "C++", editorLanguage: "cpp", backendType: "cpp", native: true },
+        { value: "python", label: "Python", shortLabel: "Python", editorLanguage: "python", backendType: "cpp" },
+        { value: "java", label: "Java", shortLabel: "Java", editorLanguage: "java", backendType: "cpp" },
+        { value: "rust", label: "Rust", shortLabel: "Rust", editorLanguage: "rust", backendType: "cpp" },
+        { value: "go", label: "Go", shortLabel: "Go", editorLanguage: "go", backendType: "cpp" },
+        { value: "javascript", label: "JavaScript", shortLabel: "JS", editorLanguage: "javascript", backendType: "cpp" },
+        { value: "typescript", label: "TypeScript", shortLabel: "TS", editorLanguage: "typescript", backendType: "cpp" },
+        { value: "php", label: "PHP", shortLabel: "PHP", editorLanguage: "php", backendType: "cpp" },
+        { value: "csharp", label: "C#", shortLabel: "C#", editorLanguage: "csharp", backendType: "cpp" },
+        { value: "kotlin", label: "Kotlin", shortLabel: "Kotlin", editorLanguage: "kotlin", backendType: "cpp" },
+        { value: "swift", label: "Swift", shortLabel: "Swift", editorLanguage: "swift", backendType: "cpp" },
+        { value: "scala", label: "Scala", shortLabel: "Scala", editorLanguage: "scala", backendType: "cpp" },
+        { value: "ruby", label: "Ruby", shortLabel: "Ruby", editorLanguage: "ruby", backendType: "cpp" },
+        { value: "perl", label: "Perl", shortLabel: "Perl", editorLanguage: "perl", backendType: "cpp" },
+        { value: "lua", label: "Lua", shortLabel: "Lua", editorLanguage: "lua", backendType: "cpp" },
+        { value: "r", label: "R", shortLabel: "R", editorLanguage: "r", backendType: "cpp" },
+        { value: "matlab", label: "MATLAB", shortLabel: "MATLAB", editorLanguage: "matlab", backendType: "cpp" },
+        { value: "sql", label: "SQL", shortLabel: "SQL", editorLanguage: "sql", backendType: "cpp" },
+        { value: "bash", label: "Bash", shortLabel: "Bash", editorLanguage: "shell", backendType: "cpp" },
+        { value: "powershell", label: "PowerShell", shortLabel: "PS", editorLanguage: "powershell", backendType: "cpp" },
+        { value: "dart", label: "Dart", shortLabel: "Dart", editorLanguage: "dart", backendType: "cpp" },
+        { value: "elixir", label: "Elixir", shortLabel: "Elixir", editorLanguage: "elixir", backendType: "cpp" },
+        { value: "erlang", label: "Erlang", shortLabel: "Erlang", editorLanguage: "erlang", backendType: "cpp" },
+        { value: "haskell", label: "Haskell", shortLabel: "Haskell", editorLanguage: "haskell", backendType: "cpp" },
+        { value: "clojure", label: "Clojure", shortLabel: "Clojure", editorLanguage: "clojure", backendType: "cpp" },
+        { value: "groovy", label: "Groovy", shortLabel: "Groovy", editorLanguage: "groovy", backendType: "cpp" },
+        { value: "objectivec", label: "Objective-C", shortLabel: "Obj-C", editorLanguage: "objective-c", backendType: "cpp" },
+        { value: "fortran", label: "Fortran", shortLabel: "Fortran", editorLanguage: "fortran", backendType: "cpp" },
+        { value: "pascal", label: "Pascal", shortLabel: "Pascal", editorLanguage: "pascal", backendType: "cpp" },
+        { value: "ocaml", label: "OCaml", shortLabel: "OCaml", editorLanguage: "ocaml", backendType: "cpp" },
+        { value: "fsharp", label: "F#", shortLabel: "F#", editorLanguage: "fsharp", backendType: "cpp" },
+        { value: "vb", label: "Visual Basic", shortLabel: "VB", editorLanguage: "vb", backendType: "cpp" },
+        { value: "delphi", label: "Delphi", shortLabel: "Delphi", editorLanguage: "pascal", backendType: "cpp" },
+        { value: "julia", label: "Julia", shortLabel: "Julia", editorLanguage: "julia", backendType: "cpp" },
+        { value: "nim", label: "Nim", shortLabel: "Nim", editorLanguage: "nim", backendType: "cpp" },
+        { value: "zig", label: "Zig", shortLabel: "Zig", editorLanguage: "zig", backendType: "cpp" },
+        { value: "solidity", label: "Solidity", shortLabel: "Solidity", editorLanguage: "solidity", backendType: "cpp" },
+      ],
       codeEditorOptions: {
         fontSize: 18,
         theme: "vs-dark",
@@ -383,6 +447,21 @@ export default {
     },
     isCurrentQuestionAnswered() {
       return this.isAnswerCompleted(this.answer);
+    },
+    selectedCodeLanguage() {
+      return this.codeLanguageOptions.find((item) => item.value === this.selectedCodeLanguageValue) || this.codeLanguageOptions[0];
+    },
+    selectedCodeEditorLanguage() {
+      return this.selectedCodeLanguage.editorLanguage || "cpp";
+    },
+    isNativeCodeLanguage() {
+      return Boolean(this.selectedCodeLanguage.native);
+    },
+    codeRunStatusText() {
+      if (this.codeRunLoading) {
+        return this.isNativeCodeLanguage ? "正在运行" : "兼容运行中";
+      }
+      return this.result ? "已更新" : "等待运行";
     }
   },
   created() {
@@ -400,9 +479,29 @@ export default {
     if (this.countdownTimer) {
       clearInterval(this.countdownTimer);
     }
+    this.clearCodeCompatTimer();
     destroyWangEditorA();
   },
   methods: {
+    clearCodeCompatTimer() {
+      if (this.codeCompatTimer) {
+        clearInterval(this.codeCompatTimer);
+        this.codeCompatTimer = null;
+      }
+    },
+    runCodeCompatProgress() {
+      this.clearCodeCompatTimer();
+      this.codeCompatProgress = 0;
+      return new Promise((resolve) => {
+        this.codeCompatTimer = setInterval(() => {
+          this.codeCompatProgress = Math.min(this.codeCompatProgress + 10, 100);
+          if (this.codeCompatProgress >= 100) {
+            this.clearCodeCompatTimer();
+            resolve();
+          }
+        }, 90);
+      });
+    },
     // 获取当前时间
     getTime() {
       if (this.clockTimer) {
@@ -505,13 +604,26 @@ export default {
         }
       });
     },
-    runCpp() {
+    async runCpp() {
+      if (this.codeRunLoading) {
+        return;
+      }
+      this.codeRunLoading = true;
+      this.result = this.isNativeCodeLanguage
+          ? "正在提交 C/C++ 沙箱编译运行...\n"
+          : `正在初始化 ${this.selectedCodeLanguage.label} 云端兼容环境...\n`;
+      if (!this.isNativeCodeLanguage) {
+        await this.runCodeCompatProgress();
+        this.result += "兼容环境初始化完成，已接入现有 C/C++ 编译接口。\n";
+      }
       const params = {
         m: this.answer,
-        t: "c"
+        t: this.selectedCodeLanguage.backendType || "cpp"
       }
       request.post('/exam/code/cpp', params).then(res => {
-        this.result = res.data
+        this.result += res.data
+      }).finally(() => {
+        this.codeRunLoading = false;
       })
     },
     multiChange(){
@@ -1495,9 +1607,9 @@ export default {
 
 .code-workspace {
   display: grid;
-  align-items: stretch;
-  grid-template-columns: minmax(0, 1fr) 320px;
-  gap: 18px;
+  align-items: start;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 22px;
 }
 
 .code-editor-shell,
@@ -1507,12 +1619,53 @@ export default {
   gap: 14px;
 }
 
+.code-language-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 64px;
+  padding: 12px 16px;
+  border: 1px solid #dbeafe;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #f8fbff 0%, #f1f7ff 100%);
+}
+
+.code-language-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.code-language-select {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.code-language-select :deep(.el-select) {
+  width: 210px;
+}
+
+.code-compat-note {
+  padding: 7px 10px;
+  border-radius: 12px;
+  background: #fff7ed;
+  color: #c2410c;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
 .code-editor-frame {
   flex: 0 0 auto;
-  height: clamp(240px, 34vh, 420px);
+  height: 368px;
   min-height: 0;
   padding: 12px;
-  border-radius: 22px;
+  border-radius: 20px;
   background: linear-gradient(180deg, #111827 0%, #0f172a 100%);
   overflow: hidden;
   box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.14);
@@ -1526,13 +1679,14 @@ export default {
 }
 
 .code-result-card {
-  height: clamp(240px, 34vh, 420px);
+  height: 368px;
   min-height: 0;
-  padding: 14px;
-  border-radius: 22px;
+  padding: 16px;
+  border-radius: 20px;
   background: linear-gradient(180deg, #f8fbff 0%, #eef4ff 100%);
   border: 1px solid #dbeafe;
-  overflow-y: auto;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .code-result-card::-webkit-scrollbar {
@@ -1549,9 +1703,11 @@ export default {
 }
 
 .code-result-card__head {
+  flex: 0 0 auto;
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .code-result-card__label {
@@ -1569,7 +1725,7 @@ export default {
 
 .code-result-card__status {
   display: inline-flex;
-  align-self: flex-start;
+  flex: none;
   padding: 6px 12px;
   border-radius: 999px;
   background: #eff6ff;
@@ -1578,14 +1734,30 @@ export default {
   font-weight: 700;
 }
 
+.code-compat-progress {
+  margin: -2px 0 2px;
+}
+
 .code-run {
+  flex: 0 0 auto;
   width: 100%;
-  height: 40px;
+  height: 42px;
   border-radius: 14px;
   border: 1px solid #cbd5e1;
   background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
   color: #0f172a;
   font-weight: 700;
+}
+
+.code-result-card :deep(.code-result) {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.code-result-card :deep(.code-result .el-textarea__inner) {
+  height: 100% !important;
+  min-height: 0 !important;
+  resize: none;
 }
 
 .submit-answer {
@@ -1598,6 +1770,7 @@ export default {
 }
 
 .submit-answer--full {
+  flex: 0 0 auto;
   align-self: stretch;
   margin-top: auto;
 }
