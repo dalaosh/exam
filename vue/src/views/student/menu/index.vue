@@ -206,5 +206,43 @@ export default {
 .student-shell__aside--cyber::-webkit-scrollbar-thumb, .student-shell__menu--cyber ::v-deep .el-menu::-webkit-scrollbar-thumb { border-radius: 999px; background: linear-gradient(180deg, rgba(95, 255, 176, 0.78), rgba(95, 255, 176, 0.26)); box-shadow: 0 0 10px rgba(95, 255, 176, 0.2); }
 @keyframes student-brand-breathe { 0%, 100% { box-shadow: 0 0 0 1px rgba(95, 255, 176, 0.08), 0 0 16px rgba(95, 255, 176, 0.16), inset 0 0 14px rgba(95, 255, 176, 0.06);} 50% { box-shadow: 0 0 0 1px rgba(95, 255, 176, 0.14), 0 0 28px rgba(95, 255, 176, 0.24), inset 0 0 20px rgba(95, 255, 176, 0.1);} }
 @keyframes student-cyber-scan { 0% { transform: translate3d(-4%, -2%, 0);} 50% { transform: translate3d(3%, 2%, 0);} 100% { transform: translate3d(-4%, -2%, 0);} }
-</style>
 
+@media (max-width: 900px) {
+  .student-shell__aside {
+    display: none;
+  }
+
+  .student-shell__header {
+    align-items: flex-start;
+    padding: 12px 14px 8px;
+  }
+
+  .student-shell__title {
+    font-size: 20px;
+  }
+
+  .student-shell__subtitle {
+    font-size: 12px;
+  }
+
+  .student-shell__toolbar {
+    justify-content: flex-start;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .student-shell__toolbar-time,
+  .student-shell__action-group,
+  .student-shell__user--compact {
+    min-height: 32px;
+  }
+
+  .student-shell__content {
+    padding: 10px 14px 14px;
+  }
+
+  .student-shell__main.el-main {
+    margin-top: 10px;
+  }
+}
+</style>

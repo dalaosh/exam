@@ -280,9 +280,28 @@ export default {
 </script>
 
 <style scoped>
+.student-password-page.student-page {
+  gap: 10px;
+}
+
+.student-password-page .student-page-head {
+  align-items: center;
+}
+
+.student-password-page .student-page-head__title {
+  font-size: 18px;
+  line-height: 1.25;
+}
+
+.student-password-page .student-page-head__meta .student-tag {
+  height: 24px;
+  line-height: 24px;
+}
+
 .student-password-page .student-password-layout {
   align-items: stretch;
-  gap: 20px;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: 14px;
 }
 
 .student-password-page .student-password-sidebar {
@@ -291,28 +310,31 @@ export default {
   min-height: 100%;
   align-self: stretch;
   position: static;
+  padding: 16px;
 }
 
 .student-password-page .student-password-sidebar__steps {
   flex: 1;
   min-height: 0;
-  margin-top: 10px;
-  overflow: auto;
+  margin-top: 2px;
+  overflow: hidden;
 }
 
 .student-password-page .student-password-sidebar__tip {
-  margin-top: 18px;
-  padding: 14px 16px;
-  border-radius: 14px;
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
   background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(59, 130, 246, 0.08));
   color: #475569;
-  font-size: 13px;
-  line-height: 1.7;
+  font-size: 12px;
+  line-height: 1.45;
 }
 
 .student-password-page .student-password-top {
   align-items: stretch;
-  grid-template-columns: minmax(0, 1.25fr) minmax(240px, 0.85fr);
+  grid-template-columns: minmax(0, 1.35fr) minmax(220px, 0.65fr);
+  gap: 12px;
+  margin-bottom: 12px;
 }
 
 .student-password-page .student-password-top > .student-help-card + .student-help-card {
@@ -323,11 +345,13 @@ export default {
   display: flex;
   flex-direction: column;
   min-height: 100%;
+  padding: 16px;
 }
 
 .student-password-page .student-password-account-card,
 .student-password-page .student-password-tips-card {
   height: 100%;
+  padding: 12px;
 }
 
 .student-password-page .student-password-tips-card {
@@ -337,22 +361,23 @@ export default {
 
 .student-password-page .student-password-tips-card__image {
   width: 100%;
-  height: 180px;
-  border-radius: 12px;
+  height: 96px;
+  border-radius: 6px;
 }
 
 .student-password-page .student-password-tips-card__desc {
-  margin: 12px 0 0;
+  margin: 8px 0 0;
   color: #64748b;
-  font-size: 13px;
-  line-height: 1.7;
+  font-size: 12px;
+  line-height: 1.45;
 }
 
 .student-password-page .student-password-stage {
   display: flex;
   flex: 1;
   flex-direction: column;
-  padding: 22px;
+  min-height: 218px;
+  padding: 14px 16px;
 }
 
 .student-password-page .student-password-stage__meta {
@@ -370,34 +395,34 @@ export default {
 }
 
 .student-password-page .student-password-stage__step {
-  margin-top: 8px;
-  font-size: 22px;
+  margin-top: 4px;
+  font-size: 18px;
   font-weight: 700;
   color: #0f172a;
 }
 
 .student-password-page .student-password-stage__step-note {
-  margin: 8px 0 0;
+  margin: 4px 0 0;
   color: #64748b;
-  font-size: 13px;
-  line-height: 1.7;
+  font-size: 12px;
+  line-height: 1.45;
 }
 
 .student-password-page .student-password-stage__counter {
   flex: 0 0 auto;
-  min-width: 64px;
-  padding: 10px 12px;
-  border-radius: 14px;
+  min-width: 52px;
+  padding: 7px 10px;
+  border-radius: 8px;
   background: #eff6ff;
   color: #1d4ed8;
   text-align: center;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
 }
 
 .student-password-page .student-password-stage__progress {
-  margin-top: 16px;
-  height: 8px;
+  margin-top: 10px;
+  height: 6px;
   border-radius: 999px;
   background: #e2e8f0;
   overflow: hidden;
@@ -416,18 +441,29 @@ export default {
   flex: 1;
   align-items: flex-start;
   justify-content: center;
-  min-height: 320px;
-  padding: 24px 0 0;
+  min-height: 132px;
+  padding: 14px 0 0;
 }
 
 .student-password-page .student-password-stage__pane--intro {
   align-items: center;
-  min-height: 320px;
+  min-height: 132px;
 }
 
 .student-password-page .student-password-stage__inner {
   width: 100%;
   max-width: 520px;
+}
+
+.student-password-page .student-password-stage__title,
+.student-password-page .student-password-stage__form-title {
+  margin-bottom: 12px;
+  font-size: 20px;
+}
+
+.student-password-page .student-password-stage__desc {
+  font-size: 13px;
+  line-height: 1.55;
 }
 
 .student-password-page .student-password-inline {
@@ -439,8 +475,8 @@ export default {
 
 .student-password-page .student-password-inline img,
 .student-password-page .student-password-inline .el-button {
-  height: 40px;
-  border-radius: 10px;
+  height: 36px;
+  border-radius: 6px;
 }
 
 .student-password-page .student-password-inline img {
@@ -452,11 +488,19 @@ export default {
 }
 
 .student-password-page :deep(.el-form-item) {
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .student-password-page :deep(.el-descriptions) {
   height: 100%;
+}
+
+.student-password-page :deep(.el-descriptions__body .el-descriptions__table) {
+  height: 100%;
+}
+
+.student-password-page :deep(.el-descriptions-item__cell) {
+  padding: 8px 10px;
 }
 
 .student-password-page :deep(.el-steps--vertical) {
@@ -464,11 +508,25 @@ export default {
 }
 
 .student-password-page :deep(.el-step__title) {
+  font-size: 14px;
   font-weight: 700;
+  line-height: 1.35;
 }
 
 .student-password-page :deep(.el-step__description) {
-  line-height: 1.6;
+  padding-bottom: 6px;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.student-password-page :deep(.el-step__head) {
+  width: 28px;
+}
+
+.student-password-page :deep(.el-step__icon) {
+  width: 22px;
+  height: 22px;
+  font-size: 12px;
 }
 
 .student-password-page :deep(.el-step.is-process .el-step__head) {
@@ -483,26 +541,35 @@ export default {
 
 .student-password-page .student-password-actions {
   margin-top: auto;
+  padding-top: 10px;
   justify-content: space-between;
 }
 
 .student-password-page .student-password-actions__note {
   color: #64748b;
-  font-size: 13px;
-  line-height: 1.7;
+  font-size: 12px;
+  line-height: 1.45;
 }
 
 .student-password-page .student-password-actions__group {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 10px;
+}
+
+.student-password-page .student-password-actions .el-button {
+  min-width: 96px;
+  height: 36px;
 }
 
 @media (max-width: 1280px) {
+  .student-password-page .student-password-layout {
+    grid-template-columns: 230px minmax(0, 1fr);
+  }
+
   .student-password-page .student-password-sidebar {
     position: static;
-    min-height: auto;
   }
 
   .student-password-page .student-password-stage__meta,
@@ -513,6 +580,36 @@ export default {
 
   .student-password-page .student-password-actions__group {
     justify-content: flex-end;
+  }
+}
+
+@media (max-width: 1100px) {
+  .student-password-page .student-password-layout,
+  .student-password-page .student-password-top {
+    grid-template-columns: 1fr;
+  }
+
+  .student-password-page .student-password-sidebar,
+  .student-password-page .student-password-top {
+    display: none;
+  }
+
+  .student-password-page .student-password-main {
+    padding: 12px;
+  }
+
+  .student-password-page .student-password-stage {
+    min-height: 180px;
+  }
+
+  .student-password-page .student-password-stage__pane,
+  .student-password-page .student-password-stage__pane--intro {
+    min-height: 96px;
+  }
+
+  .student-password-page .student-password-sidebar__steps,
+  .student-password-page .student-password-sidebar__tip {
+    display: none;
   }
 }
 

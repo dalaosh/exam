@@ -1,53 +1,43 @@
 <template>
-  <div>
-    <el-row>
-      <el-col :span="14">
-        <el-row style="height: 25vh">
-          <div style="margin-top: 6vh; text-align: center; font-size: 46px; color: #0b42e8;font-family: 'STXingkai', '华文行楷', cursive;">
-            教师端登录入口
-          </div>
-        </el-row>
-        <el-row>
-          <div class="background_1">
-            <el-image
-                style="width: 100%; height: 74.5vh"
-                :src='require("@/assets/login/teacherLogin1.webp")'
-                fit="cover"></el-image>
-          </div>
-        </el-row>
-      </el-col>
-      <el-col :span="10">
-        <div class="background_2">
-          <div class="littleView_2">
-            <div style="text-align: center; font-size: 32px; margin-bottom: 20px; color: white">欢迎使用</div>
-            <el-form :model="form" :rules="rules" ref="formRef">
-              <el-form-item prop="account">
-                <el-input style="font-size: 20px" prefix-icon="el-icon-user" placeholder="请输入账号" v-model="form.account"></el-input>
-              </el-form-item>
-              <el-form-item prop="password">
-                <el-input style="font-size: 20px" prefix-icon="el-icon-lock" placeholder="请输入密码" show-password  v-model="form.password"></el-input>
-              </el-form-item>
-              <el-form-item prop="verCode">
-                <div style="display: flex;justify-content: center">
-                  <el-input style="width: 48%;margin-right: 10px" prefix-icon="el-icon-user" placeholder="请输入验证码" v-model="form.verCode" ></el-input>
-                  <img :src="captchaUrl" @click="clickImg()" width="140px" height="33px" />
-                </div>
-              </el-form-item>
-              <el-form-item>
-                <el-button style="width: 40%; background-color: #0000ff; border-color: #030303; color: white;margin-right: 16%;font-size: 20px" @click.native="$router.push('/')">首页</el-button>
-                <el-button style="width: 40%; background-color: #0000ff; border-color: #030303;  color: white;font-size: 20px" @click="login">登 录</el-button>
-              </el-form-item>
-              <div style="display: flex; align-items: center;color: #f9fafd">
-                <div style="flex: 1"></div>
-                <div style="flex: 1; text-align: right">
-                  忘记密码？请 <a style="color: #faca07;" href="/teacherForget">找回</a>
-                </div>
-              </div>
-            </el-form>
-          </div>
+  <div class="login-page teacher-login">
+    <div class="login-shell">
+      <section class="login-intro">
+        <div class="intro-kicker">考试管理平台</div>
+        <h1>教师工作台</h1>
+        <p>面向课程、试卷、阅卷与成绩分析的统一入口，帮助教师高效完成考试全流程。</p>
+        <div class="intro-signals">
+          <span>智能组卷</span>
+          <span>在线阅卷</span>
+          <span>成绩分析</span>
         </div>
-      </el-col>
-    </el-row>
+      </section>
+
+      <section class="login-panel">
+        <div class="role-tag">教师端</div>
+        <h2>欢迎登录</h2>
+        <p class="subtitle">请输入教师账号进入工作台</p>
+
+        <el-form :model="form" :rules="rules" ref="formRef" class="login-form">
+          <el-form-item prop="account">
+            <el-input prefix-icon="el-icon-user" placeholder="请输入账号" v-model="form.account"></el-input>
+          </el-form-item>
+          <el-form-item prop="password">
+            <el-input prefix-icon="el-icon-lock" placeholder="请输入密码" show-password v-model="form.password"></el-input>
+          </el-form-item>
+          <el-form-item prop="verCode">
+            <div class="captcha-row">
+              <el-input prefix-icon="el-icon-key" placeholder="请输入验证码" v-model="form.verCode"></el-input>
+              <img class="captcha-img" :src="captchaUrl" @click="clickImg()" alt="验证码" />
+            </div>
+          </el-form-item>
+          <div class="actions">
+            <el-button class="home-btn" @click.native="$router.push('/')">首页</el-button>
+            <el-button class="login-btn" @click="login">登录</el-button>
+          </div>
+          <div class="forgot">忘记密码？请 <a href="/teacherForget">找回</a></div>
+        </el-form>
+      </section>
+    </div>
   </div>
 </template>
 
@@ -69,26 +59,21 @@ export default {
           {required: true, message: '请输入验证码', trigger: 'blur' }
         ]
       },
-      //验证码
       captchaUrl:'',
       key:'',
 
     }
   },
-  created() {
-
-  },
   mounted() {
-    this.key=Math.random();//随机数
+    this.key=Math.random();
     this.captchaUrl=process.env.VUE_APP_BASEURL+"/user/login/captcha?key="+this.key
   },
   methods: {
     login() {
-      // 验证通过
       request.post('/user/login?key='+this.key, this.form).then(res => {
         if (res.code === '200') {
-          localStorage.setItem("user", JSON.stringify(res.data))  // 存储用户数据
-          this.$router.push('/teacher/home')  // 跳转主页
+          localStorage.setItem("user", JSON.stringify(res.data))
+          this.$router.push('/teacher/home')
           this.$message.success('登录成功')
         } else {
           this.$message.error(res.msg)
@@ -98,7 +83,7 @@ export default {
     },
     clickImg(){
       this.form.verCode='';
-      this.key=Math.random();//随机数
+      this.key=Math.random();
       this.captchaUrl=process.env.VUE_APP_BASEURL+"/user/login/captcha?key="+this.key;
     },
   }
@@ -106,32 +91,15 @@ export default {
 </script>
 
 <style scoped>
-.background_1 {
-  height: 75vh;
-  background-size: 100%;
-  width: 100%;
-}
-.background_2 {
-  height: 100vh;
-  overflow: hidden;
-  //background-image: url("@/assets/login/login.png");
-  background-color: #ccd8f8;
-  background-size: 100%;
-  width: 100%;
-  padding-top: 24vh
-}
+@import "../../../assets/styles/role-login.css";
 
-
-.littleView_2{
-  width: 60%;
-  margin-left: 20%;
-  height: 50vh;
-  padding: 50px 30px 50px 30px;
-  //background-image: url("@/assets/login/login.png");
-  background-color: rgba(3, 3, 194, 0.24);
-  border-radius: 5px;
-}
-a {
-  color: #2a60c9;
+.teacher-login {
+  --accent: #9aa8ff;
+  --accent-strong: #5ee3ff;
+  --accent-soft: rgba(154, 168, 255, 0.46);
+  --accent-faint: rgba(154, 168, 255, 0.12);
+  --accent-border: rgba(154, 168, 255, 0.34);
+  --panel-glow: rgba(154, 168, 255, 0.12);
+  background-image: url("@/assets/login/tech/teacher-login-tech.jpg");
 }
 </style>

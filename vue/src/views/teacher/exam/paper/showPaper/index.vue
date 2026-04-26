@@ -6,7 +6,7 @@
           <div class="question-group">
             <div class="title title--section">
               <span>选择题</span>
-              <el-button type="text" @click="startFakeAgentMark('multi')" plain class="action-link action-link--wide">自动阅卷选择题</el-button>
+              <el-button type="text" @click="changeMultiAll" plain class="action-link action-link--wide">自动阅卷选择题</el-button>
             </div>
             <div>
               <el-card shadow="hover" class="cards" v-for="(data, index) in questionMulti" :key="index">
@@ -37,7 +37,7 @@
           <div class="question-group">
             <div class="title title--section">
               <span>判断题</span>
-              <el-button type="text" @click="startFakeAgentMark('judge')" plain class="action-link action-link--wide">自动阅卷判断题</el-button>
+              <el-button type="text" @click="changeJudgeAll" plain class="action-link action-link--wide">自动阅卷判断题</el-button>
             </div>
             <div class="divs">
               <el-card shadow="hover" class="cards" v-for="(data, index) in questionJudge" :key="index">
@@ -303,14 +303,6 @@ export default {
         return
       }
       const configMap = {
-        multi: {
-          title: "Agent 正在批阅选择题",
-          action: () => this.changeMultiAll()
-        },
-        judge: {
-          title: "Agent 正在批阅判断题",
-          action: () => this.changeJudgeAll()
-        },
         fill: {
           title: "Agent 正在批阅填空题",
           action: () => this.enableFakeAgentSuggestions("fill")

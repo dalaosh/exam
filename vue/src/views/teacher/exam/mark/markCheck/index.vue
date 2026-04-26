@@ -891,25 +891,29 @@ export default {
     batchSetRightSignAn(question) {
       request.put("exam/examAnswer/batchSetRightSign", question).then(res => {
         if (res.code === "200") {
-          this.$message.success("签名成功");
+          this.$message.success("验签完成");
           this.resetFilters();
           this.findAllCount();
           this.findQuestion();
         } else {
-          this.$message.error(res.msg);
+          this.$message.error("验签失败");
         }
+      }).catch(() => {
+        this.$message.error("验签失败");
       });
     },
     setRightSign(question) {
       request.put("exam/examAnswer/setRightSign", question).then(res => {
         if (res.code === "200") {
-          this.$message.success("签名成功");
+          this.$message.success("验签完成");
           this.filters[question.examPaper.questionType] = "all";
           this.findAllCount();
           this.findAll(question.examPaper.questionType);
         } else {
-          this.$message.error(res.msg);
+          this.$message.error("验签失败");
         }
+      }).catch(() => {
+        this.$message.error("验签失败");
       });
     },
     submitIsMarks() {
